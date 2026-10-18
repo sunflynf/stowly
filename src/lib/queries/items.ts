@@ -74,3 +74,20 @@ export function useItemAlerts(id: string) {
     },
   });
 }
+
+export function useShoppingList() {
+  return useQuery({
+    queryKey: qk.shopping,
+    queryFn: async () => {
+      const { data, error } = await getSupabaseBrowser()
+        .from("shopping_list")
+        .select("*, item:items(id, name, quantity, unit)")
+        .order("done")
+        .order("created_at", { ascending: false })
+        .limit(500);
+      if (error) throw error;
+      return data.map((r) => ({ ...r, quantity: Number(r.quantity) }));
+    },
+  });
+}
+export type ShoppingEntry = NonNullable<ReturnType<typeof useShoppingList>["data"]>[number];
