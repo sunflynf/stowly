@@ -335,5 +335,61 @@
       "low_stock": "Low stock first",
       "current": "Sort: {value}"
     }
+  },
+  "dashboard": {
+    "title": "Overview",
+    "subtitle": "{date} · {count, plural, =0 {Nothing needs attention} one {# item needs attention} other {# items need attention}}",
+    "mobileSubtitle": "{date} · {count, plural, one {# item} other {# items}}",
+    "quickFilters": "Quick filters",
+    "stats": {
+      "total": "Total items",
+      "totalHint": "{count, plural, =0 {Nothing new in the last 30 days} other {+# in the last 30 days}}",
+      "expiring": "Expiring (30 days)",
+      "expiringShort": "Expiring",
+      "expiredHint": "{count, plural, =0 {Nothing expired} one {# item expired} other {# items expired}}",
+      "lowStock": "Low stock",
+      "lowStockNone": "Everything is well stocked",
+      "warranty": "Warranty ending",
+      "warrantyShort": "Warranty ending",
+      "warrantyHint": "{days, plural, =0 {Ends today} one {Soonest in # day} other {Soonest in # days}}",
+      "warrantyNone": "No warranties ending soon"
+    },
+    "attention": "Needs attention",
+    "attentionEmpty": "All good! Nothing needs attention.",
+    "lowStock": "Low stock",
+    "lowStockLegend": "Have / threshold",
+    "lowStockEmpty": "Nothing is running low.",
+    "createShopping": "Create shopping list",
+    "shoppingCreated": "{count, plural, =0 {The shopping list already has these items} one {Added # item to the shopping list} other {Added # items to the shopping list}}",
+    "byCategory": "By category",
+    "stockOf": "{name}: {quantity} left, threshold {threshold}"
+  },
+  "scan": {
+    "button": "Scan a QR code or barcode",
+    "title": "Scan",
+    "hint": "Point the camera at a QR code or barcode.",
+    "unsupported": "This browser cannot scan codes yet. Use Chrome on Android, or type a search instead.",
+    "denied": "Could not open the camera. Allow camera access and try again."
+  },
+  "shopping": {
+    "title": "Shopping list",
+    "subtitle": "{count, plural, =0 {Nothing to buy} one {# item to buy} other {# items to buy}}",
+    "addPlaceholder": "Add something to buy…",
+    "name": "Item",
+    "quantity": "Quantity",
+    "add": "Add",
+    "fromLowStock": "Add low-stock items",
+    "bought": "Bought",
+    "markBought": "Mark {name} as bought",
+    "restocked": "Added {quantity} to stock: {name}",
+    "done": "Bought ({count})",
+    "clearDone": "Clear bought items",
+    "empty": "The list is empty. Add something or use “Add low-stock items”.",
+    "remove": "Remove {name} from the list",
+    "linked": "Linked to an item in your inventory",
+    "undo": "Undo",
+    "decrease": "Buy fewer",
+    "increase": "Buy more",
+    "inStock": "In stock: {quantity}"
   }
 }

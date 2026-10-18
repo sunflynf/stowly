@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFormats } from "@/lib/hooks/use-format";
+import { useIsDesktop } from "@/lib/hooks/use-media-query";
 import { itemSearchToQuery, parseItemSearch, SORTS, useItemSearch, type ItemSearchParams } from "@/lib/queries/search";
 import { useDashboardStats } from "@/lib/queries/stats";
 import { FilterBar } from "./filter-bar";
@@ -26,6 +27,7 @@ export function ItemsBrowser() {
   const searchParams = useSearchParams();
   const params = useMemo(() => parseItemSearch(new URLSearchParams(searchParams.toString())), [searchParams]);
   const { data: stats } = useDashboardStats();
+  const isDesktop = useIsDesktop();
   const search = useItemSearch(params);
   const rows = useMemo(() => search.data?.pages.flatMap((p) => p.rows) ?? [], [search.data]);
   const total = search.data?.pages[0]?.total ?? 0;
@@ -72,7 +74,7 @@ export function ItemsBrowser() {
     <>
       <PageHeader title={t("title")} subtitle={stats ? t("subtitle", { count: stats.total_items }) : " "} actions={addButton} />
 
-      <SearchBox value={params.q} onChange={(q) => update({ q })} placeholder={t("searchPlaceholder")} slashShortcut className="mb-3" />
+      <SearchBox value={params.q} onChange={(q) => update({ q })} placeholder={isDesktop ? t("searchPlaceholder") : t("searchShort")} slashShortcut className="mb-3" />
       <div className="mb-4">
         <FilterBar params={params} onChange={update} />
       </div>

@@ -335,5 +335,61 @@
       "low_stock": "Tồn kho thấp trước",
       "current": "Sắp xếp: {value}"
     }
+  },
+  "dashboard": {
+    "title": "Tổng quan",
+    "subtitle": "{date} · {count, plural, =0 {Không có mục cần xử lý} other {# mục cần xử lý}}",
+    "mobileSubtitle": "{date} · {count, plural, other {# món}}",
+    "quickFilters": "Lọc nhanh",
+    "stats": {
+      "total": "Tổng món đồ",
+      "totalHint": "{count, plural, =0 {Không có món mới trong 30 ngày qua} other {+# trong 30 ngày qua}}",
+      "expiring": "Sắp hết hạn (30 ngày)",
+      "expiringShort": "Sắp hết hạn",
+      "expiredHint": "{count, plural, =0 {Không có món quá hạn} other {# món đã quá hạn}}",
+      "lowStock": "Tồn kho thấp",
+      "lowStockNone": "Mọi thứ đều đủ dùng",
+      "warranty": "Sắp hết bảo hành",
+      "warrantyShort": "Bảo hành sắp hết",
+      "warrantyHint": "{days, plural, =0 {Hết hôm nay} other {Sớm nhất còn # ngày}}",
+      "warrantyNone": "Không có bảo hành sắp hết"
+    },
+    "attention": "Cần xử lý",
+    "attentionEmpty": "Tuyệt! Không có gì cần xử lý.",
+    "lowStock": "Tồn kho thấp",
+    "lowStockLegend": "Hiện có / ngưỡng",
+    "lowStockEmpty": "Không có món nào sắp hết.",
+    "createShopping": "Tạo danh sách cần mua",
+    "shoppingCreated": "{count, plural, =0 {Danh sách mua đã đủ các món này} other {Đã thêm # món vào danh sách mua}}",
+    "byCategory": "Theo danh mục",
+    "stockOf": "{name}: còn {quantity} trên ngưỡng {threshold}"
+  },
+  "scan": {
+    "button": "Quét mã QR hoặc mã vạch",
+    "title": "Quét mã",
+    "hint": "Đưa mã QR hoặc mã vạch vào khung hình.",
+    "unsupported": "Trình duyệt này chưa hỗ trợ quét mã. Hãy dùng Chrome trên Android hoặc nhập từ khoá để tìm.",
+    "denied": "Không thể mở camera. Hãy cho phép quyền camera và thử lại."
+  },
+  "shopping": {
+    "title": "Danh sách mua",
+    "subtitle": "{count, plural, =0 {Không có món nào cần mua} other {# món cần mua}}",
+    "addPlaceholder": "Thêm món cần mua…",
+    "name": "Tên món",
+    "quantity": "Số lượng",
+    "add": "Thêm",
+    "fromLowStock": "Thêm các món tồn kho thấp",
+    "bought": "Đã mua",
+    "markBought": "Đánh dấu đã mua {name}",
+    "restocked": "Đã cộng {quantity} vào kho: {name}",
+    "done": "Đã mua ({count})",
+    "clearDone": "Xoá các món đã mua",
+    "empty": "Danh sách trống. Thêm món hoặc dùng “Thêm các món tồn kho thấp”.",
+    "remove": "Xoá {name} khỏi danh sách",
+    "linked": "Liên kết với món đồ trong kho",
+    "undo": "Hoàn tác",
+    "decrease": "Giảm số lượng cần mua",
+    "increase": "Tăng số lượng cần mua",
+    "inStock": "Trong kho: {quantity}"
   }
 }
