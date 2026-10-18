@@ -136,3 +136,26 @@ describe("quantity stepper", () => {
     expect(events?.[1]?.note).toBe("mua thêm");
   });
 });
+
+describe("search", () => {
+  it("is accent-insensitive, prefix and typo tolerant", async () => {
+    await a.client.from("items").insert([
+      { name: "Áo khoác mùa đông" },
+      { name: "Cáp Lightning" },
+      { name: "Sách Nhà giả kim" },
+    ]);
+    const names = async (q: string) => {
+      const { data, error } = await a.client.rpc("search_items", { p_query: q });
+      if (error) throw error;
+      return data.map((r) => r.name);
+    };
+    expect(await names("ao khoac")).toContain("Áo khoác mùa đông");
+    expect(await names("ÁO KHOÁC")).toContain("Áo khoác mùa đông");
+    expect(await names("khoa")).toContain("Áo khoác mùa đông");
+    expect(await names("lightnig")).toContain("Cáp Lightning");
+    // typed accents rank the exact match first ("sạc" before "Sách", which also prefix-matches)
+    expect((await names("sạc"))[0]).toBe("Dây sạc USB-C");
+    // location path is searchable
+    expect(await names("ban lam viec")).toContain("Dây sạc USB-C");
+  });
+});

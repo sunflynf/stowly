@@ -165,8 +165,10 @@ $$;
 -- Search
 -- ---------------------------------------------------------------------------
 
--- Turns free text into a prefix tsquery over normalised words:
--- "ao khoac" -> 'ao':* & 'khoac':*
+-- Turns free text into a tsquery over normalised words. Prefix matching is
+-- limited to names and tags (weights A/B) so "sac" finds "Dây sạc" without
+-- dragging in every item of the category "Sách"; whole words match anywhere:
+-- "ao khoac" -> ('ao':*AB | 'ao') & ('khoac':*AB | 'khoac')
 create or replace function public.search_tsquery(p_query text)
 returns tsquery
 language sql
@@ -176,7 +178,7 @@ as $$
   select case
     when coalesce(public.normalize_search(p_query), '') = '' then null
     else to_tsquery('simple', (
-      select string_agg(quote_literal(w) || ':*', ' & ')
+      select string_agg(format('(%1$s:*AB | %1$s)', quote_literal(w)), ' & ')
       from unnest(regexp_split_to_array(
         regexp_replace(public.normalize_search(p_query), '[^a-z0-9 ]', ' ', 'g'), '\s+')) w
       where w <> ''
@@ -228,16 +230,15 @@ declare
   v_today date;
   v_norm text := nullif(public.normalize_search(p_query), '');
   v_tsq tsquery := public.search_tsquery(p_query);
+  v_words text[] := array(
+    select w from unnest(regexp_split_to_array(regexp_replace(coalesce(v_norm, ''), '[^a-z0-9 ]', ' ', 'g'), '\s+')) w
+    where w <> '');
 begin
   select * into v_profile from public.profiles where profiles.id = (select auth.uid());
   if not found then
     return;
   end if;
   v_today := public.user_today(v_profile.timezone);
-
-  -- Typo tolerance via trigram word similarity (stricter than the 0.6 default,
-  -- which lets unrelated multi-word queries through).
-  perform set_config('pg_trgm.word_similarity_threshold', '0.7', true);
 
   return query
   with matched as (
@@ -246,10 +247,10 @@ begin
       case
         when v_norm is null then 0::real
         else (coalesce(ts_rank(i.search_vector, v_tsq), 0)
-              + extensions.word_similarity(v_norm, i.search_text)
+              + extensions.strict_word_similarity(v_norm, i.search_text)
               -- whole-word hit in the name beats a prefix hit ("sac" -> "Dây sạc" before "Sách")
-              + case when public.normalize_search(i.name) ~ ('\m' || v_norm || '\M') then 0.6 else 0 end
-              + case when public.normalize_search(i.name) like v_norm || '%' then 0.3 else 0 end
+              + case when i.name_norm ~ ('\m' || v_norm || '\M') then 0.6 else 0 end
+              + case when i.name_norm like v_norm || '%' then 0.3 else 0 end
               -- typed accents that match exactly rank higher ("sạc" before "sách")
               + case when strpos(lower(i.name), lower(btrim(p_query))) > 0 then 0.6 else 0 end)::real
       end as rnk,
@@ -261,8 +262,13 @@ begin
     where (case when p_archived then i.archived_at is not null else i.archived_at is null end)
       and (v_norm is null
            or i.search_vector @@ v_tsq
-           or (char_length(v_norm) >= 3 and v_norm operator(extensions.<%) i.search_text)
-           or i.search_text like '%' || v_norm || '%')
+           -- substring of the name ("usb-c" inside "Dây sạc USB-C 1m")
+           or i.name_norm like '%' || v_norm || '%'
+           -- every word matches exactly/by prefix, or (words of 4+ letters) with a typo
+           or (select bool_and(
+                 i.search_vector @@ to_tsquery('simple', format('(%1$s:*AB | %1$s)', quote_literal(w)))
+                 or (char_length(w) >= 4 and extensions.strict_word_similarity(w, i.search_text) >= 0.5))
+               from unnest(v_words) w))
       and (p_category_ids is null or i.category_id = any (p_category_ids))
       and (p_conditions is null or i.condition = any (p_conditions))
       and (p_price_min is null or i.purchase_price >= p_price_min)

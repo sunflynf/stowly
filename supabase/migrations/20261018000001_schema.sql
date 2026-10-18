@@ -166,6 +166,7 @@ create table public.items (
   -- Maintained by trigger (0003).
   search_vector tsvector not null default ''::tsvector,
   search_text text not null default '',
+  name_norm text generated always as (public.normalize_search(name)) stored,
   unique (id, user_id),
   foreign key (category_id, user_id) references public.categories (id, user_id) on delete set null (category_id),
   foreign key (location_id, user_id) references public.locations (id, user_id) on delete set null (location_id)
@@ -178,6 +179,7 @@ create index items_expiry_idx on public.items (user_id, expiry_date) where expir
 create index items_search_vector_idx on public.items using gin (search_vector);
 create index items_search_text_trgm_idx on public.items using gin (search_text extensions.gin_trgm_ops);
 create index items_name_sort_idx on public.items (user_id, lower(name));
+create index items_name_norm_trgm_idx on public.items using gin (name_norm extensions.gin_trgm_ops);
 
 create trigger items_updated_at before update on public.items
   for each row execute function public.set_updated_at();
