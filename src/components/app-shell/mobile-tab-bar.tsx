@@ -18,6 +18,8 @@ export function MobileTabBar() {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const counts = useNavCounts();
+  // Item sub-pages (add, detail, edit) have their own bottom action bar.
+  const hidden = /^\/items\/[^/]+/.test(pathname);
 
   const renderTab = (tab: (typeof tabs)[number]) => {
     const active = "exact" in tab ? pathname === tab.href : pathname.startsWith(tab.href) && pathname !== "/items/new";
@@ -43,6 +45,8 @@ export function MobileTabBar() {
       </Link>
     );
   };
+
+  if (hidden) return null;
 
   return (
     <nav
