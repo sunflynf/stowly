@@ -49,6 +49,8 @@ function patchQuantity(data: unknown, id: string, delta: number): unknown {
       return { ...obj, quantity: Math.max(0, (obj as QuantityCarrier).quantity + delta) };
     }
     if ("rows" in obj && Array.isArray(obj.rows)) return { ...obj, rows: patchQuantity(obj.rows, id, delta) };
+    // useInfiniteQuery data: { pages, pageParams }
+    if ("pages" in obj && Array.isArray(obj.pages)) return { ...obj, pages: patchQuantity(obj.pages, id, delta) };
   }
   return data;
 }

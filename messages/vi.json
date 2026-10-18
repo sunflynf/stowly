@@ -32,7 +32,8 @@
     "previous": "Trang trước",
     "next": "Trang sau",
     "notSet": "Chưa đặt",
-    "offline": "Bạn đang ngoại tuyến. Một số thao tác sẽ không khả dụng."
+    "offline": "Bạn đang ngoại tuyến. Một số thao tác sẽ không khả dụng.",
+    "clearSearch": "Xoá nội dung tìm kiếm"
   },
   "nav": {
     "overview": "Tổng quan",
@@ -280,5 +281,59 @@
     "deleteTagConfirm": "Xoá thẻ “{name}”?",
     "noTags": "Chưa có thẻ nào. Thẻ được tạo khi bạn gắn cho món đồ.",
     "tagUsage": "{count, plural, =0 {chưa dùng} other {# món}}"
+  },
+  "items": {
+    "title": "Tất cả đồ dùng",
+    "subtitle": "{count, plural, other {# món}} · tìm theo tên, thẻ, ghi chú hoặc vị trí",
+    "searchPlaceholder": "Tìm đồ: “sạc type-C”, “áo khoác mùa đông”, “tủ phòng ngủ”…",
+    "searchShort": "Tìm đồ, thẻ, vị trí…",
+    "searchLabel": "Tìm kiếm đồ dùng",
+    "results": "{count, plural, =0 {Không có kết quả} other {# kết quả}}",
+    "resultsFor": "{count, plural, =0 {Không có kết quả cho “{query}”} other {# kết quả cho “{query}”}}",
+    "showing": "Hiển thị {shown} / {total} kết quả",
+    "loadMore": "Tải thêm",
+    "empty": "Chưa có món đồ nào. Hãy thêm món đầu tiên!",
+    "noResults": "Không tìm thấy món đồ phù hợp. Thử từ khoá khác hoặc bỏ bớt bộ lọc.",
+    "columns": {
+      "item": "Món đồ",
+      "location": "Vị trí",
+      "quantity": "Số lượng",
+      "status": "Tình trạng"
+    },
+    "filters": {
+      "category": "Danh mục",
+      "location": "Vị trí",
+      "condition": "Tình trạng",
+      "state": "Hạn dùng & tồn kho",
+      "tags": "Thẻ",
+      "price": "Giá",
+      "all": "Tất cả",
+      "lowOnly": "Chỉ tồn kho thấp",
+      "archived": "Đã lưu trữ",
+      "priceMin": "Từ",
+      "priceMax": "Đến",
+      "selected": "{label}: {value}",
+      "multiple": "{count} mục",
+      "clearAll": "Xoá bộ lọc",
+      "filtersTitle": "Bộ lọc"
+    },
+    "states": {
+      "expired": "Đã quá hạn",
+      "expiring_soon": "Sắp hết hạn",
+      "out_of_stock": "Hết hàng",
+      "low_stock": "Tồn kho thấp",
+      "warranty_ending": "Sắp hết bảo hành",
+      "replace_due": "Cần thay",
+      "lent_overdue": "Cho mượn quá hạn"
+    },
+    "sort": {
+      "label": "Sắp xếp",
+      "relevance": "Liên quan nhất",
+      "name": "Tên A–Z",
+      "updated": "Mới cập nhật",
+      "expiry": "Hạn dùng gần nhất",
+      "low_stock": "Tồn kho thấp trước",
+      "current": "Sắp xếp: {value}"
+    }
   }
 }
