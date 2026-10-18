@@ -1,0 +1,111 @@
+{
+  "app": {
+    "name": "Stowly",
+    "tagline": "Your household inventory"
+  },
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "back": "Back",
+    "more": "More options",
+    "loading": "Loading…",
+    "retry": "Try again",
+    "search": "Search",
+    "seeAll": "See all",
+    "none": "None",
+    "optional": "optional",
+    "confirm": "Confirm",
+    "done": "Done",
+    "error": "Something went wrong. Please try again.",
+    "saved": "Saved",
+    "deleted": "Deleted",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "clear": "Clear filters",
+    "apply": "Apply",
+    "previous": "Previous page",
+    "next": "Next page",
+    "notSet": "Not set",
+    "offline": "You are offline. Some actions are unavailable."
+  },
+  "nav": {
+    "overview": "Overview",
+    "items": "All items",
+    "itemsShort": "Items",
+    "locations": "Locations",
+    "expiring": "Expiring",
+    "stock": "Stock",
+    "alerts": "Alerts",
+    "shopping": "Shopping list",
+    "categories": "Categories & tags",
+    "settings": "Settings",
+    "addItem": "Add item",
+    "mainMenu": "Main navigation",
+    "signOut": "Sign out",
+    "language": "Language",
+    "account": "Account"
+  },
+  "auth": {
+    "title": "Sign in",
+    "subtitle": "Keep track of everything you own.",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "signingIn": "Signing in…",
+    "magicLink": "Email me a sign-in link",
+    "magicLinkSent": "We sent a sign-in link to {email}. Check your inbox.",
+    "or": "or",
+    "noAccount": "No account yet?",
+    "haveAccount": "Already have an account?",
+    "createAccount": "Create a new account",
+    "backToSignIn": "Back to sign in",
+    "invalidCredentials": "Incorrect email or password.",
+    "signupNotAllowed": "This email is not allowed to sign up.",
+    "signUpDone": "Account created. If confirmation is required, check your email.",
+    "passwordHint": "At least 8 characters.",
+    "linkInvalid": "The sign-in link is invalid or has expired.",
+    "rateLimited": "Too many attempts. Please try again in a few minutes."
+  },
+  "validation": {
+    "required": "This field is required.",
+    "email": "Invalid email address.",
+    "passwordMin": "Password must be at least 8 characters.",
+    "tooLong": "This is too long.",
+    "number": "Please enter a valid number.",
+    "min": "Value is too small.",
+    "date": "Invalid date.",
+    "invalid": "Invalid value."
+  },
+  "settings": {
+    "language": "Language",
+    "languages": {
+      "vi": "Tiếng Việt",
+      "en": "English"
+    }
+  },
+  "errors": {
+    "unauthorized": "Your session has expired. Please sign in again.",
+    "validation": "Please check the highlighted fields.",
+    "notFound": "Not found.",
+    "conflict": "This is a duplicate or still in use.",
+    "invalidCredentials": "Incorrect email or password.",
+    "signupNotAllowed": "This email is not allowed to sign up.",
+    "rateLimited": "Too many attempts. Please try again in a few minutes.",
+    "photoLimit": "Each item can have up to 5 photos.",
+    "locationCycle": "A location cannot be moved inside itself.",
+    "locationTooDeep": "Locations can be nested at most 6 levels deep.",
+    "locationNotEmpty": "This location still contains items or sub-locations. Move them first.",
+    "categoryInUse": "This category is in use.",
+    "unknown": "Something went wrong. Please try again."
+  },
+  "placeholder": {
+    "body": "This screen is under construction."
+  }
+}

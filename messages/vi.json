@@ -1,0 +1,111 @@
+{
+  "app": {
+    "name": "Stowly",
+    "tagline": "Quản lý đồ dùng trong nhà"
+  },
+  "common": {
+    "close": "Đóng",
+    "cancel": "Huỷ",
+    "save": "Lưu",
+    "saving": "Đang lưu…",
+    "delete": "Xoá",
+    "edit": "Sửa",
+    "add": "Thêm",
+    "back": "Quay lại",
+    "more": "Thêm tuỳ chọn",
+    "loading": "Đang tải…",
+    "retry": "Thử lại",
+    "search": "Tìm kiếm",
+    "seeAll": "Xem tất cả",
+    "none": "Không có",
+    "optional": "không bắt buộc",
+    "confirm": "Xác nhận",
+    "done": "Xong",
+    "error": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "saved": "Đã lưu",
+    "deleted": "Đã xoá",
+    "yes": "Có",
+    "no": "Không",
+    "all": "Tất cả",
+    "clear": "Xoá lọc",
+    "apply": "Áp dụng",
+    "previous": "Trang trước",
+    "next": "Trang sau",
+    "notSet": "Chưa đặt",
+    "offline": "Bạn đang ngoại tuyến. Một số thao tác sẽ không khả dụng."
+  },
+  "nav": {
+    "overview": "Tổng quan",
+    "items": "Tất cả đồ dùng",
+    "itemsShort": "Đồ dùng",
+    "locations": "Vị trí",
+    "expiring": "Sắp hết hạn",
+    "stock": "Tồn kho",
+    "alerts": "Cảnh báo",
+    "shopping": "Danh sách mua",
+    "categories": "Danh mục & thẻ",
+    "settings": "Cài đặt",
+    "addItem": "Thêm món đồ",
+    "mainMenu": "Điều hướng chính",
+    "signOut": "Đăng xuất",
+    "language": "Ngôn ngữ",
+    "account": "Tài khoản"
+  },
+  "auth": {
+    "title": "Đăng nhập",
+    "subtitle": "Quản lý mọi món đồ trong nhà bạn.",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "signIn": "Đăng nhập",
+    "signUp": "Tạo tài khoản",
+    "signingIn": "Đang đăng nhập…",
+    "magicLink": "Gửi liên kết đăng nhập qua email",
+    "magicLinkSent": "Đã gửi liên kết đăng nhập tới {email}. Hãy kiểm tra hộp thư.",
+    "or": "hoặc",
+    "noAccount": "Chưa có tài khoản?",
+    "haveAccount": "Đã có tài khoản?",
+    "createAccount": "Tạo tài khoản mới",
+    "backToSignIn": "Quay lại đăng nhập",
+    "invalidCredentials": "Email hoặc mật khẩu không đúng.",
+    "signupNotAllowed": "Email này không được phép đăng ký.",
+    "signUpDone": "Đã tạo tài khoản. Nếu cần xác nhận, hãy kiểm tra email.",
+    "passwordHint": "Ít nhất 8 ký tự.",
+    "linkInvalid": "Liên kết đăng nhập không hợp lệ hoặc đã hết hạn.",
+    "rateLimited": "Bạn thao tác quá nhanh. Hãy thử lại sau ít phút."
+  },
+  "validation": {
+    "required": "Vui lòng nhập trường này.",
+    "email": "Email không hợp lệ.",
+    "passwordMin": "Mật khẩu cần ít nhất 8 ký tự.",
+    "tooLong": "Nội dung quá dài.",
+    "number": "Vui lòng nhập một số hợp lệ.",
+    "min": "Giá trị quá nhỏ.",
+    "date": "Ngày không hợp lệ.",
+    "invalid": "Giá trị không hợp lệ."
+  },
+  "settings": {
+    "language": "Ngôn ngữ",
+    "languages": {
+      "vi": "Tiếng Việt",
+      "en": "English"
+    }
+  },
+  "errors": {
+    "unauthorized": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+    "validation": "Vui lòng kiểm tra lại thông tin.",
+    "notFound": "Không tìm thấy dữ liệu.",
+    "conflict": "Dữ liệu bị trùng hoặc đang được sử dụng.",
+    "invalidCredentials": "Email hoặc mật khẩu không đúng.",
+    "signupNotAllowed": "Email này không được phép đăng ký.",
+    "rateLimited": "Bạn thao tác quá nhanh. Hãy thử lại sau ít phút.",
+    "photoLimit": "Mỗi món đồ có tối đa 5 ảnh.",
+    "locationCycle": "Không thể chuyển một vị trí vào bên trong chính nó.",
+    "locationTooDeep": "Cây vị trí tối đa 6 cấp.",
+    "locationNotEmpty": "Vị trí này còn chứa đồ hoặc vị trí con. Hãy chuyển chúng đi trước.",
+    "categoryInUse": "Danh mục đang được sử dụng.",
+    "unknown": "Đã xảy ra lỗi. Vui lòng thử lại."
+  },
+  "placeholder": {
+    "body": "Màn hình này đang được xây dựng."
+  }
+}

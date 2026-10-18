@@ -1,0 +1,16 @@
+// TanStack Query keys. Mutations invalidate by prefix.
+export const qk = {
+  stats: ["stats"] as const,
+  categoryCounts: ["category-counts"] as const,
+  items: ["items"] as const,
+  itemSearch: (params: unknown) => ["items", "search", params] as const,
+  item: (id: string) => ["item", id] as const,
+  itemEvents: (id: string) => ["item", id, "events"] as const,
+  locations: ["locations"] as const,
+  categories: ["categories"] as const,
+  tags: ["tags"] as const,
+  alerts: ["alerts"] as const,
+  shopping: ["shopping"] as const,
+  profile: ["profile"] as const,
+  photoUrls: (paths: readonly string[]) => ["photo-urls", ...paths] as const,
+};
