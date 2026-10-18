@@ -314,6 +314,11 @@ isOneToOne: false
 "f_unaccent":
 { Args: { "input": string }; Returns: string
                            },
+"location_counts":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "item_count": number,"location_id": string
+            }[]
+                           },
 "normalize_search":
 { Args: { "input": string }; Returns: string
                            },
@@ -327,6 +332,11 @@ isOneToOne: false
                            },
 "search_tsquery":
 { Args: { "p_query": string }; Returns: unknown
+                           },
+"tag_counts":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "item_count": number,"tag_id": string
+            }[]
                            },
 "user_today":
 { Args: { "p_timezone": string }; Returns: string
