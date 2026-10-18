@@ -92,6 +92,7 @@ select
   i.quantity,
   i.unit,
   i.min_quantity,
+  i.replace_after_months,
   i.category_id,
   i.location_id,
   l.path_text as location_path,

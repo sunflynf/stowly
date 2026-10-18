@@ -274,7 +274,7 @@ isOneToOne: false
           Views: {
             "item_alerts": {
                   Row: {
-                    "category_id": string | null,"days_left": number | null,"due_date": string | null,"item_id": string | null,"kind": Database["public"]['Enums']["alert_kind"] | null,"location_id": string | null,"location_path": string | null,"location_path_en": string | null,"min_quantity": number | null,"name": string | null,"quantity": number | null,"severity": number | null,"snoozed": boolean | null,"snoozed_until": string | null,"threshold_key": string | null,"thumb_path": string | null,"unit": string | null,"user_id": string | null
+                    "category_id": string | null,"days_left": number | null,"due_date": string | null,"item_id": string | null,"kind": Database["public"]['Enums']["alert_kind"] | null,"location_id": string | null,"location_path": string | null,"location_path_en": string | null,"min_quantity": number | null,"name": string | null,"quantity": number | null,"replace_after_months": number | null,"severity": number | null,"snoozed": boolean | null,"snoozed_until": string | null,"threshold_key": string | null,"thumb_path": string | null,"unit": string | null,"user_id": string | null
                   }
                   ComputedFields: never
                   Relationships: [
