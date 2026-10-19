@@ -31,7 +31,7 @@ export function PageHeader({ title, subtitle, actions, back, mobileAction, class
   return (
     <>
       {back && (
-        <div className="sticky top-0 z-30 -mx-4 mb-3 flex h-14 items-center justify-between gap-2 border-b border-border bg-card px-1 md:hidden">
+        <div className="sticky top-0 z-30 -mx-4 mb-3 flex h-14 items-center justify-between gap-2 border-b border-border bg-card px-1 md:hidden print:hidden">
           <button
             type="button"
             onClick={goBack}

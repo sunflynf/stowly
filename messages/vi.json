@@ -161,7 +161,9 @@
       "tags": "Thẻ",
       "tagsPlaceholder": "Thêm thẻ rồi nhấn Enter",
       "photos": "Ảnh",
-      "attributes": "Thông tin thêm"
+      "attributes": "Thông tin thêm",
+      "barcode": "Mã vạch",
+      "barcodeHint": "Quét hoặc nhập để lần sau quét là tìm thấy ngay."
     },
     "sections": {
       "basics": "Thông tin chính",
@@ -223,7 +225,15 @@
     "noAlerts": "Không có cảnh báo",
     "openPhotos": "Thêm ảnh cho món đồ",
     "menu": "Tùy chọn món đồ",
-    "shoppingNote": "Mua sắm"
+    "shoppingNote": "Mua sắm",
+    "scanBarcode": "Quét mã vạch để điền tên",
+    "lookingUp": "Đang tra cứu mã vạch {code}…",
+    "barcodeExisting": "Bạn đã có món này: {name} (còn {quantity})",
+    "openExisting": "Mở món đồ",
+    "addOneExisting": "+1 vào kho",
+    "addedOne": "Đã cộng 1: {name}",
+    "productFound": "Đã điền thông tin từ mã vạch {code}. Kiểm tra lại trước khi lưu.",
+    "productNotFound": "Không tìm thấy sản phẩm cho mã {code}. Hãy nhập tên — mã vạch vẫn được lưu."
   },
   "locations": {
     "title": "Vị trí",
@@ -248,7 +258,16 @@
     "pickerTitle": "Chọn vị trí",
     "pickerSearch": "Tìm vị trí…",
     "noLocation": "Không chọn vị trí",
-    "none": "Không tìm thấy vị trí."
+    "none": "Không tìm thấy vị trí.",
+    "printLabel": "In nhãn QR",
+    "printLabels": "In nhãn QR",
+    "inside": "Bên trong",
+    "items": "Đồ trong vị trí này",
+    "itemsCount": "{count, plural, =0 {Chưa có món nào} other {# món (gồm cả vị trí con)}}",
+    "addHere": "Thêm đồ vào đây",
+    "notFound": "Không tìm thấy vị trí này.",
+    "breadcrumb": "Đường dẫn vị trí",
+    "emptyHere": "Chưa có món đồ nào ở đây."
   },
   "categoriesPage": {
     "title": "Danh mục & thẻ",
@@ -368,8 +387,16 @@
     "button": "Quét mã QR hoặc mã vạch",
     "title": "Quét mã",
     "hint": "Đưa mã QR hoặc mã vạch vào khung hình.",
-    "unsupported": "Trình duyệt này chưa hỗ trợ quét mã. Hãy dùng Chrome trên Android hoặc nhập từ khoá để tìm.",
-    "denied": "Không thể mở camera. Hãy cho phép quyền camera và thử lại."
+    "unsupported": "Không khởi động được trình quét mã trên trình duyệt này. Hãy nhập mã bên dưới.",
+    "denied": "Không thể mở camera. Hãy cho phép quyền camera và thử lại.",
+    "barcodeTitle": "Quét mã vạch",
+    "barcodeHint": "Đưa mã vạch trên bao bì vào khung hình.",
+    "starting": "Đang mở camera…",
+    "manual": "Hoặc nhập mã",
+    "manualPlaceholder": "VD: 8934563138164",
+    "manualSubmit": "Dùng mã này",
+    "noCamera": "Thiết bị này không có camera khả dụng. Bạn vẫn có thể nhập mã bên dưới.",
+    "openingItem": "Đã tìm thấy trong kho: {name}"
   },
   "shopping": {
     "title": "Danh sách mua",
@@ -494,5 +521,24 @@
     "title": "Bạn đang ngoại tuyến",
     "body": "Không thể tải trang này khi không có mạng. Hãy kiểm tra kết nối rồi thử lại.",
     "retry": "Thử lại"
+  },
+  "labels": {
+    "title": "In nhãn QR",
+    "subtitle": "Dán lên hộp, tủ, ngăn kéo. Quét nhãn để mở danh sách đồ bên trong.",
+    "select": "Chọn vị trí",
+    "selectAll": "Chọn tất cả",
+    "selectNone": "Bỏ chọn",
+    "size": "Cỡ nhãn",
+    "sizes": {
+      "small": "Nhỏ (3 cột)",
+      "large": "Lớn (2 cột)"
+    },
+    "showPath": "Hiện đường dẫn đầy đủ",
+    "print": "In {count, plural, other {# nhãn}}",
+    "empty": "Chọn ít nhất một vị trí để xem trước nhãn.",
+    "preview": "Xem trước",
+    "qrAlt": "Mã QR mở {name}",
+    "scanHint": "Quét để xem đồ bên trong",
+    "printTip": "Mẹo: in khổ A4, tỉ lệ 100%, tắt “Vừa trang”. Có thể in lên giấy decal."
   }
 }

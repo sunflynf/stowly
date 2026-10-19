@@ -161,7 +161,9 @@
       "tags": "Tags",
       "tagsPlaceholder": "Add a tag and press Enter",
       "photos": "Photos",
-      "attributes": "More details"
+      "attributes": "More details",
+      "barcode": "Barcode",
+      "barcodeHint": "Scan or type it so the next scan finds this item instantly."
     },
     "sections": {
       "basics": "Basics",
@@ -223,7 +225,15 @@
     "noAlerts": "No alerts",
     "openPhotos": "Add photos to this item",
     "menu": "Item options",
-    "shoppingNote": "Shopping"
+    "shoppingNote": "Shopping",
+    "scanBarcode": "Scan a barcode to fill in the name",
+    "lookingUp": "Looking up barcode {code}…",
+    "barcodeExisting": "You already have this: {name} ({quantity} left)",
+    "openExisting": "Open item",
+    "addOneExisting": "+1 to stock",
+    "addedOne": "Added 1: {name}",
+    "productFound": "Filled in from barcode {code}. Please check before saving.",
+    "productNotFound": "No product found for {code}. Type a name — the barcode is still saved."
   },
   "locations": {
     "title": "Locations",
@@ -248,7 +258,16 @@
     "pickerTitle": "Choose a location",
     "pickerSearch": "Search locations…",
     "noLocation": "No location",
-    "none": "No matching locations."
+    "none": "No matching locations.",
+    "printLabel": "Print QR label",
+    "printLabels": "Print QR labels",
+    "inside": "Inside",
+    "items": "Items here",
+    "itemsCount": "{count, plural, =0 {No items yet} one {# item (including sub-locations)} other {# items (including sub-locations)}}",
+    "addHere": "Add item here",
+    "notFound": "This location could not be found.",
+    "breadcrumb": "Location path",
+    "emptyHere": "Nothing stored here yet."
   },
   "categoriesPage": {
     "title": "Categories & tags",
@@ -368,8 +387,16 @@
     "button": "Scan a QR code or barcode",
     "title": "Scan",
     "hint": "Point the camera at a QR code or barcode.",
-    "unsupported": "This browser cannot scan codes yet. Use Chrome on Android, or type a search instead.",
-    "denied": "Could not open the camera. Allow camera access and try again."
+    "unsupported": "The scanner could not start in this browser. Type the code below instead.",
+    "denied": "Could not open the camera. Allow camera access and try again.",
+    "barcodeTitle": "Scan barcode",
+    "barcodeHint": "Point the camera at the barcode on the packaging.",
+    "starting": "Opening camera…",
+    "manual": "Or type the code",
+    "manualPlaceholder": "e.g. 8934563138164",
+    "manualSubmit": "Use this code",
+    "noCamera": "No camera is available on this device. You can still type the code below.",
+    "openingItem": "Found in your inventory: {name}"
   },
   "shopping": {
     "title": "Shopping list",
@@ -494,5 +521,24 @@
     "title": "You are offline",
     "body": "This page cannot be loaded without a connection. Check your network and try again.",
     "retry": "Try again"
+  },
+  "labels": {
+    "title": "Print QR labels",
+    "subtitle": "Stick them on boxes, cabinets and drawers. Scan a label to see what is inside.",
+    "select": "Choose locations",
+    "selectAll": "Select all",
+    "selectNone": "Clear",
+    "size": "Label size",
+    "sizes": {
+      "small": "Small (3 per row)",
+      "large": "Large (2 per row)"
+    },
+    "showPath": "Show the full path",
+    "print": "Print {count, plural, one {# label} other {# labels}}",
+    "empty": "Choose at least one location to preview labels.",
+    "preview": "Preview",
+    "qrAlt": "QR code opening {name}",
+    "scanHint": "Scan to see what's inside",
+    "printTip": "Tip: print on A4 at 100% scale with “Fit to page” off. Sticker paper works well."
   }
 }

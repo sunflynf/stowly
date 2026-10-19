@@ -106,3 +106,16 @@
 @utility pb-safe {
   padding-bottom: env(safe-area-inset-bottom);
 }
+
+/* Printing (QR labels): plain white A4 page, app chrome hidden via print:hidden. */
+@media print {
+  @page {
+    size: A4;
+    /* 200 mm usable width: 3 × 63.5 mm or 2 × 99.1 mm labels per row. */
+    margin: 10mm 5mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+}

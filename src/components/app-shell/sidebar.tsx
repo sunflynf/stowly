@@ -43,7 +43,7 @@ export function Sidebar() {
   const counts = useNavCounts();
 
   return (
-    <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-border bg-card md:flex">
+    <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-border bg-card md:flex print:hidden">
       <Link href="/" className="flex items-center gap-3 px-5 pt-6 pb-6">
         <LogoMark />
         <span className="text-xl font-bold">{t("app.name")}</span>

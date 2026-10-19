@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
-import { ChevronRight, FolderPlus, MoreVertical, MoveRight, Pencil, Plus, Trash2 } from "lucide-react";
+import { ChevronRight, FolderPlus, MoreVertical, MoveRight, Pencil, Plus, QrCode, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/app-shell/page-header";
 import { unwrap, useErrorToast } from "@/components/items/use-item-mutations";
@@ -124,7 +124,7 @@ export function LocationsManager() {
             <span className="size-11 shrink-0" aria-hidden />
           )}
           <Link
-            href={`/items?location=${node.id}`}
+            href={`/locations/${node.id}`}
             className="flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-md px-1 hover:underline"
             aria-label={t("viewItems", { name: label })}
           >
@@ -146,6 +146,12 @@ export function LocationsManager() {
                 <Link href={`/items/new?location=${node.id}`}>
                   <Plus aria-hidden />
                   {tc("add")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/locations/labels?ids=${node.id}`}>
+                  <QrCode aria-hidden />
+                  {t("printLabel")}
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => open({ type: "rename", node })}>
@@ -174,16 +180,24 @@ export function LocationsManager() {
     dialog?.type === "move" ? flattenTree(tree).filter((n) => !n.path_ids.includes(dialog.node.id)) : [];
 
   const addRoom = (
-    <Button onClick={() => open({ type: "create", parent: null })}>
-      <Plus />
-      {t("addRoom")}
-    </Button>
+    <>
+      <Button variant="outline" asChild>
+        <Link href="/locations/labels">
+          <QrCode />
+          {t("printLabels")}
+        </Link>
+      </Button>
+      <Button onClick={() => open({ type: "create", parent: null })}>
+        <Plus />
+        {t("addRoom")}
+      </Button>
+    </>
   );
 
   return (
     <>
       <PageHeader title={t("title")} subtitle={t("subtitle")} actions={addRoom} />
-      <div className="mb-3 md:hidden">{addRoom}</div>
+      <div className="mb-3 flex flex-wrap gap-2 md:hidden">{addRoom}</div>
       <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
         {isPending ? (
           <div className="flex flex-col gap-2 p-4">

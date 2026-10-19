@@ -51,7 +51,7 @@ export function MobileTabBar() {
   return (
     <nav
       aria-label={t("mainMenu")}
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card pb-safe md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card pb-safe md:hidden print:hidden"
     >
       <div className="mx-auto flex max-w-lg items-stretch">
         {renderTab(tabs[0])}

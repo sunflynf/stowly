@@ -22,7 +22,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col">
           <OfflineBanner />
-          <main id="main" className="mx-auto w-full max-w-[1120px] flex-1 px-4 pt-4 pb-28 md:px-10 md:pt-9 md:pb-12">
+          <main id="main" className="mx-auto w-full max-w-[1120px] flex-1 px-4 pt-4 pb-28 md:px-10 md:pt-9 md:pb-12 print:max-w-none print:p-0">
             {children}
           </main>
         </div>
