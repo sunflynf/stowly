@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { runAlertDigest } from "@/lib/alerts/digest";
 import { adminClient, createTestUser, deleteTestUser, type TestUser } from "./helpers";
 
 let a: TestUser;
@@ -127,5 +128,30 @@ describe("alerts", () => {
     const { data: item } = await b.client.from("items").insert({ name: "B's item" }).select("id").single();
     const { error } = await a.client.from("maintenance_tasks").insert({ title: "x", interval_count: 1, interval_unit: "day", item_id: item!.id });
     expect(error).not.toBeNull();
+  });
+});
+
+describe("digest", () => {
+  it("includes due tasks once per person and threshold", async () => {
+    const t = await task({ title: "Kiểm tra bình chữa cháy", interval_count: 1, interval_unit: "year", start_date: day(-2) });
+    const preview = async () => (await runAlertDigest({ force: true, dryRun: true, userId: a.id }))[0].preview!;
+    expect((await preview()).email).toContain("Kiểm tra bình chữa cháy (maintenance_overdue)");
+
+    // Already sent for this due date: not sent again on that channel.
+    await adminClient().from("maintenance_notifications_log").insert({
+      user_id: a.id,
+      household_id: a.householdId,
+      task_id: t.id,
+      kind: "maintenance_overdue",
+      threshold_key: `${day(-2)}:over`,
+      channel: "email",
+    });
+    const after = await preview();
+    expect(after.email).not.toContain("Kiểm tra bình chữa cháy (maintenance_overdue)");
+    expect(after.push).toContain("Kiểm tra bình chữa cháy (maintenance_overdue)");
+
+    // Done: a new due date means a new reminder later; nothing is due now.
+    await a.client.rpc("complete_maintenance_task", { p_task_id: t.id });
+    expect((await preview()).push).not.toContain("Kiểm tra bình chữa cháy (maintenance_overdue)");
   });
 });
