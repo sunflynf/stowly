@@ -301,6 +301,11 @@ export function ItemDetailView({ id }: { id: string }) {
             {item.purchase_date && <InfoRow label={t("fields.purchaseDate")}>{fmtDate(item.purchase_date)}</InfoRow>}
             {item.purchase_price !== null && <InfoRow label={t("fields.purchasePrice")}>{currency(item.purchase_price)}</InfoRow>}
             {item.purchase_place && <InfoRow label={t("fields.purchasePlace")}>{item.purchase_place}</InfoRow>}
+            {item.barcode && (
+              <InfoRow label={t("fields.barcode")}>
+                <span className="font-mono tabular-nums">{item.barcode}</span>
+              </InfoRow>
+            )}
             {attrDefs.success &&
               attrDefs.data
                 .filter((d) => attrs[d.key])

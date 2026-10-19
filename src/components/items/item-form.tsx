@@ -20,6 +20,7 @@ import { CategoryChips } from "./category-chips";
 import { LocationPicker } from "./location-picker";
 import { ItemPhotoManager, PendingPhotoField, type ExistingPhoto } from "./photo-field";
 import { TagInput } from "./tag-input";
+import { useBarcodeAssist } from "./barcode-assist";
 import { useInvalidateItems } from "./use-item-mutations";
 
 interface ItemFormProps {
@@ -27,6 +28,8 @@ interface ItemFormProps {
   itemId?: string;
   initial?: Partial<ItemFormValues>;
   photos?: ExistingPhoto[];
+  /** Barcode handed over by the scanner (quick add). */
+  initialBarcode?: string;
 }
 
 function stepNumber(value: string, delta: number) {
@@ -34,7 +37,7 @@ function stepNumber(value: string, delta: number) {
   return String(Math.max(0, Math.round((n + delta) * 1000) / 1000));
 }
 
-export function ItemForm({ mode, itemId, initial, photos = [] }: ItemFormProps) {
+export function ItemForm({ mode, itemId, initial, photos = [], initialBarcode }: ItemFormProps) {
   const t = useTranslations("item");
   const tc = useTranslations();
   const vm = useValidationMessage();
@@ -55,6 +58,7 @@ export function ItemForm({ mode, itemId, initial, photos = [] }: ItemFormProps) 
   const categoryId = useWatch({ control, name: "category_id" });
   const currentName = useWatch({ control, name: "name" });
   const category = categories.find((c) => c.id === categoryId);
+  const barcode = useBarcodeAssist(form, categories, initialBarcode);
 
   const submit = (addAnother: boolean) =>
     form.handleSubmit((values) => {
@@ -87,6 +91,7 @@ export function ItemForm({ mode, itemId, initial, photos = [] }: ItemFormProps) 
         if (addAnother) {
           // Keep category and location for fast batch entry.
           form.reset({ ...emptyItemForm, category_id: values.category_id, location_id: values.location_id });
+          barcode.reset();
           setFiles([]);
           window.scrollTo({ top: 0, behavior: "smooth" });
           form.setFocus("name");
@@ -114,6 +119,7 @@ export function ItemForm({ mode, itemId, initial, photos = [] }: ItemFormProps) 
     place: `${uid}-place`,
     tags: `${uid}-tags`,
     notes: `${uid}-notes`,
+    barcode: `${uid}-barcode`,
   };
 
   const card = "flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-4 md:p-5";
@@ -139,15 +145,19 @@ export function ItemForm({ mode, itemId, initial, photos = [] }: ItemFormProps) 
       </section>
 
       <Field label={t("fields.name")} htmlFor={ids.name} error={err("name")}>
-        <Input
-          {...describedBy(ids.name, err("name"))}
-          placeholder={t("fields.namePlaceholder")}
-          autoComplete="off"
-          maxLength={200}
-          enterKeyHint="next"
-          {...register("name")}
-        />
+        <div className="flex gap-2">
+          <Input
+            {...describedBy(ids.name, err("name"))}
+            placeholder={t("fields.namePlaceholder")}
+            autoComplete="off"
+            maxLength={200}
+            enterKeyHint="next"
+            {...register("name")}
+          />
+          {barcode.scanButton}
+        </div>
       </Field>
+      {barcode.notice}
 
       <div className="flex flex-col gap-2">
         <span id={ids.categoryLabel} className="text-sm font-semibold text-foreground/90">
@@ -303,6 +313,15 @@ export function ItemForm({ mode, itemId, initial, photos = [] }: ItemFormProps) 
                   placeholder={t("fields.unitPlaceholder")}
                   {...describedBy(ids.unit, err("unit"))}
                   {...register("unit")}
+                />
+              </Field>
+              <Field label={t("fields.barcode")} htmlFor={ids.barcode} error={err("barcode")} hint={t("fields.barcodeHint")}>
+                <Input
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={64}
+                  {...describedBy(ids.barcode, err("barcode"), true)}
+                  {...register("barcode")}
                 />
               </Field>
               {category?.attributes.map((attr) => {

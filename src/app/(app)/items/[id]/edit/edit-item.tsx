@@ -30,6 +30,7 @@ function toFormValues(item: ItemDetail): ItemFormValues {
     replace_after_months: str(item.replace_after_months),
     last_replaced_at: item.last_replaced_at ?? "",
     notes: item.notes ?? "",
+    barcode: item.barcode ?? "",
     attributes: Object.fromEntries(Object.entries(attrs).map(([k, v]) => [k, String(v ?? "")])),
     tags: item.tags.map((tag) => tag.name),
   };

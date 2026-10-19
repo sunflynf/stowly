@@ -11,10 +11,11 @@ export function QuickAdd() {
   // Allows prefilled links, e.g. from a location: /items/new?location=<id>
   const location = params.get("location") ?? "";
   const name = params.get("name") ?? "";
+  const barcode = params.get("barcode") ?? undefined;
   return (
     <div className="mx-auto max-w-2xl">
       <PageHeader title={t("newTitle")} back />
-      <ItemForm mode="quick" initial={{ location_id: location, name }} />
+      <ItemForm mode="quick" initial={{ location_id: location, name }} initialBarcode={barcode} />
     </div>
   );
 }

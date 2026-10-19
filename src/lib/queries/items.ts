@@ -91,3 +91,16 @@ export function useShoppingList() {
   });
 }
 export type ShoppingEntry = NonNullable<ReturnType<typeof useShoppingList>["data"]>[number];
+
+/** An active item with this barcode, if the user already owns one. */
+export async function findItemByBarcode(code: string) {
+  const { data } = await getSupabaseBrowser()
+    .from("items")
+    .select("id, name, quantity, unit")
+    .eq("barcode", code)
+    .is("archived_at", null)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return data;
+}

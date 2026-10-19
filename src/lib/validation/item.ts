@@ -21,6 +21,10 @@ export const itemInputSchema = z.object({
   replace_after_months: optionalInt(1, 600),
   last_replaced_at: optionalDate,
   notes: optionalText(5000),
+  barcode: z.preprocess(
+    (v) => (typeof v === "string" ? v.trim().replace(/\s+/g, "") || null : (v ?? null)),
+    z.string().regex(/^[0-9A-Za-z-]{4,64}$/, "invalid").nullable(),
+  ),
   attributes: z
     .record(z.string().regex(/^[a-z0-9_]{1,40}$/), z.string().max(500, "tooLong"))
     .transform((attrs) => Object.fromEntries(Object.entries(attrs).filter(([, v]) => v.trim() !== "").map(([k, v]) => [k, v.trim()])))
@@ -59,6 +63,7 @@ export interface ItemFormValues {
   replace_after_months: string;
   last_replaced_at: string;
   notes: string;
+  barcode: string;
   attributes: Record<string, string>;
   tags: string[];
 }
@@ -80,6 +85,7 @@ export const emptyItemForm: ItemFormValues = {
   replace_after_months: "",
   last_replaced_at: "",
   notes: "",
+  barcode: "",
   attributes: {},
   tags: [],
 };
