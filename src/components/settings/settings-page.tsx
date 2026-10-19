@@ -226,6 +226,15 @@ export function SettingsPage() {
                 }}
               />
             </Field>
+            <Field label={t("alerts.unusedAfter")} htmlFor="unused">
+              <NativeSelect id="unused" value={profile.unused_after_days} onChange={(e) => save.mutate({ unused_after_days: Number(e.target.value) })}>
+                {[90, 180, 365, 730, 1095].map((d) => (
+                  <option key={d} value={d}>
+                    {t("alerts.unusedOption", { days: d })}
+                  </option>
+                ))}
+              </NativeSelect>
+            </Field>
             <Field label={t("alerts.digestHour")} htmlFor="hour">
               <NativeSelect id="hour" value={profile.digest_hour} onChange={(e) => save.mutate({ digest_hour: Number(e.target.value) })}>
                 {Array.from({ length: 24 }, (_, h) => (

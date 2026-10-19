@@ -106,6 +106,8 @@ Useful local URLs:
 | **Barcode scan** | Quick add → the scan button next to the name. If the camera is unavailable, type a code into the same dialog. A known code offers **+1 to stock**; an unknown code fills the name from Open Food Facts when it is reachable, and the barcode is saved and searchable. The dashboard scan button opens labels and items you already own. |
 | **Item groups** | **Nhóm đồ** → create "Dây sạc" with threshold 5, then add items (or pick the group in the item form). The group page shows the combined total vs threshold; when the total is low, the group appears on the dashboard low-stock panel, the Alerts page (snooze / add to shopping) and the daily digest. Buying a group shopping entry restocks the member updated most recently. |
 | **CSV import** | **Settings → Nhập từ CSV**, or `/import`: drop a CSV (Excel with semicolons, Vietnamese headers and dd/mm/yyyy dates all work), check the column matching and the preview, choose what happens to duplicates, then import. Re-importing an export (`/api/export/items`) updates items by `id`. "Tải tệp mẫu" downloads a template. |
+| **Spending** | Sidebar → **Chi tiêu**: pick a period. You get totals vs the previous period, the monthly chart (hover/focus a bar, or switch to the table), spending by category and by room, and the most expensive items. Purchases without a price or date are counted in a note. |
+| **Clean-up ideas** | Sidebar → **Gợi ý dọn dẹp**, also linked from the dashboard. Four tabs: unused for a long time, worn, broken, duplicates. Actions: give away, archive, keep, snooze 30 days, and merge duplicates into the older item; undo is available where safe. The "unused" threshold is in Settings. `pnpm seed:demo` backdates history so there is something to see. |
 | **M6** PWA, performance, E2E | `pnpm build && pnpm start`, then install from the browser; the offline page is served without a network. `pnpm seed:demo --count 5000 && pnpm bench:search`, then `pnpm test:e2e`. |
 
 > `pnpm install` runs `scripts/copy-zxing-wasm.mjs`, which places the barcode decoder in `public/vendor/` (git-ignored).
@@ -205,6 +207,19 @@ Defaults chosen where the brief was open, or where the environment forced a choi
       - Each existing item is matched by at most one row, so identical lines stay separate items.
     - **Updates:** only the columns present in the file are written, and tag links change only where they differ.
     - **Speed** (local stack, 5,000 rows): about 13 s to create, about 40 s to update.
+
+19. **Spending** comes from `spending_stats()`.
+    - `purchase_price` is treated as the amount paid for the item record, not per unit.
+    - Purchases are counted by `purchase_date`, in your timezone.
+    - Purchases missing a price or a date are excluded but reported, so the totals never quietly mislead.
+    - "Previous period" means the same number of days right before the selected range.
+    - The charts are single-series in the brand teal (no categorical palette). Bars are focusable and have tooltips; only the peak bar is labelled; a table view is available.
+20. **Clean-up ideas** come from `unused_suggestions()` and `unused_suggestion_counts()`.
+    - **What "used" means:** a quantity change, a move or a condition change (rows in `item_events`). Editing a name or a note does not count. Items tracked by an expiry date are left to expiry alerts.
+    - **Duplicates:** same name, accent- and case-insensitive, in the same location. "Merge" adds the quantities to the oldest entry (recorded in its history) and archives the others.
+    - **Give away:** sets the condition to "given away" and archives the item, so it stays in history and spending.
+    - **Keep:** hides the suggestion. For worn, broken and duplicate items that is permanent; for an unused item it lasts one more idle period.
+    - **Paging:** results come per reason, 30 at a time, because PostgREST caps a response at 1,000 rows. The same cap was found and fixed for the alerts list and the digest, which now page through all rows.
 
 ### Dependencies added (and why)
 

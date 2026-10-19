@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormatter, useNow, useTimeZone, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
-import { Boxes, Plus } from "lucide-react";
+import { Boxes, ChevronRight, Plus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { AlertLine } from "@/components/alerts/alert-line";
 import { MobileMenu } from "@/components/app-shell/mobile-menu";
@@ -20,6 +20,7 @@ import { useFormats } from "@/lib/hooks/use-format";
 import { useIsDesktop } from "@/lib/hooks/use-media-query";
 import { mostUrgentPerItem, STOCK_KINDS, useAlerts } from "@/lib/queries/alerts";
 import { useGroupAlerts } from "@/lib/queries/groups";
+import { useSuggestionCounts } from "@/lib/queries/insights";
 import { usePhotoUrls } from "@/lib/queries/items";
 import { useCategoryCounts, useDashboardStats } from "@/lib/queries/stats";
 import { buildLocationTree, useCategories, useLabels, useLocations } from "@/lib/queries/taxonomy";
@@ -131,6 +132,7 @@ export function Dashboard() {
   const tn = useTranslations("nav");
   const ti = useTranslations("items");
   const tc = useTranslations("common");
+  const ts = useTranslations("suggestions");
   const ta = useTranslations("app");
   const format = useFormatter();
   const f = useFormats();
@@ -151,6 +153,8 @@ export function Dashboard() {
   const active = useMemo(() => (alerts ?? []).filter((a) => !a.snoozed), [alerts]);
   const attention = useMemo(() => mostUrgentPerItem(active.filter((a) => !STOCK_KINDS.includes(a.kind))), [active]);
   const { data: groupAlerts = [] } = useGroupAlerts();
+  const { data: suggestionCounts } = useSuggestionCounts();
+  const suggestionCount = suggestionCounts ? Object.values(suggestionCounts).reduce((a, b) => a + b, 0) : 0;
   // Items and groups share one panel, most severe first.
   const lowStock = useMemo<StockRow[]>(() => {
     const items = mostUrgentPerItem(active.filter((a) => STOCK_KINDS.includes(a.kind))).map((a) => ({
@@ -355,6 +359,22 @@ export function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {suggestionCount > 0 && (
+        <Link
+          href="/suggestions"
+          className="mt-5 flex min-h-14 items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-card px-5 py-3 hover:border-input"
+        >
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-accent text-accent-foreground">
+            <Sparkles className="size-5" aria-hidden />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-semibold">{ts("dashboard", { count: suggestionCount })}</span>
+            <span className="block text-sm text-muted-foreground">{ts("dashboardHint")}</span>
+          </span>
+          <ChevronRight className="size-5 text-muted-foreground" aria-hidden />
+        </Link>
+      )}
 
       {categoryBars.rows.length > 0 && (
         <Card className="mt-5">

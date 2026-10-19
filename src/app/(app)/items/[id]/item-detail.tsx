@@ -24,6 +24,9 @@ import { alertStatus, itemStatus } from "@/lib/status";
 import { attributeDefsSchema } from "@/lib/validation/item";
 import { cn } from "@/lib/utils";
 
+// Notes written by the app itself (vs. typed by the user) are translated.
+const SYSTEM_NOTES = ["shopping", "merge", "barcode", "demo"] as const;
+
 function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between gap-4 border-b border-border py-3 last:border-0">
@@ -102,8 +105,12 @@ function History({ id }: { id: string }) {
               <li key={e.id} className="flex items-baseline justify-between gap-3 border-b border-border py-2.5 last:border-0">
                 <span className="text-[15px]">
                   {text}
-                  {e.note && e.note !== "shopping" && <span className="text-muted-foreground"> · {e.note}</span>}
-                  {e.note === "shopping" && <span className="text-muted-foreground"> · {t("shoppingNote")}</span>}
+                  {e.note && (
+                    <span className="text-muted-foreground">
+                      {" · "}
+                      {SYSTEM_NOTES.includes(e.note as (typeof SYSTEM_NOTES)[number]) ? t(`eventNotes.${e.note as (typeof SYSTEM_NOTES)[number]}`) : e.note}
+                    </span>
+                  )}
                 </span>
                 <time dateTime={e.created_at} className="shrink-0 text-xs text-muted-foreground">
                   {format.dateTime(new Date(e.created_at), "dateTime")}

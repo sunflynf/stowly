@@ -1,6 +1,6 @@
 "use client";
 
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
 import { qk } from "./keys";
@@ -37,19 +37,42 @@ export function useSpending(range: { from: string | null; to: string }) {
   });
 }
 
-export function useSuggestions() {
+export type SuggestionReason = "idle" | "worn" | "broken" | "duplicate";
+const SUGGESTION_PAGE = 30;
+
+export function useSuggestionCounts() {
   return useQuery({
-    queryKey: [...qk.items, "suggestions"],
+    queryKey: [...qk.items, "suggestions", "counts"],
     queryFn: async () => {
-      const { data, error } = await getSupabaseBrowser().rpc("unused_suggestions");
+      const { data, error } = await getSupabaseBrowser().rpc("unused_suggestion_counts");
+      if (error) throw error;
+      const out: Record<SuggestionReason, number> = { idle: 0, worn: 0, broken: 0, duplicate: 0 };
+      data.forEach((r) => (out[r.reason as SuggestionReason] = Number(r.total)));
+      return out;
+    },
+  });
+}
+
+/** One reason's suggestions, paged (there can be thousands). */
+export function useSuggestions(reason: SuggestionReason) {
+  return useInfiniteQuery({
+    queryKey: [...qk.items, "suggestions", reason],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }) => {
+      const { data, error } = await getSupabaseBrowser().rpc("unused_suggestions", {
+        p_reason: reason,
+        p_limit: SUGGESTION_PAGE,
+        p_offset: pageParam,
+      });
       if (error) throw error;
       return data.map((r) => ({
         ...r,
         quantity: Number(r.quantity),
         purchase_price: r.purchase_price === null ? null : Number(r.purchase_price),
-        reason: r.reason as "idle" | "worn" | "broken" | "duplicate",
+        reason: r.reason as SuggestionReason,
       }));
     },
+    getNextPageParam: (last, pages) => (last.length === SUGGESTION_PAGE ? pages.length * SUGGESTION_PAGE : undefined),
   });
 }
-export type Suggestion = NonNullable<ReturnType<typeof useSuggestions>["data"]>[number];
+export type Suggestion = NonNullable<ReturnType<typeof useSuggestions>["data"]>["pages"][number][number];

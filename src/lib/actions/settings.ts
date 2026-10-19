@@ -21,6 +21,7 @@ const profileSchema = z
     notify_email: z.boolean(),
     notify_push: z.boolean(),
     digest_hour: z.number().int().min(0).max(23),
+    unused_after_days: z.number().int().min(30).max(3650),
   })
   .partial();
 
