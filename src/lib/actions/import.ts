@@ -6,7 +6,7 @@ import { normalizeText } from "@/lib/text";
 import type { Database } from "@/lib/database.types";
 import type { ItemRow } from "@/lib/types";
 import { emptyItemForm, itemInputSchema, type ItemFormValues, type ItemInput } from "@/lib/validation/item";
-import { requireUser, type ServerSupabase } from "./auth-guard";
+import { requireEditor, type ServerSupabase } from "./auth-guard";
 import { fail, ok, validationFail, type ActionResult } from "./result";
 
 const inputSchema = z.object({
@@ -141,8 +141,8 @@ const FORM_KEYS = [
  * present in the file. Missing categories, location paths, groups and tags are created.
  */
 export async function importItemsAction(input: unknown): Promise<ActionResult<{ results: ImportRowResult[] }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = inputSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
   const { rows, mode } = parsed.data;

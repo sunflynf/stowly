@@ -4,7 +4,7 @@ import { z } from "zod";
 import { addDays, todayIn } from "@/lib/dates";
 import { normalizeText } from "@/lib/text";
 import { uuid } from "@/lib/validation/common";
-import { requireUser } from "./auth-guard";
+import { requireEditor } from "./auth-guard";
 import { fail, mapDbError, ok, validationFail, type ActionResult } from "./result";
 
 export type SuggestionReason = "idle" | "worn" | "broken" | "duplicate";
@@ -18,8 +18,8 @@ const dismissSchema = z.object({
 });
 
 export async function dismissSuggestionAction(input: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = dismissSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
   const { itemId, reason, mode } = parsed.data;
@@ -37,8 +37,8 @@ export async function dismissSuggestionAction(input: unknown): Promise<ActionRes
 }
 
 export async function undoDismissAction(input: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = z.object({ itemId: uuid, reason: reasonSchema }).safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
   const { error } = await auth.supabase
@@ -52,8 +52,8 @@ export async function undoDismissAction(input: unknown): Promise<ActionResult> {
 
 /** Gives an item away: condition "given_away" (kept in history, out of the active inventory). */
 export async function giveAwayAction(itemId: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(itemId);
   if (!parsedId.success) return validationFail(parsedId.error);
   const { data, error } = await auth.supabase
@@ -71,8 +71,8 @@ export async function giveAwayAction(itemId: unknown): Promise<ActionResult> {
  * quantities are added to it (logged as history) and the others are archived.
  */
 export async function mergeDuplicatesAction(input: unknown): Promise<ActionResult<{ merged: number }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = z.object({ primaryId: uuid, duplicateIds: z.array(uuid).min(1).max(50) }).safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
   const { primaryId, duplicateIds } = parsed.data;

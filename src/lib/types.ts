@@ -14,6 +14,7 @@ export type ProfileRow = Row<"profiles">;
 
 export type ItemCondition = Database["public"]["Enums"]["item_condition"];
 export type AlertKind = Database["public"]["Enums"]["alert_kind"];
+export type HouseholdRole = Database["public"]["Enums"]["household_role"];
 
 export const ITEM_CONDITIONS = ["new", "good", "worn", "broken", "given_away"] as const satisfies readonly ItemCondition[];
 export const ALERT_KINDS = [

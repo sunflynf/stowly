@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { optionalText, requiredName, uuid } from "@/lib/validation/common";
-import { requireUser } from "./auth-guard";
+import { requireEditor } from "./auth-guard";
 import { fail, mapDbError, ok, validationFail, type ActionResult } from "./result";
 
 const createSchema = z.object({
@@ -17,8 +17,8 @@ const updateSchema = z.object({
 });
 
 export async function createLocationAction(input: unknown): Promise<ActionResult<{ id: string }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = createSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
 
@@ -37,8 +37,8 @@ export async function createLocationAction(input: unknown): Promise<ActionResult
 }
 
 export async function updateLocationAction(id: unknown, input: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   const parsed = updateSchema.safeParse(input);
   if (!parsedId.success) return validationFail(parsedId.error);
@@ -53,8 +53,8 @@ export async function updateLocationAction(id: unknown, input: unknown): Promise
 
 /** Deletes an empty location (no items, no sub-locations). */
 export async function deleteLocationAction(id: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   if (!parsedId.success) return validationFail(parsedId.error);
 

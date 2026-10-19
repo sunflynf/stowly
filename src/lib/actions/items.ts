@@ -4,7 +4,7 @@ import { z } from "zod";
 import { adjustQuantitySchema, itemInputSchema, photoInputSchema, type ItemInput } from "@/lib/validation/item";
 import { uuid } from "@/lib/validation/common";
 import { syncTags } from "@/lib/server/tags";
-import { requireUser } from "./auth-guard";
+import { requireEditor } from "./auth-guard";
 import { fail, mapDbError, ok, validationFail, type ActionResult } from "./result";
 
 const PHOTO_BUCKET = "item-photos";
@@ -15,8 +15,8 @@ function toRow(input: ItemInput) {
 }
 
 export async function createItemAction(input: unknown): Promise<ActionResult<{ id: string }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = itemInputSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
 
@@ -30,8 +30,8 @@ export async function createItemAction(input: unknown): Promise<ActionResult<{ i
 }
 
 export async function updateItemAction(id: unknown, input: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   const parsed = itemInputSchema.safeParse(input);
   if (!parsedId.success) return validationFail(parsedId.error);
@@ -61,8 +61,8 @@ const patchSchema = z
 
 /** Small partial updates used by one-tap actions (move, mark replaced, archive…). */
 export async function patchItemAction(id: unknown, input: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   const parsed = patchSchema.safeParse(input);
   if (!parsedId.success) return validationFail(parsedId.error);
@@ -81,8 +81,8 @@ export async function patchItemAction(id: unknown, input: unknown): Promise<Acti
 }
 
 export async function deleteItemAction(id: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   if (!parsedId.success) return validationFail(parsedId.error);
 
@@ -99,8 +99,8 @@ export async function deleteItemAction(id: unknown): Promise<ActionResult> {
 }
 
 export async function adjustQuantityAction(input: unknown): Promise<ActionResult<{ quantity: number }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = adjustQuantitySchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
 
@@ -113,14 +113,14 @@ export async function adjustQuantityAction(input: unknown): Promise<ActionResult
   return ok({ quantity: Number(data) });
 }
 
-/** Registers a photo the client already uploaded to Storage (under its own folder). */
+/** Registers a photo the client already uploaded to Storage (under the household folder). */
 export async function addPhotoAction(input: unknown): Promise<ActionResult<{ id: string }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = photoInputSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
   const { itemId, storagePath, thumbPath } = parsed.data;
-  const prefix = `${auth.userId}/${itemId}/`;
+  const prefix = `${auth.householdId}/${itemId}/`;
   const validName = /^[\w-]+\.(webp|jpe?g|png)$/;
   if (
     !storagePath.startsWith(prefix) ||
@@ -148,8 +148,8 @@ export async function addPhotoAction(input: unknown): Promise<ActionResult<{ id:
 }
 
 export async function deletePhotoAction(photoId: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(photoId);
   if (!parsedId.success) return validationFail(parsedId.error);
 
@@ -167,8 +167,8 @@ export async function deletePhotoAction(photoId: unknown): Promise<ActionResult>
 
 /** Moves a photo to the front (it becomes the thumbnail). */
 export async function makeCoverPhotoAction(photoId: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(photoId);
   if (!parsedId.success) return validationFail(parsedId.error);
 
