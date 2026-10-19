@@ -9,6 +9,7 @@ import {
   MapPin,
   Package,
   Settings,
+  ShieldCheck,
   ShoppingCart,
   Tag,
   Wrench,
@@ -64,6 +65,7 @@ export const secondaryNav: NavItem[] = [
   { href: "/groups", label: "groups", icon: Boxes },
   { href: "/shopping", label: "shopping", icon: ShoppingCart },
   { href: "/stats", label: "stats", icon: ChartColumn },
+  { href: "/reports/insurance", label: "insurance", icon: ShieldCheck },
   { href: "/suggestions", label: "suggestions", icon: Sparkles },
   { href: "/settings", label: "settings", icon: Settings },
 ];
