@@ -50,8 +50,8 @@ Useful local URLs:
 | `pnpm typecheck` | `next typegen` + `tsc --noEmit` |
 | `pnpm lint:i18n` | Fails if a message key exists in one locale but not the other |
 | `pnpm test` | Vitest unit tests. Covers i18n parity (keys and ICU arguments), validation, status/alert logic and digest rendering. |
-| `pnpm test:db` | Integration tests against local Supabase: RLS isolation between two users, storage policies, signup seeding, quantity RPC, search, and households: every shared table × every role (owner, editor, viewer, outsider, removed member), invites, roles, leaving, per-person logs and settings; maintenance due dates, completion, alerts, snooze and digest de-duplication |
-| `pnpm test:e2e` | Playwright tests:<br>• sign-up + language switch<br>• quick add with photo + stepper + history<br>• search and filters<br>• dashboard → shopping list → restock + snooze<br>• QR labels and the `/l/<id>` link<br>• barcode duplicate check + manual entry<br>• **real camera scan** (Chromium's fake camera plays a QR video into the ZXing decoder)<br>• item groups (created from the item form)<br>• CSV import (Vietnamese file) + export round-trip<br>• household invite → join as viewer (read-only) → removed by the owner<br>• maintenance schedule on an item → due on dashboard/Alerts → mark done |
+| `pnpm test:db` | Integration tests against local Supabase: RLS isolation between two users, storage policies, signup seeding, quantity RPC, search, and households: every shared table × every role (owner, editor, viewer, outsider, removed member), invites, roles, leaving, per-person logs and settings; maintenance due dates, completion, alerts, snooze and digest de-duplication; document storage (type, 10 MB, folder, per-item limit) and `insurance_report()` filters and totals |
+| `pnpm test:e2e` | Playwright tests:<br>• sign-up + language switch<br>• quick add with photo + stepper + history<br>• search and filters<br>• dashboard → shopping list → restock + snooze<br>• QR labels and the `/l/<id>` link<br>• barcode duplicate check + manual entry<br>• **real camera scan** (Chromium's fake camera plays a QR video into the ZXing decoder)<br>• item groups (created from the item form)<br>• CSV import (Vietnamese file) + export round-trip<br>• household invite → join as viewer (read-only) → removed by the owner<br>• maintenance schedule on an item → due on dashboard/Alerts → mark done<br>• warranty PDF upload + viewer, Claim warranty view, insurance report filters/total, backup lists documents |
 | `pnpm bench:search` | Search latency against the seeded account, and as each `demo-member-N` of the same household when present (target p95 < 200 ms) |
 | `pnpm db:reset` / `pnpm db:types` | Re-apply migrations / regenerate `src/lib/database.types.ts` |
 | `pnpm vapid` | Generate VAPID keys for web push |
@@ -112,6 +112,7 @@ Useful local URLs:
 | **Clean-up ideas** | Sidebar → **Gợi ý dọn dẹp**, also linked from the dashboard. Four tabs: unused for a long time, worn, broken, duplicates. Actions: give away, archive, keep, snooze 30 days, and merge duplicates into the older item; undo is available where safe. The "unused" threshold is in Settings. `pnpm seed:demo` backdates history so there is something to see. |
 | **Households** | Settings → **Thành viên**: name the household, set your display name, invite an email as Biên tập/Chỉ xem (without `RESEND_API_KEY` the link is shown to copy). Open the link in another browser: sign up or sign in with that email, then **Tham gia**. A viewer sees a "Chỉ xem" banner and no add/edit controls; an editor can change items. The owner changes roles and removes members; anyone can **Rời nhà này** except the last owner. Item history shows who made each change; switch households from the same section. `pnpm test:db` (role matrix), `pnpm seed:demo --count 5000 --members 3 && pnpm bench:search`. |
 | **Maintenance** | Sidebar → **Bảo trì** → **Thêm lịch bảo trì**: "Vệ sinh lưới lọc máy lạnh", every 3 months, optionally a first due date and an item (also from an item's page → **Thêm lịch**). Tasks due within your lead days (Settings → Cảnh báo, default 7) or overdue appear on the dashboard ("Bảo trì đến hạn"), on Alerts → **Bảo trì** and in the daily digest. **Đã làm** records the date (today by default) and a note in the task history and the item history, and moves the next due date; **Hoãn 7 ngày** works like other alerts. `pnpm seed:demo` adds four sample tasks. |
+| **Documents & insurance** | Item page → **Tài liệu**: choose Phiếu bảo hành / Hoá đơn / Sách hướng dẫn, then **Tải tài liệu lên** (PDF, JPG, PNG or WebP, ≤ 10 MB). Tap a document to view it (PDF in a frame, images inline) or **Tải xuống**. Items with a warranty date show **Yêu cầu bảo hành** next to it: purchase date, warranty end, shop, serial, brand/model, price, photos and documents on one printable page. Sidebar → **Báo cáo bảo hiểm**: filter by minimum value, category and room; **In / Lưu PDF** prints an A4 list with photos, price, date, serial/model and the total. **Settings → Sao lưu toàn bộ (JSON)** includes `item_documents` with their storage paths. |
 | **M6** PWA, performance, E2E | `pnpm build && pnpm start`, then install from the browser; the offline page is served without a network. `pnpm seed:demo --count 5000 && pnpm bench:search`, then `pnpm test:e2e`. |
 
 > `pnpm install` runs `scripts/copy-zxing-wasm.mjs`, which places the barcode decoder in `public/vendor/` (git-ignored).
@@ -151,6 +152,10 @@ Measured on the local stack with 5,000 items (end-to-end via PostgREST):
   - Stored in a private `item-photos` bucket under `<household_id>/<item_id>/`. Members read, owners and editors upload and delete.
   - Resized in the browser to 1600 px plus a 320 px thumbnail (WebP, with JPEG fallback).
   - Shown via signed URLs; at most 5 per item, enforced by a trigger.
+- **Documents.**
+  - Stored in a private `item-documents` bucket under `<household_id>/<item_id>/`, with the same rules as photos (members read, owners and editors write). The bucket itself only accepts PDF/JPEG/PNG/WebP up to 10 MB.
+  - The browser uploads the file; `addDocumentAction` then registers it using the type and size read back from Storage, not the values the client claims. A row check ties `storage_path` to its item's folder; at most 20 per item.
+  - Viewed and downloaded through 10-minute signed URLs (downloads keep the original file name).
 
 ---
 
@@ -251,6 +256,15 @@ Defaults chosen where the brief was open, or where the environment forced a choi
     - **Snooze and history are shared** by the household; the lead days are per person, like the other alert settings.
     - **Items:** a task linked to an item is deleted with the item; marking it done also adds a "Đã bảo trì" event to the item's history. Tasks without an item are standalone.
     - **Enum values** for the new alert kinds live in their own migration, because Postgres cannot use a new enum value in the transaction that adds it.
+
+23. **Documents and insurance report.**
+    - **Accepted files:** PDF, JPEG, PNG and WebP. HEIC is not accepted, because most browsers can't display it; iPhones convert photos to JPEG when uploading through the browser. A document keeps its original file name and a type (warranty card, invoice, manual, other), chosen when uploading.
+    - **Deleting** a document or its item also deletes the stored file.
+    - **Claim warranty** shows "Chưa ghi" for missing facts rather than hiding them, so you can see what the shop may ask for. Serial, brand and model come from the item's attributes (`serial`, `brand`, `model`, which the Electronics category has by default).
+    - **Insurance report** lists active items that have a purchase price, most valuable first. Items in the filter without a price are counted in a note, not listed (as in Spending). The room filter includes everything inside the chosen place. The minimum value applies to `purchase_price` (the price paid for the item record). Up to 2,000 rows are printed; the total always covers all matches.
+    - **Printing:** the page uses the existing A4 `@page` rules. Filters, navigation and buttons are hidden in print, and the total is a normal last row so it isn't repeated on every page. "Save as PDF" in the print dialog produces the PDF; no PDF library is used.
+    - **Backup:** `item_documents` rows (with `storage_path`) are part of the JSON export, like photos.
+    - No new dependencies.
 
 ### Dependencies added (and why)
 
