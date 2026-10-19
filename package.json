@@ -17,7 +17,8 @@
     "seed:demo": "tsx scripts/seed-demo.ts",
     "vapid": "web-push generate-vapid-keys",
     "lint:i18n": "node scripts/check-i18n.mjs",
-    "test:db": "vitest run --config vitest.integration.config.ts"
+    "test:db": "vitest run --config vitest.integration.config.ts",
+    "bench:search": "tsx scripts/bench-search.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.2",

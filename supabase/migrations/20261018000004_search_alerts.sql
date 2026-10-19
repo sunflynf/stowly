@@ -9,9 +9,9 @@ create or replace function public.user_today(p_timezone text)
 returns date
 language sql
 stable
-set search_path = ''
+-- Inlinable (no SET clause); fully qualified.
 as $$
-  select (now() at time zone coalesce(p_timezone, 'Asia/Ho_Chi_Minh'))::date
+  select (pg_catalog.now() at time zone coalesce(p_timezone, 'Asia/Ho_Chi_Minh'))::date
 $$;
 
 -- Every alert currently raised by one item. Used by the alerts view, search
@@ -28,7 +28,8 @@ create or replace function public.compute_item_alerts(
 returns table (kind public.alert_kind, severity smallint, due_date date, days_left integer, threshold_key text)
 language sql
 stable
-set search_path = ''
+-- No "set search_path" here on purpose: it would stop Postgres from inlining this
+-- function into the item_alerts view (5x slower). All names are schema-qualified.
 as $$
   with base as (
     select (p_item).* where (p_item).archived_at is null and (p_item).condition <> 'given_away'
@@ -102,14 +103,23 @@ select
   a.due_date,
   a.days_left,
   a.threshold_key,
-  (s.until is not null and s.until >= public.user_today(p.timezone)) as snoozed,
+  (s.until is not null and s.until >= d.today) as snoozed,
   s.until as snoozed_until,
   (select ph.thumb_path from public.item_photos ph where ph.item_id = i.id order by ph.sort_order, ph.created_at limit 1) as thumb_path
 from public.items i
 join public.profiles p on p.id = i.user_id
 left join public.locations l on l.id = i.location_id
-cross join lateral public.compute_item_alerts(i, public.user_today(p.timezone), p.expiry_lead_days, p.warranty_lead_days) a
-left join public.alert_snoozes s on s.item_id = i.id and s.kind = a.kind;
+cross join lateral (select public.user_today(p.timezone) as today) d
+cross join lateral public.compute_item_alerts(i, d.today, p.expiry_lead_days, p.warranty_lead_days) a
+left join public.alert_snoozes s on s.item_id = i.id and s.kind = a.kind
+-- Cheap necessary conditions first; compute_item_alerts() decides exactly.
+where i.archived_at is null
+  and i.condition <> 'given_away'
+  and (i.expiry_date <= d.today + 366
+       or (i.min_quantity is not null and i.quantity <= i.min_quantity)
+       or i.warranty_until between d.today and d.today + 366
+       or i.replace_after_months is not null
+       or i.attributes ? 'lent_to');
 
 grant select on public.item_alerts to authenticated;
 
@@ -277,6 +287,16 @@ begin
       and (p_location_id is null or exists (
             select 1 from public.locations l
             where l.id = i.location_id and p_location_id = any (l.path_ids)))
+      -- Cheap necessary conditions for the requested alert states, so the exact
+      -- (more expensive) compute_item_alerts() only runs on candidates.
+      and (p_states is null
+           or (('expired' = any (p_states) or 'expiring_soon' = any (p_states))
+               and i.expiry_date <= v_today + 366)
+           or (('low_stock' = any (p_states) or 'out_of_stock' = any (p_states))
+               and i.min_quantity is not null and i.quantity <= i.min_quantity)
+           or ('warranty_ending' = any (p_states) and i.warranty_until between v_today and v_today + 366)
+           or ('replace_due' = any (p_states) and i.replace_after_months is not null)
+           or ('lent_overdue' = any (p_states) and i.attributes ? 'lent_to'))
       and (p_tag_ids is null or exists (
             select 1 from public.item_tags it where it.item_id = i.id and it.tag_id = any (p_tag_ids)))
   ),
