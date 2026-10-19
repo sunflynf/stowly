@@ -267,14 +267,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "created_at": string,"currency": string,"digest_hour": number,"expiry_lead_days": (number)[],"id": string,"locale": string,"notify_email": boolean,"notify_push": boolean,"timezone": string,"updated_at": string,"warranty_lead_days": number
+                    "created_at": string,"currency": string,"digest_hour": number,"expiry_lead_days": (number)[],"id": string,"locale": string,"notify_email": boolean,"notify_push": boolean,"timezone": string,"unused_after_days": number,"updated_at": string,"warranty_lead_days": number
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"currency"?: string,"digest_hour"?: number,"expiry_lead_days"?: (number)[],"id": string,"locale"?: string,"notify_email"?: boolean,"notify_push"?: boolean,"timezone"?: string,"updated_at"?: string,"warranty_lead_days"?: number
+                    "created_at"?: string,"currency"?: string,"digest_hour"?: number,"expiry_lead_days"?: (number)[],"id": string,"locale"?: string,"notify_email"?: boolean,"notify_push"?: boolean,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
                   }
                   Update: {
-                    "created_at"?: string,"currency"?: string,"digest_hour"?: number,"expiry_lead_days"?: (number)[],"id"?: string,"locale"?: string,"notify_email"?: boolean,"notify_push"?: boolean,"timezone"?: string,"updated_at"?: string,"warranty_lead_days"?: number
+                    "created_at"?: string,"currency"?: string,"digest_hour"?: number,"expiry_lead_days"?: (number)[],"id"?: string,"locale"?: string,"notify_email"?: boolean,"notify_push"?: boolean,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
                   }
                   Relationships: [
                     
@@ -331,6 +331,32 @@ isOneToOne: false
       referencedColumns: ["item_id","user_id"]
     },{
       foreignKeyName: "shopping_list_item_id_user_id_fkey"
+      columns: ["item_id","user_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id","user_id"]
+    }
+                  ]
+                },"suggestion_dismissals": {
+                  Row: {
+                    "created_at": string,"item_id": string,"reason": string,"until": string | null,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"item_id": string,"reason": string,"until"?: string | null,"user_id"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"item_id"?: string,"reason"?: string,"until"?: string | null,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "suggestion_dismissals_item_id_user_id_fkey"
+      columns: ["item_id","user_id"]
+isOneToOne: false
+      referencedRelation: "item_alerts"
+      referencedColumns: ["item_id","user_id"]
+    },{
+      foreignKeyName: "suggestion_dismissals_item_id_user_id_fkey"
       columns: ["item_id","user_id"]
 isOneToOne: false
       referencedRelation: "items"
@@ -431,9 +457,17 @@ isOneToOne: false
 "search_tsquery":
 { Args: { "p_query": string }; Returns: unknown
                            },
+"spending_stats":
+{ Args: { "p_from"?: string,"p_to"?: string }; Returns: Json
+                           },
 "tag_counts":
 { Args: Record<PropertyKey, never>; Returns: {
               "item_count": number,"tag_id": string
+            }[]
+                           },
+"unused_suggestions":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "category_id": string,"condition": Database["public"]['Enums']["item_condition"],"duplicate_of": string,"duplicates": number,"idle_days": number,"item_id": string,"last_activity": string,"location_id": string,"location_path": string,"location_path_en": string,"name": string,"purchase_price": number,"quantity": number,"reason": string,"thumb_path": string,"unit": string
             }[]
                            },
 "user_today":

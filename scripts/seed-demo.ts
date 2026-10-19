@@ -82,6 +82,63 @@ async function getOrCreateUser(): Promise<string> {
   return data.user.id;
 }
 
+/**
+ * Makes history realistic: items "arrive" on their purchase date (or some time in
+ * the past), and about a third of consumables get recent usage. Without this every
+ * item would look brand new and nothing would be "unused for a long time".
+ */
+async function backdateHistory(userId: string) {
+  const items = await fetchAllRows<{ id: string; name: string; purchase_date: string | null; min_quantity: number | null; quantity: number }>(
+    (from, to) => db.from("items").select("id, name, purchase_date, min_quantity, quantity").eq("user_id", userId).range(from, to),
+  );
+  const events = await fetchAllRows<{ id: string; item_id: string; type: string }>((from, to) =>
+    db.from("item_events").select("id, item_id, type").eq("user_id", userId).eq("type", "created").range(from, to),
+  );
+  const createdAt = new Map(
+    items.map((i) => [i.id, i.purchase_date ? `${i.purchase_date}T09:00:00Z` : new Date(Date.now() - (30 + rand() * 900) * 86_400_000).toISOString()]),
+  );
+  for (let start = 0; start < items.length; start += 500) {
+    const chunk = items.slice(start, start + 500);
+    const { error } = await db
+      .from("items")
+      .upsert(chunk.map((i) => ({ id: i.id, user_id: userId, name: i.name, created_at: createdAt.get(i.id)! })), { onConflict: "id" });
+    if (error) throw error;
+  }
+  for (let start = 0; start < events.length; start += 500) {
+    const chunk = events.slice(start, start + 500);
+    const { error } = await db.from("item_events").upsert(
+      chunk.map((e) => ({ id: e.id, user_id: userId, item_id: e.item_id, type: "created" as const, created_at: createdAt.get(e.item_id)! })),
+      { onConflict: "id" },
+    );
+    if (error) throw error;
+  }
+  const usage = items
+    .filter((i) => i.min_quantity !== null && chance(0.35))
+    .map((i) => ({
+      user_id: userId,
+      item_id: i.id,
+      type: "quantity_change" as const,
+      delta: -1,
+      quantity_after: i.quantity,
+      note: "demo",
+      created_at: new Date(Date.now() - rand() * 60 * 86_400_000).toISOString(),
+    }));
+  for (let start = 0; start < usage.length; start += 500) {
+    const { error } = await db.from("item_events").insert(usage.slice(start, start + 500));
+    if (error) throw error;
+  }
+}
+
+async function fetchAllRows<T>(page: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: unknown }>): Promise<T[]> {
+  const out: T[] = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await page(from, from + 999);
+    if (error) throw error;
+    out.push(...(data ?? []));
+    if (!data || data.length < 1000) return out;
+  }
+}
+
 async function main() {
   const userId = await getOrCreateUser();
   console.log(`Seeding ${count} items for ${email} (${userId})`);
@@ -172,6 +229,7 @@ async function main() {
     inserted += data.length;
     process.stdout.write(`\r  ${inserted}/${rows.length}`);
   }
+  await backdateHistory(userId);
   console.log(`\nDone. Sign in as ${email} / ${password}`);
 }
 
