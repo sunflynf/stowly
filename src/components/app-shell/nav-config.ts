@@ -1,5 +1,6 @@
 import {
   Bell,
+  Boxes,
   Clock,
   LayoutGrid,
   Layers,
@@ -56,6 +57,7 @@ export const primaryNav: NavItem[] = [
 
 export const secondaryNav: NavItem[] = [
   { href: "/alerts", label: "alerts", icon: Bell, count: "attention" },
+  { href: "/groups", label: "groups", icon: Boxes },
   { href: "/shopping", label: "shopping", icon: ShoppingCart },
   { href: "/settings", label: "settings", icon: Settings },
 ];

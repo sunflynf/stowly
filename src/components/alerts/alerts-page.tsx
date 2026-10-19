@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { PageHeader } from "@/components/app-shell/page-header";
 import { ItemThumb } from "@/components/items/item-thumb";
 import { StatusBadge } from "@/components/items/status-badge";
-import { unwrap, useErrorToast, useInvalidateItems } from "@/components/items/use-item-mutations";
+import { ActionFailure, unwrap, useErrorToast, useInvalidateItems } from "@/components/items/use-item-mutations";
 import { useAddToShopping } from "@/components/shopping/use-add-to-shopping";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -17,13 +17,18 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { markReplacedAction, markReturnedAction, snoozeAlertAction, unsnoozeAlertAction } from "@/lib/actions/alerts";
+import { snoozeGroupAction } from "@/lib/actions/groups";
 import { patchItemAction } from "@/lib/actions/items";
+import { addToShoppingAction } from "@/lib/actions/shopping";
+import { suggestedBuyQuantity } from "@/lib/shopping";
+import { useGroupAlerts } from "@/lib/queries/groups";
 import { useFormats } from "@/lib/hooks/use-format";
 import { useAlerts, type AlertRow } from "@/lib/queries/alerts";
 import { usePhotoUrls } from "@/lib/queries/items";
 import type { AlertKind } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useAlertHelpers } from "./alert-line";
+import { GroupAlertCard } from "./group-alert-card";
 
 type Tab = "all" | "expiry" | "stock" | "warranty" | "replace" | "lent" | "snoozed";
 const TABS: Record<Tab, readonly AlertKind[] | null> = {
@@ -39,12 +44,14 @@ const TABS: Record<Tab, readonly AlertKind[] | null> = {
 export function AlertsPage() {
   const t = useTranslations("alerts");
   const tc = useTranslations("common");
+  const ti = useTranslations("item");
   const f = useFormats();
   const h = useAlertHelpers();
   const invalidate = useInvalidateItems();
   const onError = useErrorToast();
   const addToShopping = useAddToShopping();
   const { data: alerts = [], isPending } = useAlerts();
+  const { data: groupAlerts = [] } = useGroupAlerts();
   const [tab, setTab] = useState<Tab>("all");
   const [replacing, setReplacing] = useState<AlertRow | null>(null);
   const [newExpiry, setNewExpiry] = useState("");
@@ -54,7 +61,7 @@ export function AlertsPage() {
     mutationFn: async ({ run }: { run: () => Promise<unknown>; done: string; undo?: () => Promise<unknown> }) => run(),
     onSuccess: (_d, { done, undo }) =>
       toast.success(done, undo ? { action: { label: t("undo"), onClick: () => void undo().then(() => invalidate()) } } : undefined),
-    onError,
+    onError: (e) => (e instanceof ActionFailure && e.code === "conflict" ? toast.info(ti("alreadyInShopping")) : onError(e)),
     onSettled: () => invalidate(),
   });
 
@@ -68,8 +75,19 @@ export function AlertsPage() {
       out.all++;
       for (const [key, kinds] of Object.entries(TABS)) if (kinds?.includes(a.kind)) out[key as Tab]++;
     }
+    for (const g of groupAlerts) {
+      if (g.snoozed) out.snoozed++;
+      else {
+        out.all++;
+        out.stock++;
+      }
+    }
     return out;
-  }, [alerts]);
+  }, [alerts, groupAlerts]);
+
+  const visibleGroups = groupAlerts.filter((g) =>
+    tab === "snoozed" ? g.snoozed : !g.snoozed && (tab === "all" || tab === "stock"),
+  );
 
   const visible = alerts.filter((a) => {
     if (tab === "snoozed") return a.snoozed;
@@ -109,10 +127,36 @@ export function AlertsPage() {
             <Skeleton className="h-28" />
             <Skeleton className="h-28" />
           </div>
-        ) : visible.length === 0 ? (
+        ) : visible.length === 0 && visibleGroups.length === 0 ? (
           <p className="rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
         ) : (
           <ul className="flex flex-col gap-3">
+            {visibleGroups.map((g) => (
+              <GroupAlertCard
+                key={`g-${g.id}`}
+                alert={g}
+                onShopping={() =>
+                  act.mutate({
+                    run: async () =>
+                      unwrap(
+                        await addToShoppingAction({
+                          group_id: g.id,
+                          name: g.name,
+                          unit: g.unit,
+                          quantity: suggestedBuyQuantity(g.total, g.min_quantity),
+                        }),
+                      ),
+                    done: ti("addedToShopping"),
+                  })
+                }
+                onSnooze={(days) =>
+                  act.mutate({
+                    run: async () => unwrap(await snoozeGroupAction(g.id, days)),
+                    done: days ? t("done.snoozed") : t("done.unsnoozed"),
+                  })
+                }
+              />
+            ))}
             {visible.map((a) => {
               const status = h.status(a);
               const expiryKind = a.kind === "expired" || a.kind === "expiring_soon";

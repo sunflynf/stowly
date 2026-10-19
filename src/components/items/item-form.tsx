@@ -21,6 +21,7 @@ import { LocationPicker } from "./location-picker";
 import { ItemPhotoManager, PendingPhotoField, type ExistingPhoto } from "./photo-field";
 import { TagInput } from "./tag-input";
 import { useBarcodeAssist } from "./barcode-assist";
+import { GroupField } from "./group-field";
 import { useInvalidateItems } from "./use-item-mutations";
 
 interface ItemFormProps {
@@ -120,6 +121,7 @@ export function ItemForm({ mode, itemId, initial, photos = [], initialBarcode }:
     tags: `${uid}-tags`,
     notes: `${uid}-notes`,
     barcode: `${uid}-barcode`,
+    group: `${uid}-group`,
   };
 
   const card = "flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-4 md:p-5";
@@ -216,6 +218,8 @@ export function ItemForm({ mode, itemId, initial, photos = [], initialBarcode }:
         </div>
         {err("min_quantity") && <p className="text-sm font-medium text-danger-foreground">{err("min_quantity")}</p>}
       </div>
+
+      <GroupField control={control} id={ids.group} />
 
       <Field label={t("fields.location")} htmlFor={ids.location}>
         <Controller

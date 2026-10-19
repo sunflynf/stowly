@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Link2, ListPlus, Minus, Plus, Trash2 } from "lucide-react";
+import { Boxes, Link2, ListPlus, Minus, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/app-shell/page-header";
 import { unwrap, useErrorToast, useInvalidateItems } from "@/components/items/use-item-mutations";
@@ -65,6 +65,9 @@ export function ShoppingList() {
         if (row.item) {
           toast.success(t("restocked", { quantity: f.quantity(row.quantity), name: row.item.name }));
           await invalidateItems(row.item.id);
+        } else if (row.group) {
+          toast.success(t("restocked", { quantity: f.quantity(row.quantity), name: row.group.name }));
+          await invalidateItems();
         }
       } else {
         unwrap(await updateShoppingAction(row.id, { done: false }));
@@ -173,6 +176,7 @@ function ShoppingRow({
   onDelete: (row: ShoppingEntry) => void;
 }) {
   const t = useTranslations("shopping");
+  const tg = useTranslations("groups");
   const f = useFormats();
   const id = `shop-${row.id}`;
   return (
@@ -182,6 +186,12 @@ function ShoppingRow({
       </label>
       <div className="min-w-0 flex-1">
         <p className={cn("font-medium break-words", row.done && "text-muted-foreground line-through")}>{row.name}</p>
+        {row.group && (
+          <Link href={`/groups/${row.group.id}`} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:underline">
+            <Boxes className="size-3.5" aria-hidden />
+            {tg("inGroup", { name: row.group.name })}
+          </Link>
+        )}
         {row.item && (
           <Link href={`/items/${row.item.id}`} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:underline">
             <Link2 className="size-3.5" aria-hidden />

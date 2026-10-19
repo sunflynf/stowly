@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Clock, Layers, LogOut, Menu, Settings, ShoppingCart, Tag } from "lucide-react";
+import { Boxes, Clock, Layers, LogOut, Menu, Settings, ShoppingCart, Tag } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { signOutAction } from "@/lib/actions/auth";
 import { LanguageSwitcher } from "./language-switcher";
@@ -13,6 +13,7 @@ const links = [
   { href: "/shopping", label: "shopping", icon: ShoppingCart },
   { href: EXPIRING_HREF, label: "expiring", icon: Clock },
   { href: STOCK_HREF, label: "stock", icon: Layers },
+  { href: "/groups", label: "groups", icon: Boxes },
   { href: "/categories", label: "categories", icon: Tag },
   { href: "/settings", label: "settings", icon: Settings },
 ] as const;

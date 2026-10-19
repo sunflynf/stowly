@@ -4,20 +4,22 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormatter, useNow, useTimeZone, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
-import { Plus } from "lucide-react";
+import { Boxes, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { AlertLine } from "@/components/alerts/alert-line";
 import { MobileMenu } from "@/components/app-shell/mobile-menu";
 import { EXPIRING_HREF, STOCK_HREF } from "@/components/app-shell/nav-config";
 import { unwrap, useErrorToast, useInvalidateItems } from "@/components/items/use-item-mutations";
 import { SearchBox } from "@/components/search/search-box";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { addLowStockToShoppingAction } from "@/lib/actions/shopping";
 import { useFormats } from "@/lib/hooks/use-format";
 import { useIsDesktop } from "@/lib/hooks/use-media-query";
-import { mostUrgentPerItem, STOCK_KINDS, useAlerts, type AlertRow } from "@/lib/queries/alerts";
+import { mostUrgentPerItem, STOCK_KINDS, useAlerts } from "@/lib/queries/alerts";
+import { useGroupAlerts } from "@/lib/queries/groups";
 import { usePhotoUrls } from "@/lib/queries/items";
 import { useCategoryCounts, useDashboardStats } from "@/lib/queries/stats";
 import { buildLocationTree, useCategories, useLabels, useLocations } from "@/lib/queries/taxonomy";
@@ -73,32 +75,50 @@ function StatCard({
   );
 }
 
-function LowStockRow({ alert }: { alert: AlertRow }) {
+interface StockRow {
+  key: string;
+  href: string;
+  name: string;
+  quantity: number;
+  min: number;
+  out: boolean;
+  severity: number;
+  group?: boolean;
+}
+
+function LowStockRow({ row }: { row: StockRow }) {
   const t = useTranslations("dashboard");
+  const tg = useTranslations("groups");
   const f = useFormats();
-  const min = alert.min_quantity ?? 0;
-  const ratio = min > 0 ? Math.min(1, alert.quantity / min) : 0;
-  const out = alert.kind === "out_of_stock";
+  const ratio = row.min > 0 ? Math.min(1, row.quantity / row.min) : 0;
   return (
     <li>
-      <Link href={`/items/${alert.item_id}`} className="block py-2.5 hover:bg-muted/40">
+      <Link href={row.href} className="block py-2.5 hover:bg-muted/40">
         <span className="flex items-baseline justify-between gap-3">
-          <span className="truncate font-medium">{alert.name}</span>
-          <span className={cn("shrink-0 font-semibold tabular-nums", out ? "text-danger-foreground" : "text-warning-foreground")}>
-            {f.quantity(alert.quantity)} / {f.quantity(min)}
+          <span className="flex min-w-0 items-center gap-2">
+            <span className="truncate font-medium">{row.name}</span>
+            {row.group && (
+              <Badge tone="outline" className="shrink-0">
+                <Boxes className="size-3" aria-hidden />
+                {tg("badge")}
+              </Badge>
+            )}
+          </span>
+          <span className={cn("shrink-0 font-semibold tabular-nums", row.out ? "text-danger-foreground" : "text-warning-foreground")}>
+            {f.quantity(row.quantity)} / {f.quantity(row.min)}
           </span>
         </span>
         <span
           role="meter"
           aria-valuemin={0}
-          aria-valuemax={min}
-          aria-valuenow={alert.quantity}
-          aria-label={t("stockOf", { name: alert.name, quantity: f.quantity(alert.quantity), threshold: f.quantity(min) })}
+          aria-valuemax={row.min}
+          aria-valuenow={row.quantity}
+          aria-label={t("stockOf", { name: row.name, quantity: f.quantity(row.quantity), threshold: f.quantity(row.min) })}
           className="mt-2 block h-2 overflow-hidden rounded-full bg-muted"
         >
           <span
             className={cn("block h-full rounded-full", ratio <= 0.34 ? "bg-danger-solid" : "bg-warning-solid")}
-            style={{ width: `${Math.max(ratio * 100, out ? 0 : 4)}%` }}
+            style={{ width: `${Math.max(ratio * 100, row.out ? 0 : 4)}%` }}
           />
         </span>
       </Link>
@@ -130,8 +150,33 @@ export function Dashboard() {
 
   const active = useMemo(() => (alerts ?? []).filter((a) => !a.snoozed), [alerts]);
   const attention = useMemo(() => mostUrgentPerItem(active.filter((a) => !STOCK_KINDS.includes(a.kind))), [active]);
-  const lowStock = useMemo(() => mostUrgentPerItem(active.filter((a) => STOCK_KINDS.includes(a.kind))), [active]);
-  const { data: urls = {} } = usePhotoUrls([...attention.slice(0, 5), ...lowStock.slice(0, 5)].map((a) => a.thumb_path));
+  const { data: groupAlerts = [] } = useGroupAlerts();
+  // Items and groups share one panel, most severe first.
+  const lowStock = useMemo<StockRow[]>(() => {
+    const items = mostUrgentPerItem(active.filter((a) => STOCK_KINDS.includes(a.kind))).map((a) => ({
+      key: `i-${a.item_id}`,
+      href: `/items/${a.item_id}`,
+      name: a.name,
+      quantity: a.quantity,
+      min: a.min_quantity ?? 0,
+      out: a.kind === "out_of_stock",
+      severity: a.severity,
+    }));
+    const groups = groupAlerts
+      .filter((g) => !g.snoozed)
+      .map((g) => ({
+        key: `g-${g.id}`,
+        href: `/groups/${g.id}`,
+        name: g.name,
+        quantity: g.total,
+        min: g.min_quantity ?? 0,
+        out: g.kind === "out_of_stock",
+        severity: g.severity,
+        group: true,
+      }));
+    return [...groups, ...items].sort((a, b) => b.severity - a.severity);
+  }, [active, groupAlerts]);
+  const { data: urls = {} } = usePhotoUrls(attention.slice(0, 5).map((a) => a.thumb_path));
 
   const categoryBars = useMemo(() => {
     const rows = categories
@@ -299,7 +344,7 @@ export function Dashboard() {
               <>
                 <ul>
                   {lowStock.slice(0, 5).map((a) => (
-                    <LowStockRow key={a.item_id} alert={a} />
+                    <LowStockRow key={a.key} row={a} />
                   ))}
                 </ul>
                 <Button variant="outline" className="mt-3 w-full" disabled={creating} onClick={() => void createShopping()}>

@@ -17,6 +17,7 @@ function toFormValues(item: ItemDetail): ItemFormValues {
     name: item.name,
     category_id: item.category_id ?? "",
     location_id: item.location_id ?? "",
+    group_id: item.group_id ?? "",
     quantity: str(item.quantity),
     unit: item.unit ?? "",
     min_quantity: str(item.min_quantity),

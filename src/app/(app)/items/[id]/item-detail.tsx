@@ -290,6 +290,13 @@ export function ItemDetailView({ id }: { id: string }) {
                 <span className="font-normal text-muted-foreground">{t("unknownLocation")}</span>
               )}
             </InfoRow>
+            {item.group && (
+              <InfoRow label={tc("groups.group")}>
+                <Link href={`/groups/${item.group.id}`} className="underline-offset-4 hover:underline">
+                  {item.group.name}
+                </Link>
+              </InfoRow>
+            )}
             <InfoRow label={t("fields.condition")}>{tc(`conditions.${item.condition}`)}</InfoRow>
             {item.expiry_date && <InfoRow label={t("fields.expiryDate")}>{fmtDate(item.expiry_date)}</InfoRow>}
             {item.opened_date && <InfoRow label={t("fields.openedDate")}>{fmtDate(item.opened_date)}</InfoRow>}
