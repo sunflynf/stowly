@@ -19,6 +19,10 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t("tagline"),
     applicationName: t("name"),
     appleWebApp: { capable: true, title: t("name"), statusBarStyle: "default" },
+    icons: {
+      icon: [{ url: "/icons/favicon-48.png", sizes: "48x48", type: "image/png" }],
+      apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
+    },
   };
 }
 

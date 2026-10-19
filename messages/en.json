@@ -489,5 +489,10 @@
     "pushMore": "{count, plural, one {and # more} other {and # more}}",
     "testTitle": "Stowly",
     "testBody": "Notifications are working on this device."
+  },
+  "offlinePage": {
+    "title": "You are offline",
+    "body": "This page cannot be loaded without a connection. Check your network and try again.",
+    "retry": "Try again"
   }
 }

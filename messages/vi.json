@@ -489,5 +489,10 @@
     "pushMore": "{count, plural, other {và # mục khác}}",
     "testTitle": "Stowly",
     "testBody": "Thông báo đã hoạt động trên thiết bị này."
+  },
+  "offlinePage": {
+    "title": "Bạn đang ngoại tuyến",
+    "body": "Không thể tải trang này khi không có mạng. Hãy kiểm tra kết nối rồi thử lại.",
+    "retry": "Thử lại"
   }
 }
