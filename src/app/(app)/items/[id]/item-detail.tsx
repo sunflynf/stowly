@@ -7,6 +7,7 @@ import { useState } from "react";
 import { AlertTriangle, Archive, ArchiveRestore, Camera, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/app-shell/page-header";
+import { ItemMaintenance } from "@/components/maintenance/item-maintenance";
 import { QuantityStepper } from "@/components/items/quantity-stepper";
 import { StatusBadge, useStatusLabel } from "@/components/items/status-badge";
 import { unwrap, useErrorToast, useInvalidateItems, usePatchItem } from "@/components/items/use-item-mutations";
@@ -102,6 +103,7 @@ function History({ id }: { id: string }) {
                 delta: format.number(Number(e.delta ?? 0), { signDisplay: "always", maximumFractionDigits: 3 }),
                 quantity: qty(e.quantity_after),
               });
+            else if (e.type === "maintenance") text = t("events.maintenance");
             else if (e.type === "moved") text = t("events.moved", { from: locName(e.from_location_id), to: locName(e.to_location_id) });
             else
               text = t("events.status_change", {
@@ -361,6 +363,8 @@ export function ItemDetailView({ id }: { id: string }) {
           )}
           {item.notes && <p className="border-t border-border py-3 text-[15px] whitespace-pre-wrap">{item.notes}</p>}
         </section>
+
+        <ItemMaintenance itemId={id} itemName={item.name} />
 
         <History id={id} />
       </div>

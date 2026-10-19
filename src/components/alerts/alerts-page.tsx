@@ -29,8 +29,10 @@ import type { AlertKind } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useAlertHelpers } from "./alert-line";
 import { GroupAlertCard } from "./group-alert-card";
+import { TaskCard } from "@/components/maintenance/task-card";
+import { useMaintenanceAlerts, useMaintenanceTasks } from "@/lib/queries/maintenance";
 
-type Tab = "all" | "expiry" | "stock" | "warranty" | "replace" | "lent" | "snoozed";
+type Tab = "all" | "expiry" | "stock" | "warranty" | "replace" | "lent" | "maintenance" | "snoozed";
 const TABS: Record<Tab, readonly AlertKind[] | null> = {
   all: null,
   expiry: ["expired", "expiring_soon"],
@@ -38,6 +40,7 @@ const TABS: Record<Tab, readonly AlertKind[] | null> = {
   warranty: ["warranty_ending"],
   replace: ["replace_due"],
   lent: ["lent_overdue"],
+  maintenance: ["maintenance_due", "maintenance_overdue"],
   snoozed: null,
 };
 
@@ -52,6 +55,8 @@ export function AlertsPage() {
   const addToShopping = useAddToShopping();
   const { data: alerts = [], isPending } = useAlerts();
   const { data: groupAlerts = [] } = useGroupAlerts();
+  const { data: taskAlerts = [] } = useMaintenanceAlerts();
+  const { data: tasks = [] } = useMaintenanceTasks();
   const [tab, setTab] = useState<Tab>("all");
   const [replacing, setReplacing] = useState<AlertRow | null>(null);
   const [newExpiry, setNewExpiry] = useState("");
@@ -66,7 +71,7 @@ export function AlertsPage() {
   });
 
   const counts = useMemo(() => {
-    const out: Record<Tab, number> = { all: 0, expiry: 0, stock: 0, warranty: 0, replace: 0, lent: 0, snoozed: 0 };
+    const out: Record<Tab, number> = { all: 0, expiry: 0, stock: 0, warranty: 0, replace: 0, lent: 0, maintenance: 0, snoozed: 0 };
     for (const a of alerts) {
       if (a.snoozed) {
         out.snoozed++;
@@ -82,8 +87,20 @@ export function AlertsPage() {
         out.stock++;
       }
     }
+    for (const m of taskAlerts) {
+      if (m.snoozed) out.snoozed++;
+      else {
+        out.all++;
+        out.maintenance++;
+      }
+    }
     return out;
-  }, [alerts, groupAlerts]);
+  }, [alerts, groupAlerts, taskAlerts]);
+
+  const taskById = new Map(tasks.map((x) => [x.id, x]));
+  const visibleTasks = taskAlerts.filter(
+    (m) => taskById.has(m.task_id) && (tab === "snoozed" ? m.snoozed : !m.snoozed && (tab === "all" || tab === "maintenance")),
+  );
 
   const visibleGroups = groupAlerts.filter((g) =>
     tab === "snoozed" ? g.snoozed : !g.snoozed && (tab === "all" || tab === "stock"),
@@ -127,10 +144,13 @@ export function AlertsPage() {
             <Skeleton className="h-28" />
             <Skeleton className="h-28" />
           </div>
-        ) : visible.length === 0 && visibleGroups.length === 0 ? (
+        ) : visible.length === 0 && visibleGroups.length === 0 && visibleTasks.length === 0 ? (
           <p className="rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
         ) : (
           <ul className="flex flex-col gap-3">
+            {visibleTasks.map((m) => (
+              <TaskCard key={`m-${m.task_id}`} task={taskById.get(m.task_id)!} alert={m} />
+            ))}
             {visibleGroups.map((g) => (
               <GroupAlertCard
                 key={`g-${g.id}`}
