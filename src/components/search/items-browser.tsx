@@ -16,6 +16,7 @@ import { useDashboardStats } from "@/lib/queries/stats";
 import { FilterBar } from "./filter-bar";
 import { ItemList, ItemTable } from "./item-results";
 import { SearchBox } from "./search-box";
+import { CanEdit } from "@/components/app-shell/can-edit";
 
 export function ItemsBrowser() {
   const t = useTranslations("items");
@@ -60,12 +61,14 @@ export function ItemsBrowser() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const addButton = (
-    <Button asChild size="lg">
-      <Link href="/items/new">
-        <Plus />
-        {tn("addItem")}
-      </Link>
-    </Button>
+    <CanEdit>
+      <Button asChild size="lg">
+        <Link href="/items/new">
+          <Plus />
+          {tn("addItem")}
+        </Link>
+      </Button>
+    </CanEdit>
   );
 
   const heading = params.q ? t("resultsFor", { count: total, query: params.q }) : t("results", { count: total });

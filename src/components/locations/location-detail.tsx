@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { parseItemSearch, useItemSearch } from "@/lib/queries/search";
 import { useLabels, useLocationCounts, useLocations } from "@/lib/queries/taxonomy";
+import { CanEdit } from "@/components/app-shell/can-edit";
 
 /** A location's contents: breadcrumb, sub-locations and items (QR labels open this page). */
 export function LocationDetail({ id }: { id: string }) {
@@ -47,12 +48,14 @@ export function LocationDetail({ id }: { id: string }) {
           {t("printLabel")}
         </Link>
       </Button>
-      <Button asChild>
-        <Link href={`/items/new?location=${id}`}>
-          <Plus />
-          {t("addHere")}
-        </Link>
-      </Button>
+      <CanEdit>
+        <Button asChild>
+          <Link href={`/items/new?location=${id}`}>
+            <Plus />
+            {t("addHere")}
+          </Link>
+        </Button>
+      </CanEdit>
     </>
   );
 

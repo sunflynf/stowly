@@ -1,3 +1,4 @@
+import { ReadOnlyBanner } from "./can-edit";
 import { ClientGate } from "./client-gate";
 import { MobileTabBar } from "./mobile-tab-bar";
 import { OfflineBanner } from "./offline-banner";
@@ -22,6 +23,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col">
           <OfflineBanner />
+          <ReadOnlyBanner />
           <main id="main" className="mx-auto w-full max-w-[1120px] flex-1 px-4 pt-4 pb-28 md:px-10 md:pt-9 md:pb-12 print:max-w-none print:p-0">
             {children}
           </main>
