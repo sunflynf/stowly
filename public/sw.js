@@ -1,5 +1,5 @@
 /* Stowly service worker: offline-tolerant app shell + web push. */
-const VERSION = "stowly-v1";
+const VERSION = "stowly-v2";
 const SHELL = ["/offline", "/manifest.webmanifest", "/icons/icon-192.png", "/icons/icon-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -21,8 +21,8 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Immutable build assets: cache first.
-  if (url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/icons/")) {
+  // Immutable build assets and the barcode decoder: cache first.
+  if (url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/icons/") || url.pathname.startsWith("/vendor/")) {
     event.respondWith(
       caches.match(request).then(
         (cached) =>

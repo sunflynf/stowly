@@ -49,3 +49,6 @@ next-env.d.ts
 # supabase
 supabase/.branches
 supabase/.temp
+
+# generated on install (scripts/copy-zxing-wasm.mjs)
+/public/vendor/
