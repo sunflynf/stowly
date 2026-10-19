@@ -19,6 +19,7 @@ pnpm dev                      # http://localhost:3000
 
 Create an account on `/login` → **Tạo tài khoản mới**. Email confirmation is off locally. Every new account gets:
 - a profile,
+- its own household (you are the owner),
 - seven bilingual built-in categories,
 - a starter location tree: Phòng khách, Phòng ngủ › Tủ quần áo, Nhà bếp › Tủ lạnh / Kệ bếp, and so on.
 
@@ -28,6 +29,7 @@ Demo data:
 pnpm seed:demo                    # ~150 realistic items for demo@stowly.local / demo-password
 pnpm seed:demo --count 5000       # performance data set
 pnpm seed:demo --email you@example.com --password secret123 --count 300
+pnpm seed:demo --count 5000 --members 3   # + demo-member-1..3@stowly.local (editor, viewer, editor) in the same household
 ```
 
 Useful local URLs:
@@ -48,9 +50,9 @@ Useful local URLs:
 | `pnpm typecheck` | `next typegen` + `tsc --noEmit` |
 | `pnpm lint:i18n` | Fails if a message key exists in one locale but not the other |
 | `pnpm test` | Vitest unit tests. Covers i18n parity (keys and ICU arguments), validation, status/alert logic and digest rendering. |
-| `pnpm test:db` | Integration tests against local Supabase: RLS isolation between two users, storage policies, signup seeding, quantity RPC, search |
-| `pnpm test:e2e` | Playwright tests:<br>• sign-up + language switch<br>• quick add with photo + stepper + history<br>• search and filters<br>• dashboard → shopping list → restock + snooze<br>• QR labels and the `/l/<id>` link<br>• barcode duplicate check + manual entry<br>• **real camera scan** (Chromium's fake camera plays a QR video into the ZXing decoder)<br>• item groups (created from the item form)<br>• CSV import (Vietnamese file) + export round-trip |
-| `pnpm bench:search` | Search latency against the seeded account (target p95 < 200 ms) |
+| `pnpm test:db` | Integration tests against local Supabase: RLS isolation between two users, storage policies, signup seeding, quantity RPC, search, and households: every shared table × every role (owner, editor, viewer, outsider, removed member), invites, roles, leaving, per-person logs and settings |
+| `pnpm test:e2e` | Playwright tests:<br>• sign-up + language switch<br>• quick add with photo + stepper + history<br>• search and filters<br>• dashboard → shopping list → restock + snooze<br>• QR labels and the `/l/<id>` link<br>• barcode duplicate check + manual entry<br>• **real camera scan** (Chromium's fake camera plays a QR video into the ZXing decoder)<br>• item groups (created from the item form)<br>• CSV import (Vietnamese file) + export round-trip<br>• household invite → join as viewer (read-only) → removed by the owner |
+| `pnpm bench:search` | Search latency against the seeded account, and as each `demo-member-N` of the same household when present (target p95 < 200 ms) |
 | `pnpm db:reset` / `pnpm db:types` | Re-apply migrations / regenerate `src/lib/database.types.ts` |
 | `pnpm vapid` | Generate VAPID keys for web push |
 
@@ -67,11 +69,11 @@ Useful local URLs:
    - Site URL: `https://<your-app>`
    - Redirect URLs: `https://<your-app>/**`
    - Optional: turn on "Confirm email".
-3. **Single-user lock.** Set `ALLOWED_EMAIL` in Vercel, which the sign-up form checks. Also enforce it in the database, so that sign-ups through the API are rejected too:
+3. **Sign-up lock.** Set `ALLOWED_EMAIL` in Vercel, which the sign-up form checks. Also enforce it in the database, so that sign-ups through the API are rejected too:
    ```sql
    insert into private.signup_allowlist (email) values ('you@example.com');
    ```
-   After creating your account you can also disable sign-ups in Supabase entirely.
+   People you invite to your household can still sign up with the invited email while the invite is open (7 days); no allowlist change is needed. If you disable sign-ups in Supabase entirely, invitees need an existing account.
 4. **Vercel.** Import the repo and set the variables from `.env.example`:
    - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
    - `NEXT_PUBLIC_SITE_URL`, `ALLOWED_EMAIL`, `CRON_SECRET`
@@ -108,12 +110,13 @@ Useful local URLs:
 | **CSV import** | **Settings → Nhập từ CSV**, or `/import`: drop a CSV (Excel with semicolons, Vietnamese headers and dd/mm/yyyy dates all work), check the column matching and the preview, choose what happens to duplicates, then import. Re-importing an export (`/api/export/items`) updates items by `id`. "Tải tệp mẫu" downloads a template. |
 | **Spending** | Sidebar → **Chi tiêu**: pick a period. You get totals vs the previous period, the monthly chart (hover/focus a bar, or switch to the table), spending by category and by room, and the most expensive items. Purchases without a price or date are counted in a note. |
 | **Clean-up ideas** | Sidebar → **Gợi ý dọn dẹp**, also linked from the dashboard. Four tabs: unused for a long time, worn, broken, duplicates. Actions: give away, archive, keep, snooze 30 days, and merge duplicates into the older item; undo is available where safe. The "unused" threshold is in Settings. `pnpm seed:demo` backdates history so there is something to see. |
+| **Households** | Settings → **Thành viên**: name the household, set your display name, invite an email as Biên tập/Chỉ xem (without `RESEND_API_KEY` the link is shown to copy). Open the link in another browser: sign up or sign in with that email, then **Tham gia**. A viewer sees a "Chỉ xem" banner and no add/edit controls; an editor can change items. The owner changes roles and removes members; anyone can **Rời nhà này** except the last owner. Item history shows who made each change; switch households from the same section. `pnpm test:db` (role matrix), `pnpm seed:demo --count 5000 --members 3 && pnpm bench:search`. |
 | **M6** PWA, performance, E2E | `pnpm build && pnpm start`, then install from the browser; the offline page is served without a network. `pnpm seed:demo --count 5000 && pnpm bench:search`, then `pnpm test:e2e`. |
 
 > `pnpm install` runs `scripts/copy-zxing-wasm.mjs`, which places the barcode decoder in `public/vendor/` (git-ignored).
 
 Measured on the local stack with 5,000 items (end-to-end via PostgREST):
-- Search: p95 ≤ ~110 ms across text, typo, location, state-filtered and paginated queries.
+- Search: p95 ≤ ~110 ms across text, typo, location, state-filtered and paginated queries. With households (owner + 3 members of the same household, each benchmarked): worst p95 151 ms.
 - `item_alerts` view: ~20 ms.
 - `dashboard_stats()`: ~40 ms.
 
@@ -121,8 +124,14 @@ Measured on the local stack with 5,000 items (end-to-end via PostgREST):
 
 ## 4. Architecture notes
 
+- **Households.** All data belongs to a household; profiles (language, timezone, lead days, digest, push), push subscriptions and the notification logs stay per person.
+  - RLS on every shared table: read rows where `household_id = current_household_id()` (the person's active household, re-checked against membership); insert/update/delete additionally need `can_edit_household()` (owner or editor). Both helpers are `security definer`, wrapped in `(select …)` so they run once per query, not per row.
+  - Composite foreign keys `(id, household_id)` stop a row from referencing another household's category, location, item, tag or group.
+  - Members, invites and the household name: the owner of the active household. New members only arrive through `accept_household_invite()`, which checks the token hash, expiry and that the invite is addressed to the caller's email.
+  - Triggers keep a household with at least one owner, delete a household when its last member leaves, and move someone who leaves or is removed to another household (or a new one of their own).
+  - Alerts are computed per person by `user_item_alerts(user)` (their settings, their active household's items). The `item_alerts` view calls it for the signed-in user and the digest calls it per person, so there is still one source of truth.
 - **Data access.**
-  - Reads run in the browser with TanStack Query through the Supabase client; RLS restricts every query to the user's own rows.
+  - Reads run in the browser with TanStack Query through the Supabase client; RLS restricts every query to the active household's rows.
   - Every mutation is a Server Action that validates its input with Zod. The same schemas drive the forms.
   - Database triggers keep derived data in sync: location paths, search documents and item history events.
 - **Single source of truth for alerts.** `public.compute_item_alerts()` (SQL) decides which alerts are raised. The `item_alerts` view, `dashboard_stats()`, the search badges and the scheduled digest all read from it. The TypeScript side only formats labels such as "Còn 2 ngày".
@@ -133,11 +142,11 @@ Measured on the local stack with 5,000 items (end-to-end via PostgREST):
   - A substring match runs on the normalised name.
   - Typo tolerance is per word (4+ letters), using `pg_trgm` strict word similarity.
   - GIN indexes back the full-text and trigram matching.
-- **No resends.** `notifications_log(item, kind, threshold_key, channel)` is unique.
+- **No resends.** `notifications_log(user, item, kind, threshold_key, channel)` is unique, so each member gets each reminder once.
   - The threshold key includes the date and the bucket (e.g. `2026-11-01:7`), so the 30-, 7- and 1-day reminders each send once.
   - When an alert resolves, its log rows are cleared so it can fire again (e.g. restocked, then running low again).
 - **Photos.**
-  - Stored in a private `item-photos` bucket under `<user_id>/<item_id>/`.
+  - Stored in a private `item-photos` bucket under `<household_id>/<item_id>/`. Members read, owners and editors upload and delete.
   - Resized in the browser to 1600 px plus a 320 px thumbnail (WebP, with JPEG fallback).
   - Shown via signed URLs; at most 5 per item, enforced by a trigger.
 
@@ -163,7 +172,7 @@ Defaults chosen where the brief was open, or where the environment forced a choi
    - Amber: low stock, warranty ending, replacement due, lent book overdue.
    - Teal: expiring further out (e.g. "Còn 26 ngày"), as in the mockup.
 6. **Snoozes.** Snoozes are stored in a separate `alert_snoozes` table, which the brief's data model did not include. "Used up / remove" archives the item (it can be restored), and "Mark replaced" for expiring items asks for an optional new expiry date.
-7. **Sign-up lock** for this single-user app works at two levels:
+7. **Sign-up lock** works at two levels (an open household invite also allows its email to sign up):
    - `ALLOWED_EMAIL` in the UI.
    - The `private.signup_allowlist` table, enforced by a trigger on `auth.users`. An empty table allows any sign-up, which is convenient for local development.
 
@@ -220,6 +229,17 @@ Defaults chosen where the brief was open, or where the environment forced a choi
     - **Give away:** sets the condition to "given away" and archives the item, so it stays in history and spending.
     - **Keep:** hides the suggestion. For worn, broken and duplicate items that is permanent; for an unused item it lasts one more idle period.
     - **Paging:** results come per reason, 30 at a time, because PostgREST caps a response at 1,000 rows. The same cap was found and fixed for the alerts list and the digest, which now page through all rows.
+
+21. **Households.**
+    - **Migration:** each existing user gets a household whose id equals their user id, with them as owner. `user_id` columns are renamed to `household_id`, so every row, composite key and photo path stays valid and no data is rewritten. Existing history is attributed to that user.
+    - **Several households per person.** Accepting an invite switches you to that household; your own household stays available in Settings → Members. Everything on screen (and RLS) is scoped to the active household.
+    - **Roles:** editors can also manage locations, categories, tags and groups, because the item form creates them inline. Only owners manage members, invites and the household name. Invites can be for editor or viewer; an owner can promote anyone afterwards, and there can be several owners.
+    - **Invites:** 32 random bytes in the link, only the SHA-256 hash is stored; valid 7 days, once, and only for the invited email. Re-inviting an email replaces its open invite. Without Resend the owner gets the link to share. The email is written in the inviter's language.
+    - **Invited sign-ups** still get their own (empty) household; the invite then switches them to the shared one.
+    - **Leaving:** the last owner cannot leave or step down. Someone who leaves their only household gets a fresh one. If the last owner's account is deleted, the longest-standing member becomes owner; an empty household is deleted with its data.
+    - **Shared vs personal:** snoozes, shopping list and clean-up dismissals are shared by the household. Alert lead days, timezone, currency, language, digest hour and channels are per person, so two members may see different "expiring soon" sets. The digest covers each person's active household.
+    - **Display names:** optional; otherwise the part of the email before "@". Former members still appear by name in history, marked as having left.
+    - **Viewers** see a read-only banner. Add/edit controls are hidden on the main screens; every write is also rejected by the server (`forbidden`) and by RLS.
 
 ### Dependencies added (and why)
 
