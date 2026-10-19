@@ -391,5 +391,103 @@
     "decrease": "Giảm số lượng cần mua",
     "increase": "Tăng số lượng cần mua",
     "inStock": "Trong kho: {quantity}"
+  },
+  "alerts": {
+    "title": "Cảnh báo",
+    "subtitle": "{count, plural, =0 {Không có gì cần xử lý} other {# mục đang được gắn cờ}}",
+    "tabs": {
+      "all": "Tất cả",
+      "expiry": "Hạn dùng",
+      "stock": "Tồn kho",
+      "warranty": "Bảo hành",
+      "replace": "Cần thay",
+      "lent": "Cho mượn",
+      "snoozed": "Đã hoãn"
+    },
+    "empty": "Không có cảnh báo nào ở đây. 🎉",
+    "actions": {
+      "markReplaced": "Đã thay mới",
+      "usedUp": "Dùng hết / bỏ",
+      "addToShopping": "Thêm vào DS mua",
+      "snooze": "Hoãn 7 ngày",
+      "unsnooze": "Bỏ hoãn",
+      "returned": "Đã trả",
+      "group": "Thao tác cho {name}"
+    },
+    "snoozedUntil": "Hoãn đến {date}",
+    "done": {
+      "replaced": "Đã ghi nhận thay mới",
+      "usedUp": "Đã chuyển “{name}” vào lưu trữ",
+      "snoozed": "Đã hoãn 7 ngày",
+      "unsnoozed": "Đã bỏ hoãn",
+      "returned": "Đã ghi nhận trả sách"
+    },
+    "replaceDialog": {
+      "title": "Thay mới “{name}”",
+      "description": "Nhập hạn sử dụng mới nếu có. Để trống nếu không cần theo dõi.",
+      "newExpiry": "Hạn sử dụng mới"
+    },
+    "undo": "Hoàn tác"
+  },
+  "settingsPage": {
+    "title": "Cài đặt",
+    "language": {
+      "title": "Ngôn ngữ",
+      "hint": "Ngôn ngữ giao diện và email thông báo."
+    },
+    "region": {
+      "title": "Khu vực",
+      "timezone": "Múi giờ",
+      "timezoneHint": "Dùng để tính “hôm nay” và giờ gửi thông báo.",
+      "currency": "Tiền tệ"
+    },
+    "alerts": {
+      "title": "Cảnh báo",
+      "expiryLead": "Nhắc trước hạn sử dụng (ngày)",
+      "expiryLeadHint": "Mỗi mốc gửi một lần, ví dụ 30, 7 và 1 ngày trước hạn.",
+      "addLead": "Thêm mốc",
+      "removeLead": "Bỏ mốc {days} ngày",
+      "warrantyLead": "Nhắc trước hết bảo hành (ngày)",
+      "digestHour": "Giờ gửi tổng hợp hằng ngày",
+      "hour": "{hour}:00"
+    },
+    "channels": {
+      "title": "Kênh thông báo",
+      "email": "Email tổng hợp hằng ngày",
+      "emailHint": "Gửi tới {email}.",
+      "push": "Thông báo đẩy (web push)",
+      "pushHint": "Nhận thông báo trên thiết bị này.",
+      "enablePush": "Bật thông báo trên thiết bị này",
+      "pushEnabled": "Thiết bị này đã bật thông báo",
+      "disablePush": "Tắt trên thiết bị này",
+      "pushUnsupported": "Trình duyệt này không hỗ trợ thông báo đẩy. Trên iPhone, hãy thêm ứng dụng vào Màn hình chính trước.",
+      "pushDenied": "Bạn đã chặn thông báo. Hãy bật lại trong cài đặt trình duyệt.",
+      "pushNotConfigured": "Máy chủ chưa cấu hình khoá VAPID.",
+      "test": "Gửi thử thông báo",
+      "testSent": "Đã gửi thông báo thử",
+      "testFailed": "Không gửi được thông báo thử"
+    },
+    "data": {
+      "title": "Dữ liệu",
+      "exportCsv": "Xuất danh sách đồ (CSV)",
+      "exportJson": "Sao lưu toàn bộ (JSON)",
+      "exportHint": "Tệp được tạo từ dữ liệu của bạn và tải xuống thiết bị này."
+    },
+    "account": {
+      "title": "Tài khoản",
+      "signedInAs": "Đang đăng nhập: {email}"
+    },
+    "saved": "Đã lưu cài đặt"
+  },
+  "notifications": {
+    "subject": "{count, plural, other {Stowly: # mục cần xử lý}}",
+    "heading": "Chào bạn, đây là các món đồ cần chú ý hôm nay",
+    "intro": "{count, plural, other {Có # cảnh báo mới.}}",
+    "open": "Mở Stowly",
+    "footer": "Bạn nhận email này vì đã bật email tổng hợp trong Cài đặt của Stowly.",
+    "pushTitle": "{count, plural, other {# món đồ cần chú ý}}",
+    "pushMore": "{count, plural, other {và # mục khác}}",
+    "testTitle": "Stowly",
+    "testBody": "Thông báo đã hoạt động trên thiết bị này."
   }
 }

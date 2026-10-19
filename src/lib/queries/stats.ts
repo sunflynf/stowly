@@ -39,3 +39,18 @@ export function useCategoryCounts() {
     },
   });
 }
+
+export function useProfile() {
+  return useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const supabase = getSupabaseBrowser();
+      const [{ data, error }, { data: session }] = await Promise.all([
+        supabase.from("profiles").select("*").single(),
+        supabase.auth.getSession(),
+      ]);
+      if (error) throw error;
+      return { ...data, email: session.session?.user.email ?? "" };
+    },
+  });
+}

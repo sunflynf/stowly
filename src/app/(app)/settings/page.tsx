@@ -1,5 +1,12 @@
-import { PlaceholderPage } from "@/components/app-shell/placeholder-page";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+import { SettingsPage } from "@/components/settings/settings-page";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("settingsPage");
+  return { title: t("title") };
+}
 
 export default function Page() {
-  return <PlaceholderPage titleKey="settings" />;
+  return <SettingsPage />;
 }

@@ -391,5 +391,103 @@
     "decrease": "Buy fewer",
     "increase": "Buy more",
     "inStock": "In stock: {quantity}"
+  },
+  "alerts": {
+    "title": "Alerts",
+    "subtitle": "{count, plural, =0 {Nothing needs attention} one {# item flagged} other {# items flagged}}",
+    "tabs": {
+      "all": "All",
+      "expiry": "Expiry",
+      "stock": "Stock",
+      "warranty": "Warranty",
+      "replace": "Replace",
+      "lent": "Lent",
+      "snoozed": "Snoozed"
+    },
+    "empty": "No alerts here. 🎉",
+    "actions": {
+      "markReplaced": "Mark replaced",
+      "usedUp": "Used up / remove",
+      "addToShopping": "Add to shopping list",
+      "snooze": "Snooze 7 days",
+      "unsnooze": "Unsnooze",
+      "returned": "Returned",
+      "group": "Actions for {name}"
+    },
+    "snoozedUntil": "Snoozed until {date}",
+    "done": {
+      "replaced": "Marked as replaced",
+      "usedUp": "Moved “{name}” to the archive",
+      "snoozed": "Snoozed for 7 days",
+      "unsnoozed": "Unsnoozed",
+      "returned": "Marked as returned"
+    },
+    "replaceDialog": {
+      "title": "Replace “{name}”",
+      "description": "Enter the new expiry date if there is one. Leave empty to stop tracking it.",
+      "newExpiry": "New expiry date"
+    },
+    "undo": "Undo"
+  },
+  "settingsPage": {
+    "title": "Settings",
+    "language": {
+      "title": "Language",
+      "hint": "Language of the app and notification emails."
+    },
+    "region": {
+      "title": "Region",
+      "timezone": "Time zone",
+      "timezoneHint": "Used for “today” and when notifications are sent.",
+      "currency": "Currency"
+    },
+    "alerts": {
+      "title": "Alerts",
+      "expiryLead": "Remind before expiry (days)",
+      "expiryLeadHint": "One reminder per step, e.g. 30, 7 and 1 day before.",
+      "addLead": "Add step",
+      "removeLead": "Remove {days}-day step",
+      "warrantyLead": "Remind before warranty ends (days)",
+      "digestHour": "Daily digest time",
+      "hour": "{hour}:00"
+    },
+    "channels": {
+      "title": "Notification channels",
+      "email": "Daily email digest",
+      "emailHint": "Sent to {email}.",
+      "push": "Push notifications (web push)",
+      "pushHint": "Get notifications on this device.",
+      "enablePush": "Enable notifications on this device",
+      "pushEnabled": "Notifications are on for this device",
+      "disablePush": "Turn off on this device",
+      "pushUnsupported": "This browser does not support push notifications. On iPhone, add the app to your Home Screen first.",
+      "pushDenied": "Notifications are blocked. Re-enable them in your browser settings.",
+      "pushNotConfigured": "The server has no VAPID keys configured.",
+      "test": "Send a test notification",
+      "testSent": "Test notification sent",
+      "testFailed": "Could not send the test notification"
+    },
+    "data": {
+      "title": "Data",
+      "exportCsv": "Export items (CSV)",
+      "exportJson": "Full backup (JSON)",
+      "exportHint": "Files are generated from your data and downloaded to this device."
+    },
+    "account": {
+      "title": "Account",
+      "signedInAs": "Signed in as {email}"
+    },
+    "saved": "Settings saved"
+  },
+  "notifications": {
+    "subject": "{count, plural, one {Stowly: # item needs attention} other {Stowly: # items need attention}}",
+    "heading": "Hi! These items need your attention today",
+    "intro": "{count, plural, one {There is # new alert.} other {There are # new alerts.}}",
+    "open": "Open Stowly",
+    "footer": "You receive this email because the daily digest is turned on in Stowly settings.",
+    "pushTitle": "{count, plural, one {# item needs attention} other {# items need attention}}",
+    "pushMore": "{count, plural, one {and # more} other {and # more}}",
+    "testTitle": "Stowly",
+    "testBody": "Notifications are working on this device."
   }
 }
