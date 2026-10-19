@@ -51,7 +51,9 @@
     "signOut": "Sign out",
     "language": "Language",
     "account": "Account",
-    "groups": "Item groups"
+    "groups": "Item groups",
+    "stats": "Spending",
+    "suggestions": "Clean-up ideas"
   },
   "auth": {
     "title": "Sign in",
@@ -234,7 +236,13 @@
     "addOneExisting": "+1 to stock",
     "addedOne": "Added 1: {name}",
     "productFound": "Filled in from barcode {code}. Please check before saving.",
-    "productNotFound": "No product found for {code}. Type a name — the barcode is still saved."
+    "productNotFound": "No product found for {code}. Type a name — the barcode is still saved.",
+    "eventNotes": {
+      "shopping": "Shopping",
+      "merge": "Merged duplicates",
+      "barcode": "Barcode scan",
+      "demo": "Demo data"
+    }
   },
   "locations": {
     "title": "Locations",
@@ -477,7 +485,9 @@
       "removeLead": "Remove {days}-day step",
       "warrantyLead": "Remind before warranty ends (days)",
       "digestHour": "Daily digest time",
-      "hour": "{hour}:00"
+      "hour": "{hour}:00",
+      "unusedAfter": "Suggest unused items after",
+      "unusedOption": "{days, plural, one {# day} other {# days}}"
     },
     "channels": {
       "title": "Notification channels",
@@ -632,5 +642,75 @@
       "id": "ID",
       "archived": "Archived"
     }
+  },
+  "stats": {
+    "title": "Spending",
+    "subtitle": "Based on the purchase price and date of your items.",
+    "period": "Period",
+    "periods": {
+      "12m": "Last 12 months",
+      "ytd": "This year",
+      "lastYear": "Last year",
+      "all": "All time"
+    },
+    "total": "Total spent",
+    "count": "Items bought",
+    "perMonth": "Average per month",
+    "vsPrevious": "{direction, select, up {Up {pct}% vs previous period} down {Down {pct}% vs previous period} other {Same as previous period}}",
+    "noPrevious": "No data for the previous period",
+    "purchases": "{count, plural, one {# item} other {# items}}",
+    "byMonth": "By month",
+    "byCategory": "By category",
+    "byRoom": "By room",
+    "top": "Most expensive",
+    "noLocation": "No location",
+    "noCategory": "Uncategorized",
+    "showTable": "Show as table",
+    "showChart": "Show chart",
+    "month": "Month",
+    "amount": "Amount",
+    "barLabel": "{month}: {amount}, {count, plural, one {# item} other {# items}}",
+    "chartLabel": "Monthly spending chart, highest {month}: {amount}",
+    "empty": "No priced purchases in this period. Add a price and purchase date to items to see statistics.",
+    "missing": "{unpriced, plural, =0 {} one {# item bought in this period has no price.} other {# items bought in this period have no price.}} {undated, plural, =0 {} one {# priced item has no purchase date.} other {# priced items have no purchase date.}}",
+    "share": "{pct}% of total"
+  },
+  "suggestions": {
+    "title": "Clean-up ideas",
+    "subtitle": "Things unused for a long time, worn or broken items, and double entries.",
+    "tabs": {
+      "idle": "Unused",
+      "worn": "Worn",
+      "broken": "Broken",
+      "duplicate": "Duplicates"
+    },
+    "idle": "{days, plural, one {Unused for # day} other {Unused for # days}}",
+    "idleSince": "Last change: {date}",
+    "idleHint": "“Used” means a quantity change, a move or a condition change. Current threshold: {days} days (change it in Settings).",
+    "worn": "Worn · consider giving away",
+    "broken": "Broken · repair or discard",
+    "duplicate": "{count, plural, other {# items with the same name in the same place}}",
+    "duplicateOf": "Same as an item added earlier",
+    "actions": {
+      "giveAway": "Give away",
+      "archive": "Archive",
+      "keep": "Keep",
+      "snooze": "Snooze 30 days",
+      "merge": "Merge into older item",
+      "open": "Open",
+      "group": "Actions for {name}"
+    },
+    "done": {
+      "giveAway": "Marked “{name}” as given away",
+      "archive": "Archived “{name}”",
+      "keep": "Won't suggest “{name}” again",
+      "snooze": "Snoozed for 30 days",
+      "merge": "Merged into the older item"
+    },
+    "undo": "Undo",
+    "empty": "No suggestions here. Nice and tidy! ✨",
+    "showMore": "Show {count, plural, one {# more} other {# more}}",
+    "dashboard": "{count, plural, one {# clean-up idea} other {# clean-up ideas}}",
+    "dashboardHint": "Unused for a long time, worn, broken or duplicated."
   }
 }

@@ -51,7 +51,9 @@
     "signOut": "Đăng xuất",
     "language": "Ngôn ngữ",
     "account": "Tài khoản",
-    "groups": "Nhóm đồ"
+    "groups": "Nhóm đồ",
+    "stats": "Chi tiêu",
+    "suggestions": "Gợi ý dọn dẹp"
   },
   "auth": {
     "title": "Đăng nhập",
@@ -234,7 +236,13 @@
     "addOneExisting": "+1 vào kho",
     "addedOne": "Đã cộng 1: {name}",
     "productFound": "Đã điền thông tin từ mã vạch {code}. Kiểm tra lại trước khi lưu.",
-    "productNotFound": "Không tìm thấy sản phẩm cho mã {code}. Hãy nhập tên — mã vạch vẫn được lưu."
+    "productNotFound": "Không tìm thấy sản phẩm cho mã {code}. Hãy nhập tên — mã vạch vẫn được lưu.",
+    "eventNotes": {
+      "shopping": "Mua sắm",
+      "merge": "Gộp món trùng",
+      "barcode": "Quét mã vạch",
+      "demo": "Dữ liệu mẫu"
+    }
   },
   "locations": {
     "title": "Vị trí",
@@ -477,7 +485,9 @@
       "removeLead": "Bỏ mốc {days} ngày",
       "warrantyLead": "Nhắc trước hết bảo hành (ngày)",
       "digestHour": "Giờ gửi tổng hợp hằng ngày",
-      "hour": "{hour}:00"
+      "hour": "{hour}:00",
+      "unusedAfter": "Gợi ý đồ không dùng sau",
+      "unusedOption": "{days, plural, other {# ngày}}"
     },
     "channels": {
       "title": "Kênh thông báo",
@@ -632,5 +642,75 @@
       "id": "Mã (id)",
       "archived": "Đã lưu trữ"
     }
+  },
+  "stats": {
+    "title": "Chi tiêu",
+    "subtitle": "Tổng hợp từ giá mua và ngày mua của các món đồ.",
+    "period": "Khoảng thời gian",
+    "periods": {
+      "12m": "12 tháng gần nhất",
+      "ytd": "Năm nay",
+      "lastYear": "Năm trước",
+      "all": "Tất cả"
+    },
+    "total": "Tổng chi",
+    "count": "Số món đã mua",
+    "perMonth": "Trung bình mỗi tháng",
+    "vsPrevious": "{direction, select, up {Tăng {pct}% so với kỳ trước} down {Giảm {pct}% so với kỳ trước} other {Bằng kỳ trước}}",
+    "noPrevious": "Kỳ trước chưa có dữ liệu",
+    "purchases": "{count, plural, other {# món}}",
+    "byMonth": "Theo tháng",
+    "byCategory": "Theo danh mục",
+    "byRoom": "Theo phòng",
+    "top": "Món đắt nhất",
+    "noLocation": "Chưa có vị trí",
+    "noCategory": "Chưa phân loại",
+    "showTable": "Xem dạng bảng",
+    "showChart": "Xem biểu đồ",
+    "month": "Tháng",
+    "amount": "Số tiền",
+    "barLabel": "{month}: {amount}, {count, plural, other {# món}}",
+    "chartLabel": "Biểu đồ chi tiêu theo tháng, cao nhất {month}: {amount}",
+    "empty": "Chưa có món nào có giá mua trong khoảng này. Thêm giá và ngày mua khi tạo món đồ để xem thống kê.",
+    "missing": "{unpriced, plural, =0 {} other {# món mua trong kỳ chưa có giá.}} {undated, plural, =0 {} other {# món có giá nhưng chưa có ngày mua.}}",
+    "share": "{pct}% tổng chi"
+  },
+  "suggestions": {
+    "title": "Gợi ý dọn dẹp",
+    "subtitle": "Đồ lâu không dùng, đồ cũ hỏng và món bị nhập trùng.",
+    "tabs": {
+      "idle": "Lâu không dùng",
+      "worn": "Cũ",
+      "broken": "Hỏng",
+      "duplicate": "Trùng lặp"
+    },
+    "idle": "{days, plural, other {Không dùng # ngày}}",
+    "idleSince": "Lần cuối thay đổi: {date}",
+    "idleHint": "“Dùng” nghĩa là thay đổi số lượng, chuyển chỗ hoặc đổi tình trạng. Ngưỡng hiện tại: {days} ngày (đổi trong Cài đặt).",
+    "worn": "Đã cũ · cân nhắc cho đi",
+    "broken": "Đã hỏng · sửa hoặc bỏ",
+    "duplicate": "{count, plural, other {# món cùng tên ở cùng vị trí}}",
+    "duplicateOf": "Trùng với món đã thêm trước",
+    "actions": {
+      "giveAway": "Cho đi",
+      "archive": "Lưu trữ",
+      "keep": "Giữ lại",
+      "snooze": "Hoãn 30 ngày",
+      "merge": "Gộp vào món cũ",
+      "open": "Xem",
+      "group": "Thao tác cho {name}"
+    },
+    "done": {
+      "giveAway": "Đã đánh dấu “{name}” là đã cho đi",
+      "archive": "Đã lưu trữ “{name}”",
+      "keep": "Sẽ không gợi ý “{name}” nữa",
+      "snooze": "Đã hoãn gợi ý 30 ngày",
+      "merge": "Đã gộp vào món cũ"
+    },
+    "undo": "Hoàn tác",
+    "empty": "Không có gợi ý nào ở đây. Gọn gàng lắm! ✨",
+    "showMore": "Xem thêm {count, plural, other {# gợi ý}}",
+    "dashboard": "{count, plural, other {# gợi ý dọn dẹp}}",
+    "dashboardHint": "Đồ lâu không dùng, cũ, hỏng hoặc bị trùng."
   }
 }
