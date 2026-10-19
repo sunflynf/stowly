@@ -11,6 +11,7 @@ import {
   Settings,
   ShoppingCart,
   Tag,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import type { Messages } from "@/lib/messages-type";
@@ -59,6 +60,7 @@ export const primaryNav: NavItem[] = [
 
 export const secondaryNav: NavItem[] = [
   { href: "/alerts", label: "alerts", icon: Bell, count: "attention" },
+  { href: "/maintenance", label: "maintenance", icon: Wrench },
   { href: "/groups", label: "groups", icon: Boxes },
   { href: "/shopping", label: "shopping", icon: ShoppingCart },
   { href: "/stats", label: "stats", icon: ChartColumn },

@@ -12,6 +12,8 @@ const statsSchema = z.object({
   expired: z.number(),
   low_stock: z.number(),
   low_stock_names: z.array(z.string()),
+  maintenance_due: z.number().default(0),
+  maintenance_overdue: z.number().default(0),
   warranty_ending: z.number(),
   warranty_min_days: z.number().nullable(),
   attention: z.number(),

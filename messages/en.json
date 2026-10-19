@@ -53,7 +53,8 @@
     "account": "Account",
     "groups": "Item groups",
     "stats": "Spending",
-    "suggestions": "Clean-up ideas"
+    "suggestions": "Clean-up ideas",
+    "maintenance": "Maintenance"
   },
   "auth": {
     "title": "Sign in",
@@ -142,7 +143,9 @@
     "good": "Good",
     "new": "New",
     "warranty_left": "{months, plural, one {Warranty: # month left} other {Warranty: # months left}}",
-    "archived": "Archived"
+    "archived": "Archived",
+    "maintenance_due": "{days, plural, =0 {Due today} one {Due in # day} other {Due in # days}}",
+    "maintenance_overdue": "{days, plural, =0 {Due today} one {# day overdue} other {# days overdue}}"
   },
   "item": {
     "fields": {
@@ -218,7 +221,8 @@
       "created": "Created with quantity {quantity}",
       "quantity_change": "{delta} → {quantity} left",
       "moved": "Moved from {from} to {to}",
-      "status_change": "Condition: {from} → {to}"
+      "status_change": "Condition: {from} → {to}",
+      "maintenance": "Maintenance done"
     },
     "delete": "Delete item",
     "deleteConfirm": "Delete “{name}”? This cannot be undone.",
@@ -399,7 +403,8 @@
     "createShopping": "Create shopping list",
     "shoppingCreated": "{count, plural, =0 {The shopping list already has these items} one {Added # item to the shopping list} other {Added # items to the shopping list}}",
     "byCategory": "By category",
-    "stockOf": "{name}: {quantity} left, threshold {threshold}"
+    "stockOf": "{name}: {quantity} left, threshold {threshold}",
+    "maintenance": "Maintenance due ({count})"
   },
   "scan": {
     "button": "Scan a QR code or barcode",
@@ -447,7 +452,8 @@
       "warranty": "Warranty",
       "replace": "Replace",
       "lent": "Lent",
-      "snoozed": "Snoozed"
+      "snoozed": "Snoozed",
+      "maintenance": "Maintenance"
     },
     "empty": "No alerts here. 🎉",
     "actions": {
@@ -496,7 +502,10 @@
       "digestHour": "Daily digest time",
       "hour": "{hour}:00",
       "unusedAfter": "Suggest unused items after",
-      "unusedOption": "{days, plural, one {# day} other {# days}}"
+      "unusedOption": "{days, plural, one {# day} other {# days}}",
+      "maintenanceLead": "Remind about maintenance",
+      "maintenanceLeadHint": "A task shows as due this many days before its date.",
+      "maintenanceLeadOption": "{days, plural, =0 {On the due date} one {# day before} other {# days before}}"
     },
     "channels": {
       "title": "Notification channels",
@@ -792,5 +801,54 @@
     "emailBody": "You have been invited to join {household} on Stowly as {role}, to keep track of the household's things together.",
     "emailButton": "View invite",
     "emailFooter": "The link is valid for 7 days. If you don't know the sender, ignore this email."
+  },
+  "maintenance": {
+    "title": "Maintenance",
+    "subtitle": "Recurring jobs like cleaning the AC filter or servicing the motorbike.",
+    "add": "Add maintenance task",
+    "addShort": "Add task",
+    "edit": "Edit maintenance task",
+    "empty": "No maintenance tasks yet. Add something recurring, like “Clean AC filter every 3 months”.",
+    "itemEmpty": "No maintenance tasks for this item.",
+    "taskTitle": "Task",
+    "titlePlaceholder": "Clean AC filter",
+    "interval": "Repeat every",
+    "intervalCount": "Count",
+    "intervalUnit": "Unit",
+    "units": {
+      "day": "{count, plural, one {day} other {days}}",
+      "week": "{count, plural, one {week} other {weeks}}",
+      "month": "{count, plural, one {month} other {months}}",
+      "year": "{count, plural, one {year} other {years}}"
+    },
+    "every": "{count, plural, one {Every {unit, select, day {day} week {week} month {month} other {year}}} other {Every # {unit, select, day {days} week {weeks} month {months} other {years}}}}",
+    "startDate": "First due on",
+    "startDateHint": "Leave empty to start one interval from today.",
+    "item": "Item",
+    "itemHint": "Optional. Type to search your items.",
+    "itemSearch": "Search items…",
+    "itemResults": "Matching items",
+    "itemNone": "No matching items.",
+    "unlinkItem": "Remove item",
+    "notes": "Notes",
+    "dueOn": "Due {date}",
+    "lastDone": "Last done {date}",
+    "neverDone": "Not done yet",
+    "markDone": "Mark done",
+    "doneOn": "Done on",
+    "doneOnHint": "Empty means today. The next date counts from this day.",
+    "doneNote": "Note (optional)",
+    "doneToast": "Recorded. The task moved to its next date.",
+    "history": "History",
+    "actionsFor": "Actions for {name}",
+    "menuFor": "More actions for {name}",
+    "delete": "Delete maintenance task",
+    "deleteConfirm": "Delete “{name}” and its history?",
+    "deleted": "Maintenance task deleted.",
+    "sections": {
+      "due": "To do ({count})",
+      "snoozed": "Snoozed ({count})",
+      "upcoming": "Upcoming ({count})"
+    }
   }
 }
