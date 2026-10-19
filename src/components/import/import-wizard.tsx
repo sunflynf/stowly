@@ -254,49 +254,44 @@ export function ImportWizard() {
               </Button>
             </div>
             <p className="mb-3 text-sm text-muted-foreground">{t("mappingHint")}</p>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-[15px]">
-                <thead>
-                  <tr className="text-sm text-muted-foreground">
-                    <th scope="col" className="py-2 pr-3 font-medium">{t("column")}</th>
-                    <th scope="col" className="py-2 pr-3 font-medium">{t("sample")}</th>
-                    <th scope="col" className="py-2 font-medium">{t("field")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {parsed.headers.map((h, i) => {
-                    const sample = parsed.records.find((r) => (r[i] ?? "").trim())?.[i] ?? "";
-                    const selectId = `map-${i}`;
-                    return (
-                      <tr key={i} className="border-t border-border">
-                        <th scope="row" className="py-2 pr-3 font-medium">
-                          <label htmlFor={selectId}>{h || `#${i + 1}`}</label>
-                        </th>
-                        <td className="max-w-48 truncate py-2 pr-3 text-muted-foreground">{sample}</td>
-                        <td className="py-2">
-                          <NativeSelect
-                            id={selectId}
-                            value={mapping[i] ?? ""}
-                            onChange={(e) => {
-                              const value = (e.target.value || null) as ImportField | null;
-                              setMapping((m) => m.map((f, j) => (j === i ? value : f === value && value ? null : f)));
-                            }}
-                            className="min-h-10 py-1"
-                          >
-                            <option value="">{t("skip")}</option>
-                            {IMPORT_FIELDS.map((f) => (
-                              <option key={f} value={f}>
-                                {label(f)}
-                              </option>
-                            ))}
-                          </NativeSelect>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            {/* Stacked on phones, three columns on desktop. */}
+            <div className="hidden grid-cols-[1fr_1fr_16rem] gap-3 border-b border-border pb-2 text-sm text-muted-foreground md:grid" aria-hidden>
+              <span>{t("column")}</span>
+              <span>{t("sample")}</span>
+              <span>{t("field")}</span>
             </div>
+            <ul>
+              {parsed.headers.map((h, i) => {
+                const sample = parsed.records.find((r) => (r[i] ?? "").trim())?.[i] ?? "";
+                const selectId = `map-${i}`;
+                return (
+                  <li key={i} className="grid gap-x-3 gap-y-1.5 border-b border-border py-3 last:border-0 md:grid-cols-[1fr_1fr_16rem] md:items-center">
+                    <label htmlFor={selectId} className="font-medium break-words">
+                      {h || `#${i + 1}`}
+                    </label>
+                    <span className="truncate text-sm text-muted-foreground md:text-[15px]">
+                      <span className="md:hidden">{t("sample")}: </span>
+                      {sample}
+                    </span>
+                    <NativeSelect
+                      id={selectId}
+                      value={mapping[i] ?? ""}
+                      onChange={(e) => {
+                        const value = (e.target.value || null) as ImportField | null;
+                        setMapping((m) => m.map((f, j) => (j === i ? value : f === value && value ? null : f)));
+                      }}
+                    >
+                      <option value="">{t("skip")}</option>
+                      {IMPORT_FIELDS.map((f) => (
+                        <option key={f} value={f}>
+                          {label(f)}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                  </li>
+                );
+              })}
+            </ul>
             {!hasName && (
               <p role="alert" className="mt-3 rounded-[var(--radius)] bg-warning px-3 py-2 text-sm font-medium text-warning-foreground">
                 {t("needName")}
