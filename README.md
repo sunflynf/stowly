@@ -49,7 +49,7 @@ Useful local URLs:
 | `pnpm lint:i18n` | Fails if a message key exists in one locale but not the other |
 | `pnpm test` | Vitest unit tests. Covers i18n parity (keys and ICU arguments), validation, status/alert logic and digest rendering. |
 | `pnpm test:db` | Integration tests against local Supabase: RLS isolation between two users, storage policies, signup seeding, quantity RPC, search |
-| `pnpm test:e2e` | Playwright: sign-up + language switch, quick add with photo + stepper + history, search/filters, dashboard → shopping list → restock + snooze |
+| `pnpm test:e2e` | Playwright tests:<br>• sign-up + language switch<br>• quick add with photo + stepper + history<br>• search and filters<br>• dashboard → shopping list → restock + snooze<br>• QR labels and the `/l/<id>` link<br>• barcode duplicate check + manual entry<br>• **real camera scan** (Chromium's fake camera plays a QR video into the ZXing decoder) |
 | `pnpm bench:search` | Search latency against the seeded account (target p95 < 200 ms) |
 | `pnpm db:reset` / `pnpm db:types` | Re-apply migrations / regenerate `src/lib/database.types.ts` |
 | `pnpm vapid` | Generate VAPID keys for web push |
@@ -102,7 +102,11 @@ Useful local URLs:
 | **M3** Search, All items, stepper, history | `/items`: type `ao khoac`, `sac`, `lightnig` (typo) or `tu quan ao` (a location). Combine filters and sorts; the state is kept in the URL. The inline stepper writes to the item's quantity history (item detail page). `pnpm bench:search` |
 | **M4** Alert states, dashboard, shopping list | `/` shows stat cards, "Cần xử lý" and the low-stock bars. "Tạo danh sách cần mua" fills `/shopping`; checking an item adds the bought amount to stock. |
 | **M5** Scheduled alerts, Alerts page, settings | `/alerts`: Mark replaced, Used up, Add to shopping list, Snooze 7 days (with undo). `/settings`: lead days, digest hour, channels, push on this device, test notification, CSV/JSON export. Cron dry run: `curl -H "Authorization: Bearer local-cron-secret" "localhost:3000/api/cron/alerts?force=1&dry=1"` |
+| **QR labels** | `/locations` → **In nhãn QR**: pick locations and a label size, then print (A4, 100% scale). Scanning a label, or opening `/l/<id>`, shows that location's contents, signing in first if needed. |
+| **Barcode scan** | Quick add → the scan button next to the name. If the camera is unavailable, type a code into the same dialog. A known code offers **+1 to stock**; an unknown code fills the name from Open Food Facts when it is reachable, and the barcode is saved and searchable. The dashboard scan button opens labels and items you already own. |
 | **M6** PWA, performance, E2E | `pnpm build && pnpm start`, then install from the browser; the offline page is served without a network. `pnpm seed:demo --count 5000 && pnpm bench:search`, then `pnpm test:e2e`. |
+
+> `pnpm install` runs `scripts/copy-zxing-wasm.mjs`, which places the barcode decoder in `public/vendor/` (git-ignored).
 
 Measured on the local stack with 5,000 items (end-to-end via PostgREST):
 - Search: p95 ≤ ~110 ms across text, typo, location, state-filtered and paginated queries.
@@ -167,9 +171,21 @@ Defaults chosen where the brief was open, or where the environment forced a choi
 9. **UI kit.** The shadcn registry was not reachable from the build environment, so the components in `src/components/ui` are hand-written in shadcn style on Radix primitives (`radix-ui`), with the same API conventions.
 10. **Currency.** Prices are stored as plain numbers in the profile currency (VND by default; USD and EUR are selectable). There is no conversion.
 11. **Lists.** All items uses infinite scroll with 50 rows per page, plus a "Load more" button. Totals come from `count(*) over()`.
-12. **Scan button.** The QR/scan button uses the browser's `BarcodeDetector` (Chrome on Android). Links to this app open directly; any other code is used as a search query. Printable QR labels are a nice-to-have and were not built.
+12. **Scanning.** The scanner uses the browser's native `BarcodeDetector` when it supports the needed formats, and otherwise the ZXing WebAssembly ponyfill (`barcode-detector`). That covers iPhone Safari, Firefox and desktop browsers. The `.wasm` file is copied to `public/vendor/` on install and served by the app itself, never from a CDN. Every scan dialog also accepts a typed code.
+    - A scanned **QR label** (`…/l/<location-id>`) opens that location. Labels are recognised on any host, so labels printed from another domain still work here.
+    - A scanned **product barcode** opens the item you already own with that barcode. If you don't own one, quick add opens with the code filled in.
 13. **Dark mode.** All colours are CSS variables in `globals.css`, so dark mode only needs a second set of values. It is not implemented yet (light theme first, per the brief).
 14. **Performance tweak.** `compute_item_alerts()` and `user_today()` deliberately omit `SET search_path` so Postgres can inline them; every name is schema-qualified. Inlining made the alerts view about 10× faster.
+15. **QR labels.**
+    - Labels encode a short link, `/l/<id>`, which keeps the QR code coarse and easy to scan. It redirects to `/locations/<id>`, a page showing sub-locations and every item inside, including items in sub-locations.
+    - Labels are generated locally with `qrcode`, as SVG. The link uses `NEXT_PUBLIC_SITE_URL`, so labels printed from a preview build open production.
+    - The print sheet matches common A4 sticker paper: 63.5×38.1 mm (3 per row) or 99.1×67.7 mm (2 per row).
+16. **Barcode lookup.**
+    - `/api/products/<code>` asks Open Food Facts, then Open Products Facts. Both are free, keyless and identified by a User-Agent.
+    - Results are cached for 7 days, each request times out after 4 s, and the endpoint requires sign-in.
+    - Lookup fills in the name ("Brand Name 75 g") and the category, but only fields you have left empty.
+    - Items keep their `barcode`, which is also searchable, so the next scan finds the item instantly.
+    - From quick add, a known barcode shows "Bạn đã có món này" with **Open item** and **+1 to stock** instead of creating a duplicate.
 
 ### Dependencies added (and why)
 
@@ -181,6 +197,8 @@ Defaults chosen where the brief was open, or where the environment forced a choi
 | `react-hook-form`, `zod`, `@hookform/resolvers` | Forms and shared validation |
 | `radix-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`, `lucide-react`, `sonner` | Accessible primitives, shadcn-style variants, icons, toasts |
 | `browser-image-compression` | Client-side photo resize/compression before upload |
+| `qrcode` | QR labels, generated locally as SVG |
+| `barcode-detector` | Barcode/QR scanning on browsers without a native `BarcodeDetector` (ZXing WebAssembly, self-hosted) |
 | `resend` | Digest email |
 | `web-push` | Push notifications (VAPID) |
 | `server-only` | Guards server modules (service-role client) from client bundles |

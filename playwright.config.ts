@@ -22,7 +22,7 @@ export default defineConfig({
   },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1360, height: 900 } } },
-    { name: "mobile", use: { ...devices["Pixel 7"] }, grep: /@mobile/ },
+    { name: "mobile", use: { ...devices["Pixel 7"] }, grep: /@mobile/, testIgnore: /camera-scan/ },
   ],
   webServer: {
     command: `pnpm dev --port ${PORT}`,
