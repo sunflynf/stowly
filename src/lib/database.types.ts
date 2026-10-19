@@ -465,8 +465,13 @@ isOneToOne: false
               "item_count": number,"tag_id": string
             }[]
                            },
-"unused_suggestions":
+"unused_suggestion_counts":
 { Args: Record<PropertyKey, never>; Returns: {
+              "reason": string,"total": number
+            }[]
+                           },
+"unused_suggestions":
+{ Args: { "p_limit"?: number,"p_offset"?: number,"p_reason"?: string }; Returns: {
               "category_id": string,"condition": Database["public"]['Enums']["item_condition"],"duplicate_of": string,"duplicates": number,"idle_days": number,"item_id": string,"last_activity": string,"location_id": string,"location_path": string,"location_path_en": string,"name": string,"purchase_price": number,"quantity": number,"reason": string,"thumb_path": string,"unit": string
             }[]
                            },

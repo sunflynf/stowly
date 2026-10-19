@@ -31,13 +31,22 @@ export function byUrgency(a: AlertRow, b: AlertRow) {
   return b.severity - a.severity || (a.days_left ?? 0) - (b.days_left ?? 0) || a.name.localeCompare(b.name);
 }
 
+const fetchPage = (from: number) =>
+  getSupabaseBrowser().from("item_alerts").select("*").order("item_id").order("kind").range(from, from + 999);
+
 /** All currently raised alerts (the item_alerts view is the single source of truth). */
 export function useAlerts() {
   return useQuery({
     queryKey: qk.alerts,
     queryFn: async (): Promise<AlertRow[]> => {
-      const { data, error } = await getSupabaseBrowser().from("item_alerts").select("*").limit(2000);
-      if (error) throw error;
+      // Page past PostgREST's 1000-row response cap; large inventories can have more alerts.
+      const data: Awaited<ReturnType<typeof fetchPage>>["data"] & object = [];
+      for (let from = 0; ; from += 1000) {
+        const { data: page, error } = await fetchPage(from);
+        if (error) throw error;
+        data.push(...page);
+        if (page.length < 1000 || from >= 20_000) break;
+      }
       return data
         .map((r) => ({
           item_id: r.item_id!,

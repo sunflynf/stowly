@@ -29,6 +29,19 @@ export interface UserDigestResult {
 
 type Alert = RenderAlert & { threshold_key: string };
 
+async function fetchAll<T>(
+  page: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>,
+): Promise<{ data: T[]; error: { message: string } | null }> {
+  const data: T[] = [];
+  for (let from = 0; from < 50_000; from += 1000) {
+    const { data: rows, error } = await page(from, from + 999);
+    if (error) return { data, error };
+    data.push(...(rows ?? []));
+    if (!rows || rows.length < 1000) break;
+  }
+  return { data, error: null };
+}
+
 /**
  * Evaluates alert states per user (in their timezone) and sends one email digest
  * and one push notification with alerts that were not sent before. Idempotent:
@@ -56,12 +69,20 @@ export async function runAlertDigest(options: DigestOptions = {}): Promise<UserD
       continue;
     }
 
+    // Page past PostgREST's 1000-row response cap.
     const [{ data: rawAlerts, error: alertError }, { data: rawLog, error: logError }] = await Promise.all([
-      db
-        .from("item_alerts")
-        .select("item_id, name, kind, severity, days_left, threshold_key, replace_after_months, location_path, location_path_en, snoozed")
-        .eq("user_id", profile.id),
-      db.from("notifications_log").select("id, item_id, kind, threshold_key, channel").eq("user_id", profile.id),
+      fetchAll((from, to) =>
+        db
+          .from("item_alerts")
+          .select("item_id, name, kind, severity, days_left, threshold_key, replace_after_months, location_path, location_path_en, snoozed")
+          .eq("user_id", profile.id)
+          .order("item_id")
+          .order("kind")
+          .range(from, to),
+      ),
+      fetchAll((from, to) =>
+        db.from("notifications_log").select("id, item_id, kind, threshold_key, channel").eq("user_id", profile.id).order("id").range(from, to),
+      ),
     ]);
     if (alertError || logError) {
       result.errors.push((alertError ?? logError)!.message);
