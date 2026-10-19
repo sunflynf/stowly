@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTimeZone, useTranslations } from "next-intl";
 import { useState } from "react";
-import { AlertTriangle, Archive, ArchiveRestore, Camera, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { AlertTriangle, Archive, ArchiveRestore, Camera, MoreVertical, Pencil, ShieldCheck, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/app-shell/page-header";
+import { ItemDocuments } from "@/components/documents/item-documents";
 import { ItemMaintenance } from "@/components/maintenance/item-maintenance";
 import { QuantityStepper } from "@/components/items/quantity-stepper";
 import { StatusBadge, useStatusLabel } from "@/components/items/status-badge";
@@ -320,7 +321,17 @@ export function ItemDetailView({ id }: { id: string }) {
             <InfoRow label={t("fields.condition")}>{tc(`conditions.${item.condition}`)}</InfoRow>
             {item.expiry_date && <InfoRow label={t("fields.expiryDate")}>{fmtDate(item.expiry_date)}</InfoRow>}
             {item.opened_date && <InfoRow label={t("fields.openedDate")}>{fmtDate(item.opened_date)}</InfoRow>}
-            {item.warranty_until && <InfoRow label={t("fields.warrantyUntil")}>{fmtDate(item.warranty_until)}</InfoRow>}
+            {item.warranty_until && (
+              <InfoRow label={t("fields.warrantyUntil")}>
+                <span className="flex flex-wrap items-center justify-end gap-x-3">
+                  {fmtDate(item.warranty_until)}
+                  <Link href={`/items/${id}/warranty`} className="inline-flex min-h-11 items-center gap-1 text-primary underline-offset-4 hover:underline">
+                    <ShieldCheck className="size-4" aria-hidden />
+                    {tc("documents.claimWarranty")}
+                  </Link>
+                </span>
+              </InfoRow>
+            )}
             {item.replace_after_months && (
               <InfoRow label={t("fields.replaceAfterMonths")}>{format.number(item.replace_after_months)}</InfoRow>
             )}
@@ -363,6 +374,8 @@ export function ItemDetailView({ id }: { id: string }) {
           )}
           {item.notes && <p className="border-t border-border py-3 text-[15px] whitespace-pre-wrap">{item.notes}</p>}
         </section>
+
+        <ItemDocuments itemId={id} />
 
         <ItemMaintenance itemId={id} itemName={item.name} />
 

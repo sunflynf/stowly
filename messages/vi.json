@@ -54,7 +54,8 @@
     "groups": "Nhóm đồ",
     "stats": "Chi tiêu",
     "suggestions": "Gợi ý dọn dẹp",
-    "maintenance": "Bảo trì"
+    "maintenance": "Bảo trì",
+    "insurance": "Báo cáo bảo hiểm"
   },
   "auth": {
     "title": "Đăng nhập",
@@ -115,7 +116,8 @@
     "inviteNotFound": "Không tìm thấy lời mời.",
     "inviteExpired": "Lời mời đã hết hạn. Hãy nhờ chủ nhà gửi lời mời mới.",
     "inviteUsed": "Lời mời này đã được dùng.",
-    "inviteWrongEmail": "Lời mời này dành cho một email khác."
+    "inviteWrongEmail": "Lời mời này dành cho một email khác.",
+    "documentLimit": "Mỗi món đồ có tối đa 20 tài liệu."
   },
   "placeholder": {
     "body": "Màn hình này đang được xây dựng."
@@ -850,5 +852,59 @@
       "snoozed": "Đã hoãn ({count})",
       "upcoming": "Sắp tới ({count})"
     }
+  },
+  "documents": {
+    "title": "Tài liệu",
+    "empty": "Chưa có phiếu bảo hành, hoá đơn hay sách hướng dẫn.",
+    "kind": "Loại tài liệu",
+    "kinds": {
+      "warranty": "Phiếu bảo hành",
+      "invoice": "Hoá đơn",
+      "manual": "Sách hướng dẫn",
+      "other": "Khác"
+    },
+    "upload": "Tải tài liệu lên",
+    "uploading": "Đang tải lên…",
+    "hint": "PDF hoặc ảnh (JPG, PNG, WebP), tối đa 10 MB mỗi tệp.",
+    "errors": {
+      "documentType": "{name}: chỉ nhận PDF hoặc ảnh JPG, PNG, WebP.",
+      "documentSize": "{name} lớn hơn 10 MB."
+    },
+    "viewNamed": "Xem {name}",
+    "deleteNamed": "Xoá {name}",
+    "download": "Tải xuống",
+    "delete": "Xoá tài liệu",
+    "deleteConfirm": "Xoá “{name}”? Tệp sẽ bị xoá vĩnh viễn.",
+    "deleted": "Đã xoá tài liệu.",
+    "claimWarranty": "Yêu cầu bảo hành",
+    "print": "In",
+    "notRecorded": "Chưa ghi",
+    "serial": "Số serial",
+    "model": "Hãng / Model",
+    "photos": "Ảnh",
+    "warrantyLeft": "{days, plural, =0 {Hết hạn hôm nay} other {Còn # ngày}}",
+    "warrantyExpired": "{days, plural, other {Đã hết # ngày}}"
+  },
+  "insurance": {
+    "title": "Báo cáo bảo hiểm",
+    "subtitle": "Danh sách đồ có giá trị kèm ảnh, giá mua và số serial. In hoặc lưu thành PDF.",
+    "print": "In / Lưu PDF",
+    "filters": "Bộ lọc báo cáo",
+    "minValue": "Giá trị tối thiểu",
+    "category": "Danh mục",
+    "room": "Phòng / vị trí",
+    "all": "Tất cả",
+    "printTitle": "Danh sách tài sản – {household}",
+    "generated": "Lập ngày {date}",
+    "summaryMin": "từ {value}",
+    "count": "{count, plural, other {# món đồ}}",
+    "total": "Tổng giá trị",
+    "photo": "Ảnh",
+    "item": "Món đồ",
+    "identity": "Hãng, model, serial",
+    "noDate": "Chưa có ngày mua",
+    "empty": "Không có món đồ nào có giá mua khớp bộ lọc.",
+    "unpriced": "{count, plural, other {# món đồ khớp bộ lọc chưa có giá mua nên không được liệt kê.}}",
+    "truncated": "Chỉ hiển thị {shown} món giá trị nhất; tổng vẫn tính tất cả."
   }
 }
