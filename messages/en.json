@@ -499,7 +499,8 @@
       "title": "Data",
       "exportCsv": "Export items (CSV)",
       "exportJson": "Full backup (JSON)",
-      "exportHint": "Files are generated from your data and downloaded to this device."
+      "exportHint": "Files are generated from your data and downloaded to this device.",
+      "import": "Import from CSV"
     },
     "account": {
       "title": "Account",
@@ -580,5 +581,56 @@
     "lowBanner": "Low stock: {total} left in total, shared threshold is {threshold}",
     "outBanner": "The whole group is out of stock (threshold {threshold})",
     "badge": "Group"
+  },
+  "importPage": {
+    "title": "Import from CSV",
+    "subtitle": "Add or update many items at once from Excel, Google Sheets or a Stowly export.",
+    "choose": "Choose a CSV file",
+    "drop": "Drop a CSV file here or",
+    "fileHint": "Comma, semicolon or tab separated; UTF-8. Up to 10,000 rows.",
+    "template": "Download template",
+    "readError": "Could not read the file. Save it as CSV (UTF-8).",
+    "tooMany": "The file has too many rows (max 10,000).",
+    "fileInfo": "{file}: {rows, plural, one {# row} other {# rows}} · {cols, plural, one {# column} other {# columns}}",
+    "changeFile": "Choose another file",
+    "mapping": "Match columns",
+    "mappingHint": "Columns were matched automatically. Check and adjust if needed.",
+    "column": "Column in file",
+    "sample": "Example",
+    "field": "Stowly field",
+    "skip": "— Skip —",
+    "needName": "Match one column to “Item name”.",
+    "duplicates": "When an item already exists",
+    "duplicatesHint": "A duplicate has the same id (from an export), the same barcode, or the same name in the same location.",
+    "modes": {
+      "update": "Update the existing item",
+      "updateHint": "Only columns in the file are overwritten.",
+      "skip": "Skip duplicates",
+      "skipHint": "Keep the existing item as is.",
+      "create": "Always create new",
+      "createHint": "No duplicate check (unless an id column is present)."
+    },
+    "preview": "Preview",
+    "previewHint": "{valid, plural, one {# valid row} other {# valid rows}} · {invalid, plural, =0 {no errors} one {# row with errors will be skipped} other {# rows with errors will be skipped}}",
+    "row": "Row",
+    "ok": "OK",
+    "problems": {
+      "required": "missing {field}",
+      "date": "{field}: invalid date",
+      "condition": "{field}: not recognised",
+      "attributes": "{field}: invalid JSON"
+    },
+    "start": "Import {count, plural, one {# row} other {# rows}}",
+    "importing": "Importing… {done}/{total}",
+    "done": "Import finished",
+    "summary": "{created} created · {updated} updated · {skipped} skipped · {errors} errors",
+    "errorReport": "Download rows with errors",
+    "viewItems": "View items",
+    "again": "Import another file",
+    "createdHint": "Missing categories, locations, groups and tags are created automatically.",
+    "fields": {
+      "id": "ID",
+      "archived": "Archived"
+    }
   }
 }

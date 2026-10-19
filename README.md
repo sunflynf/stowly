@@ -49,7 +49,7 @@ Useful local URLs:
 | `pnpm lint:i18n` | Fails if a message key exists in one locale but not the other |
 | `pnpm test` | Vitest unit tests. Covers i18n parity (keys and ICU arguments), validation, status/alert logic and digest rendering. |
 | `pnpm test:db` | Integration tests against local Supabase: RLS isolation between two users, storage policies, signup seeding, quantity RPC, search |
-| `pnpm test:e2e` | Playwright tests:<br>• sign-up + language switch<br>• quick add with photo + stepper + history<br>• search and filters<br>• dashboard → shopping list → restock + snooze<br>• QR labels and the `/l/<id>` link<br>• barcode duplicate check + manual entry<br>• **real camera scan** (Chromium's fake camera plays a QR video into the ZXing decoder) |
+| `pnpm test:e2e` | Playwright tests:<br>• sign-up + language switch<br>• quick add with photo + stepper + history<br>• search and filters<br>• dashboard → shopping list → restock + snooze<br>• QR labels and the `/l/<id>` link<br>• barcode duplicate check + manual entry<br>• **real camera scan** (Chromium's fake camera plays a QR video into the ZXing decoder)<br>• item groups (created from the item form)<br>• CSV import (Vietnamese file) + export round-trip |
 | `pnpm bench:search` | Search latency against the seeded account (target p95 < 200 ms) |
 | `pnpm db:reset` / `pnpm db:types` | Re-apply migrations / regenerate `src/lib/database.types.ts` |
 | `pnpm vapid` | Generate VAPID keys for web push |
@@ -104,6 +104,8 @@ Useful local URLs:
 | **M5** Scheduled alerts, Alerts page, settings | `/alerts`: Mark replaced, Used up, Add to shopping list, Snooze 7 days (with undo). `/settings`: lead days, digest hour, channels, push on this device, test notification, CSV/JSON export. Cron dry run: `curl -H "Authorization: Bearer local-cron-secret" "localhost:3000/api/cron/alerts?force=1&dry=1"` |
 | **QR labels** | `/locations` → **In nhãn QR**: pick locations and a label size, then print (A4, 100% scale). Scanning a label, or opening `/l/<id>`, shows that location's contents, signing in first if needed. |
 | **Barcode scan** | Quick add → the scan button next to the name. If the camera is unavailable, type a code into the same dialog. A known code offers **+1 to stock**; an unknown code fills the name from Open Food Facts when it is reachable, and the barcode is saved and searchable. The dashboard scan button opens labels and items you already own. |
+| **Item groups** | **Nhóm đồ** → create "Dây sạc" with threshold 5, then add items (or pick the group in the item form). The group page shows the combined total vs threshold; when the total is low, the group appears on the dashboard low-stock panel, the Alerts page (snooze / add to shopping) and the daily digest. Buying a group shopping entry restocks the member updated most recently. |
+| **CSV import** | **Settings → Nhập từ CSV**, or `/import`: drop a CSV (Excel with semicolons, Vietnamese headers and dd/mm/yyyy dates all work), check the column matching and the preview, choose what happens to duplicates, then import. Re-importing an export (`/api/export/items`) updates items by `id`. "Tải tệp mẫu" downloads a template. |
 | **M6** PWA, performance, E2E | `pnpm build && pnpm start`, then install from the browser; the offline page is served without a network. `pnpm seed:demo --count 5000 && pnpm bench:search`, then `pnpm test:e2e`. |
 
 > `pnpm install` runs `scripts/copy-zxing-wasm.mjs`, which places the barcode decoder in `public/vendor/` (git-ignored).
@@ -186,6 +188,23 @@ Defaults chosen where the brief was open, or where the environment forced a choi
     - Lookup fills in the name ("Brand Name 75 g") and the category, but only fields you have left empty.
     - Items keep their `barcode`, which is also searchable, so the next scan finds the item instantly.
     - From quick add, a known barcode shows "Bạn đã có món này" with **Open item** and **+1 to stock** instead of creating a duplicate.
+
+17. **Item groups.**
+    - A group has a shared threshold, evaluated on the **sum** of its active members' quantities.
+    - Members keep their own optional thresholds.
+    - Group alerts live in a `group_alerts` view with the same alert kinds as items (`low_stock`/`out_of_stock`).
+    - Group alerts have their own notification log and a simple `snoozed_until` on the group.
+    - A bought group entry adds its quantity to the member updated most recently: usually the one you are re-buying, and easy to adjust afterwards.
+18. **CSV import.**
+    - **File handling:** Parsing and validation run in the browser, so you get an instant preview. Rows are sent in chunks of 200 to a server action, which validates everything again with the same Zod item schema.
+    - **Matching:**
+      - Category and group names are matched accent-insensitively, in Vietnamese or English.
+      - Location paths use `›`, `>` or `/` as separators and are walked from the top, creating missing levels.
+      - Missing categories, groups and tags are created.
+      - A row with an `id` you own always updates that item. Otherwise a duplicate is the same barcode, or the same name in the same location; it is updated, skipped or created again, as you choose.
+      - Each existing item is matched by at most one row, so identical lines stay separate items.
+    - **Updates:** only the columns present in the file are written, and tag links change only where they differ.
+    - **Speed** (local stack, 5,000 rows): about 13 s to create, about 40 s to update.
 
 ### Dependencies added (and why)
 

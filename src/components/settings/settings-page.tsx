@@ -3,7 +3,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
-import { Bell, Download, LogOut, Plus, X } from "lucide-react";
+import Link from "next/link";
+import { Bell, Download, LogOut, Plus, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { LanguageSwitcher } from "@/components/app-shell/language-switcher";
 import { PageHeader } from "@/components/app-shell/page-header";
@@ -273,6 +274,12 @@ export function SettingsPage() {
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <div className="flex flex-wrap gap-2">
+            <Button variant="outline" asChild>
+              <Link href="/import">
+                <Upload />
+                {t("data.import")}
+              </Link>
+            </Button>
             <Button variant="outline" asChild>
               <a href="/api/export/items" download>
                 <Download />

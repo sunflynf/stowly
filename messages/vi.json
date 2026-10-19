@@ -499,7 +499,8 @@
       "title": "Dữ liệu",
       "exportCsv": "Xuất danh sách đồ (CSV)",
       "exportJson": "Sao lưu toàn bộ (JSON)",
-      "exportHint": "Tệp được tạo từ dữ liệu của bạn và tải xuống thiết bị này."
+      "exportHint": "Tệp được tạo từ dữ liệu của bạn và tải xuống thiết bị này.",
+      "import": "Nhập từ CSV"
     },
     "account": {
       "title": "Tài khoản",
@@ -580,5 +581,56 @@
     "lowBanner": "Tồn kho thấp: tổng còn {total}, ngưỡng chung là {threshold}",
     "outBanner": "Hết hàng cả nhóm (ngưỡng chung là {threshold})",
     "badge": "Nhóm"
+  },
+  "importPage": {
+    "title": "Nhập từ CSV",
+    "subtitle": "Thêm hoặc cập nhật nhiều món đồ cùng lúc từ Excel, Google Sheets hoặc tệp xuất của Stowly.",
+    "choose": "Chọn tệp CSV",
+    "drop": "Kéo thả tệp CSV vào đây hoặc",
+    "fileHint": "Hỗ trợ dấu phẩy, chấm phẩy hoặc tab; mã hoá UTF-8. Tối đa 10.000 dòng.",
+    "template": "Tải tệp mẫu",
+    "readError": "Không đọc được tệp. Hãy lưu dưới dạng CSV (UTF-8).",
+    "tooMany": "Tệp có quá nhiều dòng (tối đa 10.000).",
+    "fileInfo": "{file}: {rows, plural, other {# dòng}} · {cols, plural, other {# cột}}",
+    "changeFile": "Chọn tệp khác",
+    "mapping": "Ghép cột",
+    "mappingHint": "Chúng tôi đã tự nhận diện các cột. Kiểm tra và sửa nếu cần.",
+    "column": "Cột trong tệp",
+    "sample": "Ví dụ",
+    "field": "Trường trong Stowly",
+    "skip": "— Bỏ qua —",
+    "needName": "Cần ghép một cột với “Tên món đồ”.",
+    "duplicates": "Khi món đồ đã tồn tại",
+    "duplicatesHint": "Trùng nghĩa là cùng mã (id) từ tệp xuất, cùng mã vạch, hoặc cùng tên ở cùng vị trí.",
+    "modes": {
+      "update": "Cập nhật món đã có",
+      "updateHint": "Chỉ ghi đè các cột có trong tệp.",
+      "skip": "Bỏ qua dòng trùng",
+      "skipHint": "Giữ nguyên món đã có.",
+      "create": "Luôn tạo mới",
+      "createHint": "Không kiểm tra trùng (trừ khi có cột id)."
+    },
+    "preview": "Xem trước",
+    "previewHint": "{valid, plural, other {# dòng hợp lệ}} · {invalid, plural, =0 {không có lỗi} other {# dòng lỗi sẽ bị bỏ qua}}",
+    "row": "Dòng",
+    "ok": "Hợp lệ",
+    "problems": {
+      "required": "thiếu {field}",
+      "date": "{field}: ngày không hợp lệ",
+      "condition": "{field}: không nhận ra",
+      "attributes": "{field}: JSON không hợp lệ"
+    },
+    "start": "Nhập {count, plural, other {# dòng}}",
+    "importing": "Đang nhập… {done}/{total}",
+    "done": "Đã nhập xong",
+    "summary": "{created} tạo mới · {updated} cập nhật · {skipped} bỏ qua · {errors} lỗi",
+    "errorReport": "Tải danh sách dòng lỗi",
+    "viewItems": "Xem đồ dùng",
+    "again": "Nhập tệp khác",
+    "createdHint": "Danh mục, vị trí, nhóm và thẻ chưa có sẽ được tạo tự động.",
+    "fields": {
+      "id": "Mã (id)",
+      "archived": "Đã lưu trữ"
+    }
   }
 }
