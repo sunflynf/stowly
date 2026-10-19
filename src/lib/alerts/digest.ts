@@ -84,8 +84,33 @@ export async function runAlertDigest(options: DigestOptions = {}): Promise<UserD
       .sort((x, y) => y.severity - x.severity || (x.days_left ?? 0) - (y.days_left ?? 0));
     const log = rawLog as (LogEntry & { id: string })[];
 
+    // Item groups: stock alerts on the combined quantity, logged separately.
+    const [{ data: rawGroups }, { data: rawGroupLog }] = await Promise.all([
+      db.from("group_alerts").select("group_id, name, kind, severity, threshold_key, snoozed").eq("user_id", profile.id),
+      db.from("group_notifications_log").select("id, group_id, kind, threshold_key, channel").eq("user_id", profile.id),
+    ]);
+    const groupAlerts: Alert[] = (rawGroups ?? [])
+      .filter((g) => !g.snoozed)
+      .map((g) => ({
+        item_id: g.group_id!,
+        href: `/groups/${g.group_id}`,
+        name: g.name!,
+        kind: g.kind!,
+        severity: g.severity ?? 2,
+        days_left: null,
+        threshold_key: g.threshold_key!,
+        replace_after_months: null,
+        location_path: null,
+        location_path_en: null,
+      }));
+    const groupLog = (rawGroupLog ?? []).map((l) => ({ ...l, item_id: l.group_id })) as (LogEntry & { id: string })[];
+    const freshFor = (channel: Channel) =>
+      [...selectNewAlerts(groupAlerts, groupLog, channel), ...selectNewAlerts(alerts, log, channel)].sort(
+        (x, y) => y.severity - x.severity || (x.days_left ?? 0) - (y.days_left ?? 0),
+      );
+
     if (options.dryRun) {
-      const preview = (channel: Channel) => selectNewAlerts(alerts, log, channel).map((a) => `${a.name} (${a.kind})`);
+      const preview = (channel: Channel) => freshFor(channel).map((a) => `${a.name} (${a.kind})`);
       result.preview = {
         email: profile.notify_email ? preview("email") : [],
         push: profile.notify_push ? preview("push") : [],
@@ -96,19 +121,31 @@ export async function runAlertDigest(options: DigestOptions = {}): Promise<UserD
     // Resolved alerts may fire again later.
     const stale = staleLogEntries(alerts, log) as (LogEntry & { id: string })[];
     if (stale.length) await db.from("notifications_log").delete().in("id", stale.map((s) => s.id));
+    const staleGroups = staleLogEntries(groupAlerts, groupLog) as (LogEntry & { id: string })[];
+    if (staleGroups.length) await db.from("group_notifications_log").delete().in("id", staleGroups.map((s) => s.id));
 
     const locale: Locale = isLocale(profile.locale) ? profile.locale : "vi";
     const markSent = async (channel: Channel, sent: Alert[]) => {
-      if (!sent.length) return;
-      const { error: insertError } = await db.from("notifications_log").upsert(
-        sent.map((a) => ({ user_id: profile.id, item_id: a.item_id, kind: a.kind, threshold_key: a.threshold_key, channel })),
-        { onConflict: "item_id,kind,threshold_key,channel", ignoreDuplicates: true },
-      );
-      if (insertError) result.errors.push(insertError.message);
+      const items = sent.filter((a) => !a.href);
+      const groups = sent.filter((a) => a.href);
+      if (items.length) {
+        const { error: insertError } = await db.from("notifications_log").upsert(
+          items.map((a) => ({ user_id: profile.id, item_id: a.item_id, kind: a.kind, threshold_key: a.threshold_key, channel })),
+          { onConflict: "item_id,kind,threshold_key,channel", ignoreDuplicates: true },
+        );
+        if (insertError) result.errors.push(insertError.message);
+      }
+      if (groups.length) {
+        const { error: insertError } = await db.from("group_notifications_log").upsert(
+          groups.map((a) => ({ user_id: profile.id, group_id: a.item_id, kind: a.kind, threshold_key: a.threshold_key, channel })),
+          { onConflict: "group_id,kind,threshold_key,channel", ignoreDuplicates: true },
+        );
+        if (insertError) result.errors.push(insertError.message);
+      }
     };
 
     if (profile.notify_email && emailConfigured()) {
-      const fresh = selectNewAlerts(alerts, log, "email");
+      const fresh = freshFor("email");
       if (fresh.length) {
         try {
           const { data: user } = await db.auth.admin.getUserById(profile.id);
@@ -124,7 +161,7 @@ export async function runAlertDigest(options: DigestOptions = {}): Promise<UserD
     }
 
     if (profile.notify_push && pushConfigured()) {
-      const fresh = selectNewAlerts(alerts, log, "push");
+      const fresh = freshFor("push");
       if (fresh.length) {
         const { data: subs } = await db.from("push_subscriptions").select("id, endpoint, p256dh, auth").eq("user_id", profile.id);
         if (subs?.length) {

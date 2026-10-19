@@ -45,6 +45,38 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"group_notifications_log": {
+                  Row: {
+                    "channel": string,"group_id": string,"id": string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at": string,"threshold_key": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "channel": string,"group_id": string,"id"?: string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"threshold_key": string,"user_id": string
+                  }
+                  Update: {
+                    "channel"?: string,"group_id"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"threshold_key"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "group_notifications_log_group_id_user_id_fkey"
+      columns: ["group_id","user_id"]
+isOneToOne: false
+      referencedRelation: "group_alerts"
+      referencedColumns: ["group_id","user_id"]
+    },{
+      foreignKeyName: "group_notifications_log_group_id_user_id_fkey"
+      columns: ["group_id","user_id"]
+isOneToOne: false
+      referencedRelation: "item_group_stats"
+      referencedColumns: ["id","user_id"]
+    },{
+      foreignKeyName: "group_notifications_log_group_id_user_id_fkey"
+      columns: ["group_id","user_id"]
+isOneToOne: false
+      referencedRelation: "item_groups"
+      referencedColumns: ["id","user_id"]
+    }
+                  ]
                 },"item_events": {
                   Row: {
                     "created_at": string,"delta": number | null,"from_condition": Database["public"]['Enums']["item_condition"] | null,"from_location_id": string | null,"id": string,"item_id": string,"note": string | null,"quantity_after": number | null,"to_condition": Database["public"]['Enums']["item_condition"] | null,"to_location_id": string | null,"type": Database["public"]['Enums']["item_event_type"],"user_id": string
@@ -70,6 +102,20 @@ isOneToOne: false
       referencedRelation: "items"
       referencedColumns: ["id","user_id"]
     }
+                  ]
+                },"item_groups": {
+                  Row: {
+                    "created_at": string,"id": string,"min_quantity": number | null,"name": string,"snoozed_until": string | null,"unit": string | null,"updated_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"min_quantity"?: number | null,"name": string,"snoozed_until"?: string | null,"unit"?: string | null,"updated_at"?: string,"user_id"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"min_quantity"?: number | null,"name"?: string,"snoozed_until"?: string | null,"unit"?: string | null,"updated_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    
                   ]
                 },"item_photos": {
                   Row: {
@@ -131,14 +177,14 @@ isOneToOne: false
                   ]
                 },"items": {
                   Row: {
-                    "archived_at": string | null,"attributes": NonNullable<Json>,"barcode": string | null,"category_id": string | null,"condition": Database["public"]['Enums']["item_condition"],"created_at": string,"expiry_date": string | null,"id": string,"last_replaced_at": string | null,"location_id": string | null,"min_quantity": number | null,"name": string,"name_norm": string | null,"notes": string | null,"opened_date": string | null,"purchase_date": string | null,"purchase_place": string | null,"purchase_price": number | null,"quantity": number,"replace_after_months": number | null,"search_text": string,"search_vector": unknown,"unit": string | null,"updated_at": string,"user_id": string,"warranty_until": string | null
+                    "archived_at": string | null,"attributes": NonNullable<Json>,"barcode": string | null,"category_id": string | null,"condition": Database["public"]['Enums']["item_condition"],"created_at": string,"expiry_date": string | null,"group_id": string | null,"id": string,"last_replaced_at": string | null,"location_id": string | null,"min_quantity": number | null,"name": string,"name_norm": string | null,"notes": string | null,"opened_date": string | null,"purchase_date": string | null,"purchase_place": string | null,"purchase_price": number | null,"quantity": number,"replace_after_months": number | null,"search_text": string,"search_vector": unknown,"unit": string | null,"updated_at": string,"user_id": string,"warranty_until": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"expiry_date"?: string | null,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name": string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"user_id"?: string,"warranty_until"?: string | null
+                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"expiry_date"?: string | null,"group_id"?: string | null,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name": string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"user_id"?: string,"warranty_until"?: string | null
                   }
                   Update: {
-                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"expiry_date"?: string | null,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name"?: string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"user_id"?: string,"warranty_until"?: string | null
+                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"expiry_date"?: string | null,"group_id"?: string | null,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name"?: string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"user_id"?: string,"warranty_until"?: string | null
                   }
                   Relationships: [
                     {
@@ -146,6 +192,24 @@ isOneToOne: false
       columns: ["category_id","user_id"]
 isOneToOne: false
       referencedRelation: "categories"
+      referencedColumns: ["id","user_id"]
+    },{
+      foreignKeyName: "items_group_fkey"
+      columns: ["group_id","user_id"]
+isOneToOne: false
+      referencedRelation: "group_alerts"
+      referencedColumns: ["group_id","user_id"]
+    },{
+      foreignKeyName: "items_group_fkey"
+      columns: ["group_id","user_id"]
+isOneToOne: false
+      referencedRelation: "item_group_stats"
+      referencedColumns: ["id","user_id"]
+    },{
+      foreignKeyName: "items_group_fkey"
+      columns: ["group_id","user_id"]
+isOneToOne: false
+      referencedRelation: "item_groups"
       referencedColumns: ["id","user_id"]
     },{
       foreignKeyName: "items_location_id_user_id_fkey"
@@ -231,17 +295,35 @@ isOneToOne: false
                   ]
                 },"shopping_list": {
                   Row: {
-                    "created_at": string,"done": boolean,"done_at": string | null,"id": string,"item_id": string | null,"name": string,"quantity": number,"unit": string | null,"user_id": string
+                    "created_at": string,"done": boolean,"done_at": string | null,"group_id": string | null,"id": string,"item_id": string | null,"name": string,"quantity": number,"unit": string | null,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"done"?: boolean,"done_at"?: string | null,"id"?: string,"item_id"?: string | null,"name": string,"quantity"?: number,"unit"?: string | null,"user_id"?: string
+                    "created_at"?: string,"done"?: boolean,"done_at"?: string | null,"group_id"?: string | null,"id"?: string,"item_id"?: string | null,"name": string,"quantity"?: number,"unit"?: string | null,"user_id"?: string
                   }
                   Update: {
-                    "created_at"?: string,"done"?: boolean,"done_at"?: string | null,"id"?: string,"item_id"?: string | null,"name"?: string,"quantity"?: number,"unit"?: string | null,"user_id"?: string
+                    "created_at"?: string,"done"?: boolean,"done_at"?: string | null,"group_id"?: string | null,"id"?: string,"item_id"?: string | null,"name"?: string,"quantity"?: number,"unit"?: string | null,"user_id"?: string
                   }
                   Relationships: [
                     {
+      foreignKeyName: "shopping_list_group_fkey"
+      columns: ["group_id","user_id"]
+isOneToOne: false
+      referencedRelation: "group_alerts"
+      referencedColumns: ["group_id","user_id"]
+    },{
+      foreignKeyName: "shopping_list_group_fkey"
+      columns: ["group_id","user_id"]
+isOneToOne: false
+      referencedRelation: "item_group_stats"
+      referencedColumns: ["id","user_id"]
+    },{
+      foreignKeyName: "shopping_list_group_fkey"
+      columns: ["group_id","user_id"]
+isOneToOne: false
+      referencedRelation: "item_groups"
+      referencedColumns: ["id","user_id"]
+    },{
       foreignKeyName: "shopping_list_item_id_user_id_fkey"
       columns: ["item_id","user_id"]
 isOneToOne: false
@@ -272,7 +354,15 @@ isOneToOne: false
                 }
           }
           Views: {
-            "item_alerts": {
+            "group_alerts": {
+                  Row: {
+                    "group_id": string | null,"kind": Database["public"]['Enums']["alert_kind"] | null,"members": number | null,"min_quantity": number | null,"name": string | null,"severity": number | null,"snoozed": boolean | null,"snoozed_until": string | null,"threshold_key": string | null,"total": number | null,"unit": string | null,"user_id": string | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    
+                  ]
+                },"item_alerts": {
                   Row: {
                     "category_id": string | null,"days_left": number | null,"due_date": string | null,"item_id": string | null,"kind": Database["public"]['Enums']["alert_kind"] | null,"location_id": string | null,"location_path": string | null,"location_path_en": string | null,"min_quantity": number | null,"name": string | null,"quantity": number | null,"replace_after_months": number | null,"severity": number | null,"snoozed": boolean | null,"snoozed_until": string | null,"threshold_key": string | null,"thumb_path": string | null,"unit": string | null,"user_id": string | null
                   }
@@ -291,6 +381,14 @@ isOneToOne: false
       referencedRelation: "locations"
       referencedColumns: ["id","user_id"]
     }
+                  ]
+                },"item_group_stats": {
+                  Row: {
+                    "id": string | null,"members": number | null,"min_quantity": number | null,"name": string | null,"snoozed_until": string | null,"total": number | null,"unit": string | null,"user_id": string | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    
                   ]
                 }
           }
@@ -326,8 +424,8 @@ isOneToOne: false
 { Args: { "p_ids": (string)[] }; Returns: undefined
                            },
 "search_items":
-{ Args: { "p_archived"?: boolean,"p_category_ids"?: (string)[],"p_conditions"?: (Database["public"]['Enums']["item_condition"])[],"p_limit"?: number,"p_location_id"?: string,"p_offset"?: number,"p_price_max"?: number,"p_price_min"?: number,"p_query"?: string,"p_sort"?: string,"p_states"?: (Database["public"]['Enums']["alert_kind"])[],"p_tag_ids"?: (string)[] }; Returns: {
-              "alert_kinds": (Database["public"]['Enums']["alert_kind"])[],"category_id": string,"condition": Database["public"]['Enums']["item_condition"],"expiry_date": string,"id": string,"location_id": string,"location_path": string,"location_path_en": string,"min_quantity": number,"name": string,"purchase_price": number,"quantity": number,"rank": number,"thumb_path": string,"total_count": number,"unit": string,"updated_at": string,"warranty_until": string
+{ Args: { "p_archived"?: boolean,"p_category_ids"?: (string)[],"p_conditions"?: (Database["public"]['Enums']["item_condition"])[],"p_group_id"?: string,"p_limit"?: number,"p_location_id"?: string,"p_offset"?: number,"p_price_max"?: number,"p_price_min"?: number,"p_query"?: string,"p_sort"?: string,"p_states"?: (Database["public"]['Enums']["alert_kind"])[],"p_tag_ids"?: (string)[] }; Returns: {
+              "alert_kinds": (Database["public"]['Enums']["alert_kind"])[],"category_id": string,"condition": Database["public"]['Enums']["item_condition"],"expiry_date": string,"group_id": string,"id": string,"location_id": string,"location_path": string,"location_path_en": string,"min_quantity": number,"name": string,"purchase_price": number,"quantity": number,"rank": number,"thumb_path": string,"total_count": number,"unit": string,"updated_at": string,"warranty_until": string
             }[]
                            },
 "search_tsquery":

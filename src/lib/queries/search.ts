@@ -15,6 +15,7 @@ export interface ItemSearchParams {
   location: string | null;
   conditions: ItemCondition[];
   tags: string[];
+  group: string | null;
   states: AlertKind[];
   priceMin: number | null;
   priceMax: number | null;
@@ -35,6 +36,7 @@ export function parseItemSearch(sp: URLSearchParams): ItemSearchParams {
     location: UUID.test(sp.get("location") ?? "") ? sp.get("location") : null,
     conditions: list(sp.get("conditions")).filter((c): c is ItemCondition => (ITEM_CONDITIONS as readonly string[]).includes(c)),
     tags: list(sp.get("tags")).filter((c) => UUID.test(c)),
+    group: UUID.test(sp.get("group") ?? "") ? sp.get("group") : null,
     states: list(sp.get("states")).filter((c): c is AlertKind => (ALERT_KINDS as readonly string[]).includes(c)),
     priceMin: num(sp.get("price_min")),
     priceMax: num(sp.get("price_max")),
@@ -50,6 +52,7 @@ export function itemSearchToQuery(p: ItemSearchParams): string {
   if (p.location) sp.set("location", p.location);
   if (p.conditions.length) sp.set("conditions", p.conditions.join(","));
   if (p.tags.length) sp.set("tags", p.tags.join(","));
+  if (p.group) sp.set("group", p.group);
   if (p.states.length) sp.set("states", p.states.join(","));
   if (p.priceMin !== null) sp.set("price_min", String(p.priceMin));
   if (p.priceMax !== null) sp.set("price_max", String(p.priceMax));
@@ -71,6 +74,7 @@ export interface SearchRow {
   location_id: string | null;
   location_path: string | null;
   location_path_en: string | null;
+  group_id: string | null;
   expiry_date: string | null;
   warranty_until: string | null;
   purchase_price: number | null;
@@ -92,6 +96,7 @@ export async function fetchSearchPage(p: ItemSearchParams, offset: number, limit
     p_location_id: p.location ?? undefined,
     p_conditions: p.conditions.length ? p.conditions : undefined,
     p_tag_ids: p.tags.length ? p.tags : undefined,
+    p_group_id: p.group ?? undefined,
     p_states: p.states.length ? p.states : undefined,
     p_price_min: p.priceMin ?? undefined,
     p_price_max: p.priceMax ?? undefined,

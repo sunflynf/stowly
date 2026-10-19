@@ -13,7 +13,7 @@ export function useItem(id: string) {
       const { data, error } = await getSupabaseBrowser()
         .from("items")
         .select(
-          "*, category:categories(id, name, name_en, icon, default_attributes), location:locations(id, name, name_en, path_text, path_text_en), photos:item_photos(id, storage_path, thumb_path, sort_order, created_at), item_tags(tag:tags(id, name))",
+          "*, category:categories(id, name, name_en, icon, default_attributes), location:locations(id, name, name_en, path_text, path_text_en), group:item_groups(id, name), photos:item_photos(id, storage_path, thumb_path, sort_order, created_at), item_tags(tag:tags(id, name))",
         )
         .eq("id", id)
         .maybeSingle();
@@ -81,7 +81,7 @@ export function useShoppingList() {
     queryFn: async () => {
       const { data, error } = await getSupabaseBrowser()
         .from("shopping_list")
-        .select("*, item:items(id, name, quantity, unit)")
+        .select("*, item:items(id, name, quantity, unit), group:item_groups(id, name)")
         .order("done")
         .order("created_at", { ascending: false })
         .limit(500);

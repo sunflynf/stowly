@@ -11,6 +11,7 @@ export const qk = {
   tags: ["tags"] as const,
   alerts: ["alerts"] as const,
   shopping: ["shopping"] as const,
+  groups: ["groups"] as const,
   profile: ["profile"] as const,
   photoUrls: (paths: readonly string[]) => ["photo-urls", ...paths] as const,
 };

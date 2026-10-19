@@ -8,6 +8,7 @@ import { fail, mapDbError, ok, validationFail, type ActionResult } from "./resul
 
 const addSchema = z.object({
   item_id: uuid.nullable().optional(),
+  group_id: uuid.nullable().optional(),
   name: requiredName(200),
   quantity: requiredNumber(0.001, 1_000_000),
   unit: optionalText(20).optional(),
@@ -29,15 +30,17 @@ export async function addLowStockToShoppingAction(): Promise<ActionResult<{ adde
   const auth = await requireUser();
   if (!auth) return fail("unauthorized");
 
-  const [{ data: alerts, error }, { data: open }] = await Promise.all([
+  const [{ data: alerts, error }, { data: groupAlerts, error: groupError }, { data: open }] = await Promise.all([
     auth.supabase
       .from("item_alerts")
       .select("item_id, name, quantity, min_quantity, unit")
       .in("kind", ["low_stock", "out_of_stock"]),
-    auth.supabase.from("shopping_list").select("item_id").eq("done", false).not("item_id", "is", null),
+    auth.supabase.from("group_alerts").select("group_id, name, total, min_quantity, unit"),
+    auth.supabase.from("shopping_list").select("item_id, group_id").eq("done", false),
   ]);
-  if (error) return fail(mapDbError(error));
-  const onList = new Set((open ?? []).map((r) => r.item_id));
+  if (error || groupError) return fail(mapDbError(error ?? groupError));
+  const onList = new Set((open ?? []).map((r) => r.item_id).filter(Boolean));
+  const groupsOnList = new Set((open ?? []).map((r) => r.group_id).filter(Boolean));
   const rows = (alerts ?? [])
     .filter((a) => a.item_id && !onList.has(a.item_id))
     .map((a) => ({
@@ -46,11 +49,19 @@ export async function addLowStockToShoppingAction(): Promise<ActionResult<{ adde
       unit: a.unit,
       quantity: suggestedBuyQuantity(Number(a.quantity ?? 0), a.min_quantity === null ? null : Number(a.min_quantity)),
     }));
-  if (rows.length) {
-    const { error: insertError } = await auth.supabase.from("shopping_list").insert(rows);
+  const groupRows = (groupAlerts ?? [])
+    .filter((g) => g.group_id && !groupsOnList.has(g.group_id))
+    .map((g) => ({
+      group_id: g.group_id!,
+      name: g.name!,
+      unit: g.unit,
+      quantity: suggestedBuyQuantity(Number(g.total ?? 0), g.min_quantity === null ? null : Number(g.min_quantity)),
+    }));
+  if (rows.length || groupRows.length) {
+    const { error: insertError } = await auth.supabase.from("shopping_list").insert([...rows, ...groupRows], { defaultToNull: false });
     if (insertError) return fail(mapDbError(insertError));
   }
-  return ok({ added: rows.length });
+  return ok({ added: rows.length + groupRows.length });
 }
 
 const updateSchema = z.object({
@@ -91,13 +102,26 @@ export async function markBoughtAction(id: unknown, restock: unknown): Promise<A
     .update({ done: true, done_at: new Date().toISOString() })
     .eq("id", parsedId.data)
     .eq("done", false)
-    .select("item_id, quantity")
+    .select("item_id, group_id, quantity")
     .maybeSingle();
   if (error) return fail(mapDbError(error));
   if (!row) return fail("notFound");
-  if (parsedRestock.data && row.item_id) {
+  let restockId = row.item_id;
+  if (!restockId && row.group_id) {
+    // A group entry restocks the member updated most recently (usually the one being re-bought).
+    const { data: member } = await auth.supabase
+      .from("items")
+      .select("id")
+      .eq("group_id", row.group_id)
+      .is("archived_at", null)
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    restockId = member?.id ?? null;
+  }
+  if (parsedRestock.data && restockId) {
     const { error: rpcError } = await auth.supabase.rpc("adjust_item_quantity", {
-      p_item_id: row.item_id,
+      p_item_id: restockId,
       p_delta: Number(row.quantity),
       p_note: "shopping",
     });

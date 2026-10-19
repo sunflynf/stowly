@@ -10,6 +10,8 @@ const MESSAGES = { vi, en } as const;
 
 export interface RenderAlert {
   item_id: string;
+  /** Link path when not an item (e.g. "/groups/<id>"). */
+  href?: string;
   name: string;
   kind: AlertKind;
   severity: number;
@@ -57,7 +59,7 @@ export function renderDigestEmail(opts: { locale: Locale; timeZone: string; site
   const rows = alerts
     .map((a) => {
       const { status, label } = statusText(locale, timeZone, a);
-      const url = `${siteUrl}/items/${a.item_id}`;
+      const url = `${siteUrl}${a.href ?? `/items/${a.item_id}`}`;
       return `<tr>
   <td style="padding:12px 0;border-bottom:1px solid #E2E8E5">
     <a href="${url}" style="color:#14201C;font-weight:600;text-decoration:none">${escapeHtml(a.name)}</a>

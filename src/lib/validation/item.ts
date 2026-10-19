@@ -8,6 +8,7 @@ export const itemInputSchema = z.object({
   name: requiredName(200),
   category_id: z.preprocess((v) => (v === "" ? null : v), uuid.nullable()),
   location_id: z.preprocess((v) => (v === "" ? null : v), uuid.nullable()),
+  group_id: z.preprocess((v) => (v === "" || v === undefined ? null : v), uuid.nullable()),
   quantity: requiredNumber(0, 1_000_000),
   unit: optionalText(20),
   min_quantity: optionalNumber(0, 1_000_000),
@@ -50,6 +51,7 @@ export interface ItemFormValues {
   name: string;
   category_id: string;
   location_id: string;
+  group_id: string;
   quantity: string;
   unit: string;
   min_quantity: string;
@@ -72,6 +74,7 @@ export const emptyItemForm: ItemFormValues = {
   name: "",
   category_id: "",
   location_id: "",
+  group_id: "",
   quantity: "1",
   unit: "",
   min_quantity: "",
