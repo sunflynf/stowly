@@ -13,5 +13,9 @@ export const qk = {
   shopping: ["shopping"] as const,
   groups: ["groups"] as const,
   profile: ["profile"] as const,
+  households: ["households"] as const,
+  members: ["households", "members"] as const,
+  invites: ["households", "invites"] as const,
+  people: ["households", "people"] as const,
   photoUrls: (paths: readonly string[]) => ["photo-urls", ...paths] as const,
 };
