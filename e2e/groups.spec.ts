@@ -1,7 +1,7 @@
 import { expect, signIn, test } from "./fixtures";
 
 test("create a group from quick add, combine stock, see the shared alert", async ({ page, user, db }) => {
-  await db.from("items").insert({ user_id: user.id, name: "Dây sạc Lightning", quantity: 1 });
+  await db.from("items").insert({ household_id: user.householdId, name: "Dây sạc Lightning", quantity: 1 });
   await signIn(page, user);
 
   await page.goto("/items/new");

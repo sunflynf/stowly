@@ -38,7 +38,7 @@ test("import a Vietnamese CSV (semicolons, dd/mm dates, new locations, group, ta
   const { data: items } = await db
     .from("items")
     .select("name, quantity, min_quantity, expiry_date, purchase_price, category:categories(name), location:locations(path_text), group:item_groups(name), item_tags(tag:tags(name))")
-    .eq("user_id", user.id)
+    .eq("household_id", user.householdId)
     .order("name");
   expect(items!.map((i) => i.name)).toEqual(["Dây sạc Lightning", "Dây sạc USB-C 1m", "Sữa tươi hộp 1L"]);
   const usb = items!.find((i) => i.name === "Dây sạc USB-C 1m")!;
@@ -49,7 +49,7 @@ test("import a Vietnamese CSV (semicolons, dd/mm dates, new locations, group, ta
   const milk = items!.find((i) => i.name === "Sữa tươi hộp 1L")!;
   expect(milk.expiry_date).toBe("2026-11-20");
   expect(milk.location?.path_text).toBe("Nhà bếp › Tủ lạnh"); // existing location reused, not duplicated
-  const { count: fridges } = await db.from("locations").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("name", "Tủ lạnh");
+  const { count: fridges } = await db.from("locations").select("id", { count: "exact", head: true }).eq("household_id", user.householdId).eq("name", "Tủ lạnh");
   expect(fridges).toBe(1);
 
   // Round trip: export, change a quantity, import again → updates by id, no duplicates.
@@ -61,7 +61,7 @@ test("import a Vietnamese CSV (semicolons, dd/mm dates, new locations, group, ta
   await expect(page.getByLabel("id", { exact: true })).toHaveValue("id");
   await page.getByRole("button", { name: "Nhập 3 dòng" }).click();
   await expect(page.getByText("0 tạo mới · 3 cập nhật · 0 bỏ qua · 0 lỗi")).toBeVisible();
-  const { data: after } = await db.from("items").select("name, quantity").eq("user_id", user.id);
+  const { data: after } = await db.from("items").select("name, quantity").eq("household_id", user.householdId);
   expect(after).toHaveLength(3);
   expect(Number(after!.find((i) => i.name === "Sữa tươi hộp 1L")!.quantity)).toBe(9);
 });

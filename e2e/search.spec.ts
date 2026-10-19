@@ -1,13 +1,13 @@
 import { expect, signIn, test } from "./fixtures";
 
 test("accent-insensitive search, filters and inline stepper", async ({ page, user, db }) => {
-  const { data: locs } = await db.from("locations").select("id, builtin_key").eq("user_id", user.id);
+  const { data: locs } = await db.from("locations").select("id, builtin_key").eq("household_id", user.householdId);
   const loc = (k: string) => locs!.find((l) => l.builtin_key === k)!.id;
   const { error } = await db.from("items").insert(
     [
-    { user_id: user.id, name: "Áo khoác mùa đông", location_id: loc("wardrobe") },
-    { user_id: user.id, name: "Pin AA", quantity: 1, min_quantity: 4, location_id: loc("desk") },
-    { user_id: user.id, name: "Cáp Lightning", quantity: 0, min_quantity: 2, location_id: loc("tv_cabinet") },
+    { household_id: user.householdId, name: "Áo khoác mùa đông", location_id: loc("wardrobe") },
+    { household_id: user.householdId, name: "Pin AA", quantity: 1, min_quantity: 4, location_id: loc("desk") },
+    { household_id: user.householdId, name: "Cáp Lightning", quantity: 0, min_quantity: 2, location_id: loc("tv_cabinet") },
     ],
     { defaultToNull: false },
   );

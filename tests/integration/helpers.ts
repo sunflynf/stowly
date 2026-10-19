@@ -16,8 +16,16 @@ export function anonClient(): Client {
   return createClient<Database>(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
+export interface TestUser {
+  id: string;
+  email: string;
+  /** The household created for the user at sign-up. */
+  householdId: string;
+  client: Client;
+}
+
 /** Creates a confirmed user and returns a client signed in as that user. */
-export async function createTestUser(): Promise<{ id: string; email: string; client: Client }> {
+export async function createTestUser(): Promise<TestUser> {
   const email = `test-${randomUUID()}@stowly.test`;
   const password = `pw-${randomUUID()}`;
   const admin = adminClient();
@@ -26,7 +34,9 @@ export async function createTestUser(): Promise<{ id: string; email: string; cli
   const client = anonClient();
   const { error: signInError } = await client.auth.signInWithPassword({ email, password });
   if (signInError) throw signInError;
-  return { id: data.user.id, email, client };
+  const { data: profile, error: profileError } = await client.from("profiles").select("active_household_id").single();
+  if (profileError || !profile.active_household_id) throw profileError ?? new Error("no household");
+  return { id: data.user.id, email, householdId: profile.active_household_id, client };
 }
 
 export async function deleteTestUser(id: string) {

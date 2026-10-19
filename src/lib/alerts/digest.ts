@@ -43,15 +43,16 @@ async function fetchAll<T>(
 }
 
 /**
- * Evaluates alert states per user (in their timezone) and sends one email digest
- * and one push notification with alerts that were not sent before. Idempotent:
- * notifications_log prevents re-sending the same item/threshold.
+ * Evaluates alert states per person (their timezone and lead days, items of their
+ * active household) and sends one email digest and one push notification with
+ * alerts that were not sent to that person before. Idempotent: notifications_log
+ * (per person) prevents re-sending the same item/threshold.
  */
 export async function runAlertDigest(options: DigestOptions = {}): Promise<UserDigestResult[]> {
   const db = getSupabaseAdmin();
   const now = options.now ?? new Date();
 
-  let query = db.from("profiles").select("id, locale, timezone, notify_email, notify_push, digest_hour");
+  let query = db.from("profiles").select("id, active_household_id, locale, timezone, notify_email, notify_push, digest_hour");
   if (options.userId) query = query.eq("id", options.userId);
   const { data: profiles, error } = await query;
   if (error) throw error;
@@ -68,20 +69,30 @@ export async function runAlertDigest(options: DigestOptions = {}): Promise<UserD
       result.skipped = "notifications-off";
       continue;
     }
+    const householdId = profile.active_household_id;
+    if (!householdId) {
+      result.skipped = "no-household";
+      continue;
+    }
 
     // Page past PostgREST's 1000-row response cap.
     const [{ data: rawAlerts, error: alertError }, { data: rawLog, error: logError }] = await Promise.all([
       fetchAll((from, to) =>
         db
-          .from("item_alerts")
+          .rpc("user_item_alerts", { p_user_id: profile.id })
           .select("item_id, name, kind, severity, days_left, threshold_key, replace_after_months, location_path, location_path_en, snoozed")
-          .eq("user_id", profile.id)
           .order("item_id")
           .order("kind")
           .range(from, to),
       ),
       fetchAll((from, to) =>
-        db.from("notifications_log").select("id, item_id, kind, threshold_key, channel").eq("user_id", profile.id).order("id").range(from, to),
+        db
+          .from("notifications_log")
+          .select("id, item_id, kind, threshold_key, channel")
+          .eq("user_id", profile.id)
+          .eq("household_id", householdId)
+          .order("id")
+          .range(from, to),
       ),
     ]);
     if (alertError || logError) {
@@ -107,8 +118,12 @@ export async function runAlertDigest(options: DigestOptions = {}): Promise<UserD
 
     // Item groups: stock alerts on the combined quantity, logged separately.
     const [{ data: rawGroups }, { data: rawGroupLog }] = await Promise.all([
-      db.from("group_alerts").select("group_id, name, kind, severity, threshold_key, snoozed").eq("user_id", profile.id),
-      db.from("group_notifications_log").select("id, group_id, kind, threshold_key, channel").eq("user_id", profile.id),
+      db.rpc("user_group_alerts", { p_user_id: profile.id }).select("group_id, name, kind, severity, threshold_key, snoozed"),
+      db
+        .from("group_notifications_log")
+        .select("id, group_id, kind, threshold_key, channel")
+        .eq("user_id", profile.id)
+        .eq("household_id", householdId),
     ]);
     const groupAlerts: Alert[] = (rawGroups ?? [])
       .filter((g) => !g.snoozed)
@@ -151,15 +166,29 @@ export async function runAlertDigest(options: DigestOptions = {}): Promise<UserD
       const groups = sent.filter((a) => a.href);
       if (items.length) {
         const { error: insertError } = await db.from("notifications_log").upsert(
-          items.map((a) => ({ user_id: profile.id, item_id: a.item_id, kind: a.kind, threshold_key: a.threshold_key, channel })),
-          { onConflict: "item_id,kind,threshold_key,channel", ignoreDuplicates: true },
+          items.map((a) => ({
+            user_id: profile.id,
+            household_id: householdId,
+            item_id: a.item_id,
+            kind: a.kind,
+            threshold_key: a.threshold_key,
+            channel,
+          })),
+          { onConflict: "user_id,item_id,kind,threshold_key,channel", ignoreDuplicates: true },
         );
         if (insertError) result.errors.push(insertError.message);
       }
       if (groups.length) {
         const { error: insertError } = await db.from("group_notifications_log").upsert(
-          groups.map((a) => ({ user_id: profile.id, group_id: a.item_id, kind: a.kind, threshold_key: a.threshold_key, channel })),
-          { onConflict: "group_id,kind,threshold_key,channel", ignoreDuplicates: true },
+          groups.map((a) => ({
+            user_id: profile.id,
+            household_id: householdId,
+            group_id: a.item_id,
+            kind: a.kind,
+            threshold_key: a.threshold_key,
+            channel,
+          })),
+          { onConflict: "user_id,group_id,kind,threshold_key,channel", ignoreDuplicates: true },
         );
         if (insertError) result.errors.push(insertError.message);
       }

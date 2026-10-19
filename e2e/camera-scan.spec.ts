@@ -18,7 +18,7 @@ test.use({
 test("camera scan of a known code opens the item @mobile", async ({ page, user, db }) => {
   const { data: item } = await db
     .from("items")
-    .insert({ user_id: user.id, name: "Mì Hảo Hảo (thùng 30)", barcode: CODE })
+    .insert({ household_id: user.householdId, name: "Mì Hảo Hảo (thùng 30)", barcode: CODE })
     .select("id")
     .single();
   await signIn(page, user);

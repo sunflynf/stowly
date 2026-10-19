@@ -5,9 +5,9 @@ const isoIn = (days: number) => new Date(Date.now() + days * 86_400_000).toISOSt
 test("dashboard alerts → shopping list → restock; snooze from Alerts", async ({ page, user, db }) => {
   const { error } = await db.from("items").insert(
     [
-    { user_id: user.id, name: "Dầu ăn 2L", expiry_date: isoIn(-3) },
-    { user_id: user.id, name: "Sữa tươi hộp 1L", expiry_date: isoIn(2) },
-    { user_id: user.id, name: "Pin AA", quantity: 1, min_quantity: 4 },
+    { household_id: user.householdId, name: "Dầu ăn 2L", expiry_date: isoIn(-3) },
+    { household_id: user.householdId, name: "Sữa tươi hộp 1L", expiry_date: isoIn(2) },
+    { household_id: user.householdId, name: "Pin AA", quantity: 1, min_quantity: 4 },
     ],
     { defaultToNull: false },
   );
@@ -26,7 +26,7 @@ test("dashboard alerts → shopping list → restock; snooze from Alerts", async
   await page.getByRole("checkbox", { name: "Đánh dấu đã mua Pin AA" }).click();
   await expect(page.getByText("Đã cộng 4 vào kho: Pin AA")).toBeVisible();
 
-  const { data: pin } = await db.from("items").select("quantity").eq("user_id", user.id).eq("name", "Pin AA").single();
+  const { data: pin } = await db.from("items").select("quantity").eq("household_id", user.householdId).eq("name", "Pin AA").single();
   expect(Number(pin!.quantity)).toBe(5);
 
   await page.goto("/alerts");
