@@ -26,6 +26,8 @@ const KIND_SEVERITY: Record<AlertKind, number> = {
   warranty_ending: 2,
   replace_due: 2,
   lent_overdue: 2,
+  maintenance_overdue: 3,
+  maintenance_due: 2,
 };
 
 export interface ItemStatusInput {
@@ -101,10 +103,12 @@ export function alertStatus(alert: AlertInfo): ItemStatus {
   switch (alert.kind) {
     case "expired":
     case "lent_overdue":
+    case "maintenance_overdue":
       values.days = Math.abs(days);
       break;
     case "expiring_soon":
     case "warranty_ending":
+    case "maintenance_due":
       values.days = Math.max(0, days);
       break;
     case "replace_due":
