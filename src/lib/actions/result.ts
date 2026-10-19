@@ -15,6 +15,7 @@ export type ActionError =
   | "signupNotAllowed"
   | "rateLimited"
   | "photoLimit"
+  | "documentLimit"
   | "locationCycle"
   | "locationTooDeep"
   | "locationNotEmpty"
@@ -51,6 +52,7 @@ export function mapDbError(error: { code?: string; message?: string } | null): A
   if (!error) return "unknown";
   const msg = error.message ?? "";
   if (msg.includes("photo_limit_reached")) return "photoLimit";
+  if (msg.includes("document_limit_reached")) return "documentLimit";
   if (msg.includes("location_cycle")) return "locationCycle";
   if (msg.includes("location_too_deep")) return "locationTooDeep";
   if (msg.includes("last_owner")) return "lastOwner";
