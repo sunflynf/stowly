@@ -13,7 +13,7 @@ export async function GET() {
   const header = [
     "name", "category", "location", "quantity", "unit", "min_quantity", "condition", "purchase_date", "purchase_price",
     "purchase_place", "expiry_date", "opened_date", "warranty_until", "replace_after_months", "last_replaced_at", "tags",
-    "notes", "attributes", "archived", "created_at", "id",
+    "notes", "attributes", "barcode", "group", "archived", "created_at", "id",
   ];
   const rows = items.map((i) => [
     i.name,
@@ -34,6 +34,8 @@ export async function GET() {
     i.item_tags.map((t) => t.tag?.name).filter(Boolean),
     i.notes,
     Object.keys(i.attributes as object).length ? JSON.stringify(i.attributes) : "",
+    i.barcode,
+    i.group?.name ?? "",
     i.archived_at ? "yes" : "",
     i.created_at,
     i.id,

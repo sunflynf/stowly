@@ -14,8 +14,8 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      // Photos are uploaded straight to Supabase Storage; actions only carry JSON.
-      bodySizeLimit: "1mb",
+      // Photos go straight to Supabase Storage; actions carry JSON (CSV import sends 200-row chunks).
+      bodySizeLimit: "4mb",
     },
   },
 };

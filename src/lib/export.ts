@@ -34,7 +34,7 @@ export async function exportItems(supabase: ServerSupabase) {
     supabase
       .from("items")
       .select(
-        "id, name, quantity, unit, min_quantity, condition, purchase_date, purchase_price, purchase_place, expiry_date, opened_date, warranty_until, replace_after_months, last_replaced_at, notes, attributes, archived_at, created_at, updated_at, category:categories(name, name_en), location:locations(path_text), item_tags(tag:tags(name))",
+        "id, name, quantity, unit, min_quantity, condition, purchase_date, purchase_price, purchase_place, expiry_date, opened_date, warranty_until, replace_after_months, last_replaced_at, notes, attributes, barcode, archived_at, created_at, updated_at, category:categories(name, name_en), location:locations(path_text), group:item_groups(name), item_tags(tag:tags(name))",
       )
       .order("created_at")
       .range(from, to),
