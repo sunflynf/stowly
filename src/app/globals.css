@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Light theme first; a dark theme only needs to redefine these
+ * variables under a [data-theme="dark"] / prefers-color-scheme selector.
+ */
+:root {
+  --background: #f3f5f4;
+  --foreground: #14201c;
+  --card: #ffffff;
+  --card-foreground: #14201c;
+  --popover: #ffffff;
+  --popover-foreground: #14201c;
+
+  --primary: #0b6e63;
+  --primary-hover: #095c53;
+  --primary-foreground: #ffffff;
+  --accent: #e3f1ee;
+  --accent-foreground: #0a5a51;
+
+  --muted: #eef1ef;
+  --muted-foreground: #4b5c55;
+  --border: #e2e8e5;
+  --input: #cfd8d4;
+  --ring: #0b6e63;
+
+  --danger: #fde8e6;
+  --danger-foreground: #9f1d14;
+  --danger-solid: #b3261e;
+  --warning: #fdefd6;
+  --warning-foreground: #8a4b00;
+  --warning-solid: #b85c00;
+  --neutral: #eef1ef;
+  --neutral-foreground: #3b4a44;
+  --success: #e3f1ee;
+  --success-foreground: #0a5a51;
+
+  --radius: 12px;
+  --radius-lg: 14px;
+}
+
+@theme {
+  /* Desktop layout starts at ~800px; below that the mobile layout is used. */
+  --breakpoint-md: 50rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-danger-solid: var(--danger-solid);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-solid: var(--warning-solid);
+  --color-neutral: var(--neutral);
+  --color-neutral-foreground: var(--neutral-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius-lg);
+
+  --font-sans: var(--font-be-vietnam-pro), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Printing (QR labels): plain white A4 page, app chrome hidden via print:hidden. */
+@media print {
+  @page {
+    size: A4;
+    /* 200 mm usable width: 3 × 63.5 mm or 2 × 99.1 mm labels per row. */
+    margin: 10mm 5mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+}

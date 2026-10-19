@@ -1,0 +1,143 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { Plus } from "lucide-react";
+import { PageHeader } from "@/components/app-shell/page-header";
+import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useFormats } from "@/lib/hooks/use-format";
+import { useIsDesktop } from "@/lib/hooks/use-media-query";
+import { itemSearchToQuery, parseItemSearch, SORTS, useItemSearch, type ItemSearchParams } from "@/lib/queries/search";
+import { useDashboardStats } from "@/lib/queries/stats";
+import { FilterBar } from "./filter-bar";
+import { ItemList, ItemTable } from "./item-results";
+import { SearchBox } from "./search-box";
+
+export function ItemsBrowser() {
+  const t = useTranslations("items");
+  const tn = useTranslations("nav");
+  const tc = useTranslations("common");
+  const f = useFormats();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const params = useMemo(() => parseItemSearch(new URLSearchParams(searchParams.toString())), [searchParams]);
+  const { data: stats } = useDashboardStats();
+  const isDesktop = useIsDesktop();
+  const search = useItemSearch(params);
+  const rows = useMemo(() => search.data?.pages.flatMap((p) => p.rows) ?? [], [search.data]);
+  const total = search.data?.pages[0]?.total ?? 0;
+
+  const update = useCallback(
+    (patch: Partial<ItemSearchParams>) => {
+      const next = { ...params, ...patch };
+      // Relevance only makes sense with a query.
+      if ("q" in patch && patch.q && params.sort === "updated" && !searchParams.get("sort")) next.sort = "relevance";
+      if ("q" in patch && !patch.q && next.sort === "relevance") next.sort = "updated";
+      router.replace(`${pathname}${itemSearchToQuery(next)}`, { scroll: false });
+    },
+    [params, pathname, router, searchParams],
+  );
+
+  // Infinite scroll: load the next page when the sentinel becomes visible.
+  const sentinel = useRef<HTMLDivElement>(null);
+  const { hasNextPage, isFetchingNextPage, fetchNextPage } = search;
+  useEffect(() => {
+    const el = sentinel.current;
+    if (!el || !hasNextPage) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting && !isFetchingNextPage) void fetchNextPage();
+      },
+      { rootMargin: "400px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const addButton = (
+    <Button asChild size="lg">
+      <Link href="/items/new">
+        <Plus />
+        {tn("addItem")}
+      </Link>
+    </Button>
+  );
+
+  const heading = params.q ? t("resultsFor", { count: total, query: params.q }) : t("results", { count: total });
+
+  return (
+    <>
+      <PageHeader title={t("title")} subtitle={stats ? t("subtitle", { count: stats.total_items }) : " "} actions={addButton} />
+
+      <SearchBox value={params.q} onChange={(q) => update({ q })} placeholder={isDesktop ? t("searchPlaceholder") : t("searchShort")} slashShortcut className="mb-3" />
+      <div className="mb-4">
+        <FilterBar params={params} onChange={update} />
+      </div>
+
+      <section className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card" aria-busy={search.isFetching}>
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-5">
+          <h2 className="font-semibold" aria-live="polite">
+            {search.isPending ? " " : heading}
+          </h2>
+          <label className="flex items-center gap-2 text-sm">
+            <span className="sr-only">{t("sort.label")}</span>
+            <NativeSelect
+              value={params.sort}
+              onChange={(e) => update({ sort: e.target.value as ItemSearchParams["sort"] })}
+              className="min-h-10 w-auto py-1 text-sm"
+            >
+              {SORTS.filter((s) => s !== "relevance" || params.q).map((s) => (
+                <option key={s} value={s}>
+                  {t("sort.current", { value: t(`sort.${s}`) })}
+                </option>
+              ))}
+            </NativeSelect>
+          </label>
+        </div>
+
+        {search.isPending ? (
+          <div className="flex flex-col gap-3 p-4">
+            {Array.from({ length: 6 }, (_, i) => (
+              <Skeleton key={i} className="h-14" />
+            ))}
+          </div>
+        ) : search.isError ? (
+          <p className="p-6 text-center text-danger-foreground" role="alert">
+            {tc("error")}
+          </p>
+        ) : rows.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 p-8 text-center text-muted-foreground">
+            <p>{stats?.total_items === 0 ? t("empty") : t("noResults")}</p>
+            {stats?.total_items === 0 && addButton}
+          </div>
+        ) : (
+          <>
+            <div className="hidden md:block">
+              <ItemTable rows={rows} />
+            </div>
+            <div className="md:hidden">
+              <ItemList rows={rows} />
+            </div>
+          </>
+        )}
+
+        {rows.length > 0 && (
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3 text-sm text-muted-foreground md:px-5">
+            <span>{t("showing", { shown: f.integer(rows.length), total: f.integer(total) })}</span>
+            {hasNextPage && (
+              <Button variant="secondary" size="sm" disabled={isFetchingNextPage} onClick={() => void fetchNextPage()}>
+                {t("loadMore")}
+              </Button>
+            )}
+          </div>
+        )}
+        <div ref={sentinel} aria-hidden />
+      </section>
+    </>
+  );
+}
