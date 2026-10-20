@@ -379,6 +379,11 @@
       "all": "Tất cả",
       "expiring": "Sắp hết hạn",
       "stock": "Sắp hết hàng"
+    },
+    "layout": {
+      "label": "Bố cục",
+      "list": "Danh sách",
+      "cards": "Thẻ"
     }
   },
   "dashboard": {

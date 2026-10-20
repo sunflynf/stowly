@@ -57,7 +57,7 @@ export function EditItem({ id, drawer = false }: { id: string; drawer?: boolean 
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div>
       <PageHeader title={t("editTitle")} back={`/items/${id}`} />
       {isPending ? (
         <Skeleton className="h-96" />

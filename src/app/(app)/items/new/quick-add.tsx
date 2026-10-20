@@ -21,7 +21,7 @@ export function QuickAdd({ drawer = false }: { drawer?: boolean }) {
     );
   }
   return (
-    <div className="mx-auto max-w-2xl">
+    <div>
       <PageHeader title={t("newTitle")} back />
       <ItemForm mode="quick" initial={{ location_id: location, name }} initialBarcode={barcode} />
     </div>

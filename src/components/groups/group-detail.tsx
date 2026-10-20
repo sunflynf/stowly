@@ -195,7 +195,7 @@ export function GroupDetail({ id }: { id: string }) {
     });
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div>
       <PageHeader
         title={group.name}
         subtitle={t("members", { count: group.members })}

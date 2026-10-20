@@ -153,7 +153,7 @@ export function ItemDetailView({ id }: { id: string }) {
 
   if (isPending) {
     return (
-      <div className="mx-auto flex max-w-2xl flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <Skeleton className="h-40" />
         <Skeleton className="h-8 w-2/3" />
         <Skeleton className="h-24" />
@@ -162,7 +162,7 @@ export function ItemDetailView({ id }: { id: string }) {
   }
   if (!item) {
     return (
-      <div className="mx-auto max-w-2xl">
+      <div>
         <PageHeader title={t("detailTitle")} back="/items" />
         <p className="text-muted-foreground">{t("notFound")}</p>
       </div>
@@ -224,7 +224,7 @@ export function ItemDetailView({ id }: { id: string }) {
   const replaceMonths = (since: string | null) => (since ? monthsBetween(since, today) : 0);
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div>
       <PageHeader
         title={t("detailTitle")}
         back="/items"

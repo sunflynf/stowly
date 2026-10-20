@@ -99,7 +99,7 @@ export function AlertsPage() {
   const ref = (a: AlertRow) => ({ itemId: a.item_id, kind: a.kind });
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div>
       <PageHeader title={t("title")} subtitle={t("subtitle", { count: counts.all })} />
 
       <div role="tablist" aria-label={t("title")} className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">

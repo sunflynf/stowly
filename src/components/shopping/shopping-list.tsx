@@ -88,7 +88,7 @@ export function ShoppingList() {
     });
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div>
       <PageHeader
         title={t("title")}
         subtitle={t("subtitle", { count: open.length })}

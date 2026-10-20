@@ -379,6 +379,11 @@
       "all": "All",
       "expiring": "Expiring",
       "stock": "Low stock"
+    },
+    "layout": {
+      "label": "Layout",
+      "list": "List",
+      "cards": "Cards"
     }
   },
   "dashboard": {
