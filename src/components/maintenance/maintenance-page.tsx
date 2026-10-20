@@ -35,7 +35,7 @@ export function MaintenancePage() {
   );
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div>
       <PageHeader title={t("title")} subtitle={t("subtitle")} actions={addButton} />
       <div className="mb-4 md:hidden">{addButton}</div>
       {isPending ? (

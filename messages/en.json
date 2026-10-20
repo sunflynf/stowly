@@ -54,6 +54,7 @@
     "stats": "Spending",
     "suggestions": "Clean-up ideas",
     "maintenance": "Maintenance",
+    "insurance": "Insurance report",
     "collapseSidebar": "Collapse sidebar",
     "expandSidebar": "Expand sidebar"
   },
@@ -116,7 +117,8 @@
     "inviteNotFound": "Invite not found.",
     "inviteExpired": "This invite has expired. Ask the owner for a new one.",
     "inviteUsed": "This invite has already been used.",
-    "inviteWrongEmail": "This invite is for a different email."
+    "inviteWrongEmail": "This invite is for a different email.",
+    "documentLimit": "An item can have at most 20 documents."
   },
   "placeholder": {
     "body": "This screen is under construction."
@@ -895,5 +897,59 @@
       "snoozed": "Snoozed ({count})",
       "upcoming": "Upcoming ({count})"
     }
+  },
+  "documents": {
+    "title": "Documents",
+    "empty": "No warranty card, invoice or manual yet.",
+    "kind": "Document type",
+    "kinds": {
+      "warranty": "Warranty card",
+      "invoice": "Invoice",
+      "manual": "Manual",
+      "other": "Other"
+    },
+    "upload": "Upload document",
+    "uploading": "Uploading…",
+    "hint": "PDF or image (JPG, PNG, WebP), up to 10 MB each.",
+    "errors": {
+      "documentType": "{name}: only PDF or JPG, PNG, WebP images are accepted.",
+      "documentSize": "{name} is larger than 10 MB."
+    },
+    "viewNamed": "View {name}",
+    "deleteNamed": "Delete {name}",
+    "download": "Download",
+    "delete": "Delete document",
+    "deleteConfirm": "Delete “{name}”? The file is removed permanently.",
+    "deleted": "Document deleted.",
+    "claimWarranty": "Claim warranty",
+    "print": "Print",
+    "notRecorded": "Not recorded",
+    "serial": "Serial number",
+    "model": "Brand / model",
+    "photos": "Photos",
+    "warrantyLeft": "{days, plural, =0 {Ends today} one {# day left} other {# days left}}",
+    "warrantyExpired": "{days, plural, one {Ended # day ago} other {Ended # days ago}}"
+  },
+  "insurance": {
+    "title": "Insurance report",
+    "subtitle": "Your valuables with photos, purchase price and serial numbers. Print or save as PDF.",
+    "print": "Print / Save PDF",
+    "filters": "Report filters",
+    "minValue": "Minimum value",
+    "category": "Category",
+    "room": "Room / place",
+    "all": "All",
+    "printTitle": "Household inventory – {household}",
+    "generated": "Generated {date}",
+    "summaryMin": "from {value}",
+    "count": "{count, plural, one {# item} other {# items}}",
+    "total": "Total value",
+    "photo": "Photo",
+    "item": "Item",
+    "identity": "Brand, model, serial",
+    "noDate": "No purchase date",
+    "empty": "No items with a purchase price match these filters.",
+    "unpriced": "{count, plural, one {# matching item has no purchase price and is not listed.} other {# matching items have no purchase price and are not listed.}}",
+    "truncated": "Showing the {shown} most valuable items; the total includes all of them."
   }
 }

@@ -6,6 +6,7 @@ export const qk = {
   itemSearch: (params: unknown) => ["items", "search", params] as const,
   item: (id: string) => ["item", id] as const,
   itemEvents: (id: string) => ["item", id, "events"] as const,
+  itemDocuments: (id: string) => ["item", id, "documents"] as const,
   locations: ["locations"] as const,
   categories: ["categories"] as const,
   tags: ["tags"] as const,

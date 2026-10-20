@@ -225,6 +225,31 @@ const SPECS: Record<SharedTable, TableSpec> = {
     insert: async () => ({ item_id: await newItem(), reason: "idle" }),
     update: { until: "2099-01-01" },
   },
+  item_documents: {
+    seed: async () => {
+      const item = await newItem();
+      return ownerInsert("item_documents", {
+        item_id: item,
+        kind: "warranty",
+        title: "phieu-bao-hanh.pdf",
+        storage_path: `${household}/${item}/${unique()}.pdf`,
+        mime_type: "application/pdf",
+        size_bytes: 1000,
+      });
+    },
+    insert: async () => {
+      const item = await newItem();
+      return {
+        item_id: item,
+        kind: "invoice",
+        title: "hoa-don.pdf",
+        storage_path: `${household}/${item}/${unique()}.pdf`,
+        mime_type: "application/pdf",
+        size_bytes: 2000,
+      };
+    },
+    update: { kind: "manual" },
+  },
   maintenance_tasks: {
     seed: () => ownerInsert("maintenance_tasks", { title: `m-${unique()}`, interval_count: 3, interval_unit: "month", item_id: itemId }),
     insert: async () => ({ title: `m-${unique()}`, interval_count: 1, interval_unit: "year" }),

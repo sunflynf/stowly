@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { adjustQuantitySchema, itemInputSchema, photoInputSchema, type ItemInput } from "@/lib/validation/item";
 import { uuid } from "@/lib/validation/common";
+import { DOCUMENT_BUCKET } from "@/lib/validation/documents";
 import { syncTags } from "@/lib/server/tags";
 import { requireEditor } from "./auth-guard";
 import { fail, mapDbError, ok, validationFail, type ActionResult } from "./result";
@@ -86,15 +87,16 @@ export async function deleteItemAction(id: unknown): Promise<ActionResult> {
   const parsedId = uuid.safeParse(id);
   if (!parsedId.success) return validationFail(parsedId.error);
 
-  const { data: photos } = await auth.supabase
-    .from("item_photos")
-    .select("storage_path, thumb_path")
-    .eq("item_id", parsedId.data);
+  const [{ data: photos }, { data: documents }] = await Promise.all([
+    auth.supabase.from("item_photos").select("storage_path, thumb_path").eq("item_id", parsedId.data),
+    auth.supabase.from("item_documents").select("storage_path").eq("item_id", parsedId.data),
+  ]);
   const { data, error } = await auth.supabase.from("items").delete().eq("id", parsedId.data).select("id");
   if (error) return fail(mapDbError(error));
   if (!data.length) return fail("notFound");
   const paths = (photos ?? []).flatMap((p) => [p.storage_path, p.thumb_path].filter((x): x is string => Boolean(x)));
   if (paths.length) await auth.supabase.storage.from(PHOTO_BUCKET).remove(paths);
+  if (documents?.length) await auth.supabase.storage.from(DOCUMENT_BUCKET).remove(documents.map((d) => d.storage_path));
   return ok();
 }
 

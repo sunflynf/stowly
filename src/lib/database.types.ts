@@ -137,6 +137,32 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"item_documents": {
+                  Row: {
+                    "created_at": string,"household_id": string,"id": string,"item_id": string,"kind": Database["public"]['Enums']["document_kind"],"mime_type": string,"size_bytes": number,"storage_path": string,"title": string,"uploaded_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"household_id"?: string,"id"?: string,"item_id": string,"kind"?: Database["public"]['Enums']["document_kind"],"mime_type": string,"size_bytes": number,"storage_path": string,"title": string,"uploaded_by"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"household_id"?: string,"id"?: string,"item_id"?: string,"kind"?: Database["public"]['Enums']["document_kind"],"mime_type"?: string,"size_bytes"?: number,"storage_path"?: string,"title"?: string,"uploaded_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "item_documents_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "item_documents_item_id_household_id_fkey"
+      columns: ["item_id","household_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id","household_id"]
+    }
+                  ]
                 },"item_events": {
                   Row: {
                     "actor_id": string | null,"created_at": string,"delta": number | null,"from_condition": Database["public"]['Enums']["item_condition"] | null,"from_location_id": string | null,"household_id": string,"id": string,"item_id": string,"note": string | null,"quantity_after": number | null,"to_condition": Database["public"]['Enums']["item_condition"] | null,"to_location_id": string | null,"type": Database["public"]['Enums']["item_event_type"]
@@ -634,6 +660,9 @@ isOneToOne: false
               "display_name": string,"is_member": boolean,"user_id": string
             }[]
                            },
+"insurance_report":
+{ Args: { "p_category_ids"?: (string)[],"p_location_id"?: string,"p_min_value"?: number }; Returns: Json
+                           },
 "is_household_owner":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
@@ -702,7 +731,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "alert_kind": "expired"|"expiring_soon"|"out_of_stock"|"low_stock"|"warranty_ending"|"replace_due"|"lent_overdue"|"maintenance_due"|"maintenance_overdue","household_role": "owner"|"editor"|"viewer","interval_unit": "day"|"week"|"month"|"year","item_condition": "new"|"good"|"worn"|"broken"|"given_away","item_event_type": "created"|"quantity_change"|"moved"|"status_change"|"maintenance"
+            "alert_kind": "expired"|"expiring_soon"|"out_of_stock"|"low_stock"|"warranty_ending"|"replace_due"|"lent_overdue"|"maintenance_due"|"maintenance_overdue","document_kind": "warranty"|"invoice"|"manual"|"other","household_role": "owner"|"editor"|"viewer","interval_unit": "day"|"week"|"month"|"year","item_condition": "new"|"good"|"worn"|"broken"|"given_away","item_event_type": "created"|"quantity_change"|"moved"|"status_change"|"maintenance"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -818,7 +847,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "alert_kind": ["expired", "expiring_soon", "out_of_stock", "low_stock", "warranty_ending", "replace_due", "lent_overdue", "maintenance_due", "maintenance_overdue"],"household_role": ["owner", "editor", "viewer"],"interval_unit": ["day", "week", "month", "year"],"item_condition": ["new", "good", "worn", "broken", "given_away"],"item_event_type": ["created", "quantity_change", "moved", "status_change", "maintenance"]
+            "alert_kind": ["expired", "expiring_soon", "out_of_stock", "low_stock", "warranty_ending", "replace_due", "lent_overdue", "maintenance_due", "maintenance_overdue"],"document_kind": ["warranty", "invoice", "manual", "other"],"household_role": ["owner", "editor", "viewer"],"interval_unit": ["day", "week", "month", "year"],"item_condition": ["new", "good", "worn", "broken", "given_away"],"item_event_type": ["created", "quantity_change", "moved", "status_change", "maintenance"]
           }
         }
 } as const

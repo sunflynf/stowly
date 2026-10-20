@@ -10,6 +10,7 @@ const TABLES = [
   "locations",
   "items",
   "item_photos",
+  "item_documents",
   "tags",
   "item_tags",
   "item_events",
@@ -20,7 +21,7 @@ const TABLES = [
   "maintenance_log",
 ] as const;
 
-/** Full JSON backup of everything the user owns (photos are listed by storage path). */
+/** Full JSON backup of the active household (photos and documents are listed by storage path). */
 export async function GET() {
   const auth = await requireUser();
   if (!auth) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
