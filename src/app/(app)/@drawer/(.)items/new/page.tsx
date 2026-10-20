@@ -1,5 +1,10 @@
+import { DrawerGate } from "@/components/items/item-drawer";
 import { QuickAdd } from "../../../items/new/quick-add";
 
 export default function NewItemDrawerPage() {
-  return <QuickAdd drawer />;
+  return (
+    <DrawerGate>
+      <QuickAdd drawer />
+    </DrawerGate>
+  );
 }
