@@ -47,6 +47,7 @@ Stowly runs on **Vercel** (the app) and **Supabase** (database, sign-in, photo s
    | `ALERT_EMAIL_FROM` | `Stowly <onboarding@resend.dev>` until you verify a domain |
    | `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | From `pnpm vapid` |
    | `VAPID_SUBJECT` | `mailto:you@example.com` |
+   | `AUTH_EMAIL_CONFIRMATION` | `off` until you verify a domain in Resend (sign-up sends no confirmation email); remove it afterwards |
 
 5. **Connect the alert job to your deployment.** The migration already schedules `stowly-alert-digest` at minute 5 of every hour. Tell it where to call, in the SQL editor:
    ```sql
