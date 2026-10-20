@@ -56,7 +56,8 @@
     "maintenance": "Maintenance",
     "insurance": "Insurance report",
     "collapseSidebar": "Collapse sidebar",
-    "expandSidebar": "Expand sidebar"
+    "expandSidebar": "Expand sidebar",
+    "trash": "Trash"
   },
   "auth": {
     "title": "Sign in",
@@ -228,8 +229,8 @@
       "maintenance": "Maintenance done"
     },
     "delete": "Delete item",
-    "deleteConfirm": "Delete “{name}”? This cannot be undone.",
-    "deleted": "Item deleted",
+    "deleteConfirm": "Move “{name}” to the trash? You can restore it for 30 days.",
+    "deleted": "Moved to the trash",
     "archive": "Archive",
     "unarchive": "Restore",
     "archived": "Item archived",
@@ -951,5 +952,19 @@
     "empty": "No items with a purchase price match these filters.",
     "unpriced": "{count, plural, one {# matching item has no purchase price and is not listed.} other {# matching items have no purchase price and are not listed.}}",
     "truncated": "Showing the {shown} most valuable items; the total includes all of them."
+  },
+  "trash": {
+    "title": "Trash",
+    "subtitle": "Deleted items are kept for 30 days, then removed for good with their photos and documents.",
+    "empty": "The trash is empty.",
+    "undo": "Undo",
+    "deletedOn": "Deleted {date} by {name}",
+    "purgeOn": "Removed for good on {date}",
+    "restore": "Restore",
+    "restored": "Restored “{name}”.",
+    "deleteForever": "Delete forever",
+    "deleteForeverNamed": "Delete {name} forever",
+    "deleteForeverConfirm": "Delete “{name}” forever, with its photos, documents and history? This cannot be undone.",
+    "deletedForever": "Deleted forever."
   }
 }

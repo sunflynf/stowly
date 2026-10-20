@@ -56,7 +56,8 @@
     "maintenance": "Bảo trì",
     "insurance": "Báo cáo bảo hiểm",
     "collapseSidebar": "Thu gọn thanh bên",
-    "expandSidebar": "Mở rộng thanh bên"
+    "expandSidebar": "Mở rộng thanh bên",
+    "trash": "Thùng rác"
   },
   "auth": {
     "title": "Đăng nhập",
@@ -228,8 +229,8 @@
       "maintenance": "Đã bảo trì"
     },
     "delete": "Xoá món đồ",
-    "deleteConfirm": "Xoá “{name}”? Thao tác này không thể hoàn tác.",
-    "deleted": "Đã xoá món đồ",
+    "deleteConfirm": "Chuyển “{name}” vào thùng rác? Bạn có thể khôi phục trong 30 ngày.",
+    "deleted": "Đã chuyển vào thùng rác",
     "archive": "Lưu trữ",
     "unarchive": "Khôi phục",
     "archived": "Đã lưu trữ món đồ",
@@ -951,5 +952,19 @@
     "empty": "Không có món đồ nào có giá mua khớp bộ lọc.",
     "unpriced": "{count, plural, other {# món đồ khớp bộ lọc chưa có giá mua nên không được liệt kê.}}",
     "truncated": "Chỉ hiển thị {shown} món giá trị nhất; tổng vẫn tính tất cả."
+  },
+  "trash": {
+    "title": "Thùng rác",
+    "subtitle": "Đồ đã xoá được giữ 30 ngày, sau đó bị xoá hẳn cùng ảnh và tài liệu.",
+    "empty": "Thùng rác trống.",
+    "undo": "Hoàn tác",
+    "deletedOn": "Xoá lúc {date} bởi {name}",
+    "purgeOn": "Xoá hẳn vào {date}",
+    "restore": "Khôi phục",
+    "restored": "Đã khôi phục “{name}”.",
+    "deleteForever": "Xoá vĩnh viễn",
+    "deleteForeverNamed": "Xoá vĩnh viễn {name}",
+    "deleteForeverConfirm": "Xoá vĩnh viễn “{name}” cùng ảnh, tài liệu và lịch sử? Không thể hoàn tác.",
+    "deletedForever": "Đã xoá vĩnh viễn."
   }
 }

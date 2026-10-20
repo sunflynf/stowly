@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { deleteItemAction } from "@/lib/actions/items";
+import { deleteItemAction, restoreItemAction } from "@/lib/actions/items";
 import { monthsBetween, todayIn } from "@/lib/dates";
 import { useFormats } from "@/lib/hooks/use-format";
 import { useHousehold, useHouseholdPeople } from "@/lib/queries/household";
@@ -183,7 +183,17 @@ export function ItemDetailView({ id }: { id: string }) {
   const remove = async () => {
     try {
       unwrap(await deleteItemAction(id));
-      toast.success(t("deleted"));
+      toast.success(t("deleted"), {
+        action: {
+          label: tc("trash.undo"),
+          onClick: () =>
+            void restoreItemAction(id).then(async (r) => {
+              if (!r.ok) return onError(new Error(r.error));
+              await invalidate(id);
+              router.push(`/items/${id}`);
+            }),
+        },
+      });
       await invalidate();
       router.push("/items");
     } catch (e) {
