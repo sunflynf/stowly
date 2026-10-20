@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormatter, useNow, useTimeZone, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
-import { Boxes, ChevronRight, Plus, Sparkles } from "lucide-react";
+import { Boxes, ChevronRight, Plus, Sparkles, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { AlertLine } from "@/components/alerts/alert-line";
 import { MobileMenu } from "@/components/app-shell/mobile-menu";
@@ -27,6 +27,10 @@ import { buildLocationTree, useCategories, useLabels, useLocations } from "@/lib
 import { cn } from "@/lib/utils";
 import { ScanButton } from "./scan-button";
 import { CanEdit } from "@/components/app-shell/can-edit";
+import { StatusBadge } from "@/components/items/status-badge";
+import { useIntervalLabel } from "@/components/maintenance/use-maintenance";
+import { useMaintenanceAlerts } from "@/lib/queries/maintenance";
+import { alertStatus } from "@/lib/status";
 
 function StatCard({
   label,
@@ -154,6 +158,9 @@ export function Dashboard() {
   const active = useMemo(() => (alerts ?? []).filter((a) => !a.snoozed), [alerts]);
   const attention = useMemo(() => mostUrgentPerItem(active.filter((a) => !STOCK_KINDS.includes(a.kind))), [active]);
   const { data: groupAlerts = [] } = useGroupAlerts();
+  const { data: taskAlerts = [] } = useMaintenanceAlerts();
+  const dueTasks = taskAlerts.filter((m) => !m.snoozed).sort((a, b) => b.severity - a.severity || a.days_left - b.days_left);
+  const interval = useIntervalLabel();
   const { data: suggestionCounts } = useSuggestionCounts();
   const suggestionCount = suggestionCounts ? Object.values(suggestionCounts).reduce((a, b) => a + b, 0) : 0;
   // Items and groups share one panel, most severe first.
@@ -362,6 +369,37 @@ export function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {dueTasks.length > 0 && (
+        <Card className="mt-5">
+          <CardHeader className="pb-1">
+            <CardTitle>{t("maintenance", { count: dueTasks.length })}</CardTitle>
+            <Link href="/maintenance" className="inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline">
+              {tc("seeAll")}
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <ul className="divide-y divide-border">
+              {dueTasks.slice(0, 4).map((m) => (
+                <li key={m.task_id}>
+                  <Link href={`/maintenance#task-${m.task_id}`} className="flex items-center gap-3 py-2.5 hover:bg-muted/40">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
+                      <Wrench className="size-5" aria-hidden />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-medium">{m.title}</span>
+                      <span className="block truncate text-sm text-muted-foreground">
+                        {m.item_name ?? interval(m.interval_count, m.interval_unit)}
+                      </span>
+                    </span>
+                    <StatusBadge status={alertStatus({ kind: m.kind, severity: m.severity, days_left: m.days_left })} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       {suggestionCount > 0 && (
         <Link

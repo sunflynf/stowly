@@ -16,6 +16,8 @@ const TABLES = [
   "shopping_list",
   "alert_snoozes",
   "item_groups",
+  "maintenance_tasks",
+  "maintenance_log",
 ] as const;
 
 /** Full JSON backup of everything the user owns (photos are listed by storage path). */

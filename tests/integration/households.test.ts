@@ -137,7 +137,14 @@ describe("invites", () => {
 
 type SharedTable = Exclude<
   keyof Tables,
-  "profiles" | "push_subscriptions" | "households" | "household_members" | "household_invites" | "notifications_log" | "group_notifications_log"
+  | "profiles"
+  | "push_subscriptions"
+  | "households"
+  | "household_members"
+  | "household_invites"
+  | "notifications_log"
+  | "group_notifications_log"
+  | "maintenance_notifications_log"
 >;
 
 interface TableSpec {
@@ -218,12 +225,29 @@ const SPECS: Record<SharedTable, TableSpec> = {
     insert: async () => ({ item_id: await newItem(), reason: "idle" }),
     update: { until: "2099-01-01" },
   },
+  maintenance_tasks: {
+    seed: () => ownerInsert("maintenance_tasks", { title: `m-${unique()}`, interval_count: 3, interval_unit: "month", item_id: itemId }),
+    insert: async () => ({ title: `m-${unique()}`, interval_count: 1, interval_unit: "year" }),
+    update: { title: "renamed" },
+  },
+  maintenance_log: {
+    seed: async () => {
+      const task = await ownerInsert("maintenance_tasks", { title: `m-${unique()}`, interval_count: 1, interval_unit: "week" });
+      return ownerInsert("maintenance_log", { task_id: task.id, done_on: "2026-01-01" });
+    },
+    insert: async () => {
+      const task = await ownerInsert("maintenance_tasks", { title: `m-${unique()}`, interval_count: 1, interval_unit: "week" });
+      return { task_id: task.id, done_on: "2026-01-02" };
+    },
+    update: { note: "rewritten" },
+  },
 };
 
 type Actor = "owner" | "editor" | "viewer" | "outsider" | "removed";
 const actor = (name: Actor) => ({ owner, editor, viewer, outsider, removed })[name];
 const canRead: Actor[] = ["owner", "editor", "viewer"];
 const canWrite: Actor[] = ["owner", "editor"];
+const APPEND_ONLY: SharedTable[] = ["item_events", "maintenance_log"];
 
 describe.each(Object.keys(SPECS) as SharedTable[])("%s", (table) => {
   const spec = SPECS[table];
@@ -243,16 +267,16 @@ describe.each(Object.keys(SPECS) as SharedTable[])("%s", (table) => {
     if (canWrite.includes(name)) expect(insertError).toBeNull();
     else expect(insertError).not.toBeNull();
 
-    // Update: history is append-only for everyone.
+    // Update: histories are append-only for everyone.
     if (spec.update) {
       const { data: updated } = await client.from(table).update(spec.update as never).match(row).select();
-      const allowed = canWrite.includes(name) && table !== "item_events";
+      const allowed = canWrite.includes(name) && !APPEND_ONLY.includes(table);
       expect(updated ?? []).toHaveLength(allowed ? 1 : 0);
     }
 
     // Delete
     const { data: deleted } = await client.from(table).delete().match(row).select();
-    const allowed = canWrite.includes(name) && table !== "item_events";
+    const allowed = canWrite.includes(name) && !APPEND_ONLY.includes(table);
     expect(deleted ?? []).toHaveLength(allowed ? 1 : 0);
   });
 });

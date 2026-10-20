@@ -53,6 +53,7 @@
     "groups": "Nhóm đồ",
     "stats": "Chi tiêu",
     "suggestions": "Gợi ý dọn dẹp",
+    "maintenance": "Bảo trì",
     "collapseSidebar": "Thu gọn thanh bên",
     "expandSidebar": "Mở rộng thanh bên"
   },
@@ -143,7 +144,9 @@
     "good": "Tốt",
     "new": "Mới",
     "warranty_left": "{months, plural, other {Bảo hành còn # tháng}}",
-    "archived": "Đã lưu trữ"
+    "archived": "Đã lưu trữ",
+    "maintenance_due": "{days, plural, =0 {Đến hạn hôm nay} other {Còn # ngày}}",
+    "maintenance_overdue": "{days, plural, =0 {Đến hạn hôm nay} other {Trễ # ngày}}"
   },
   "item": {
     "fields": {
@@ -219,7 +222,8 @@
       "created": "Tạo mới với số lượng {quantity}",
       "quantity_change": "{delta} → còn {quantity}",
       "moved": "Chuyển từ {from} sang {to}",
-      "status_change": "Tình trạng: {from} → {to}"
+      "status_change": "Tình trạng: {from} → {to}",
+      "maintenance": "Đã bảo trì"
     },
     "delete": "Xoá món đồ",
     "deleteConfirm": "Xoá “{name}”? Thao tác này không thể hoàn tác.",
@@ -412,7 +416,8 @@
     "createShopping": "Tạo danh sách cần mua",
     "shoppingCreated": "{count, plural, =0 {Danh sách mua đã đủ các món này} other {Đã thêm # món vào danh sách mua}}",
     "byCategory": "Theo danh mục",
-    "stockOf": "{name}: còn {quantity} trên ngưỡng {threshold}"
+    "stockOf": "{name}: còn {quantity} trên ngưỡng {threshold}",
+    "maintenance": "Bảo trì đến hạn ({count})"
   },
   "scan": {
     "button": "Quét mã QR hoặc mã vạch",
@@ -460,7 +465,8 @@
       "warranty": "Bảo hành",
       "replace": "Cần thay",
       "lent": "Cho mượn",
-      "snoozed": "Đã hoãn"
+      "snoozed": "Đã hoãn",
+      "maintenance": "Bảo trì"
     },
     "empty": "Không có cảnh báo nào ở đây. 🎉",
     "actions": {
@@ -523,7 +529,10 @@
       "digestHour": "Giờ gửi tổng hợp hằng ngày",
       "hour": "{hour}:00",
       "unusedAfter": "Gợi ý đồ không dùng sau",
-      "unusedOption": "{days, plural, other {# ngày}}"
+      "unusedOption": "{days, plural, other {# ngày}}",
+      "maintenanceLead": "Nhắc việc bảo trì trước",
+      "maintenanceLeadHint": "Việc bảo trì hiện là “đến hạn” từ chừng ấy ngày trước hạn.",
+      "maintenanceLeadOption": "{days, plural, =0 {Đúng ngày đến hạn} other {# ngày}}"
     },
     "channels": {
       "title": "Kênh thông báo",
@@ -837,5 +846,54 @@
     "emailBody": "Bạn được mời tham gia {household} trên Stowly với vai trò {role}, để cùng quản lý đồ dùng trong nhà.",
     "emailButton": "Xem lời mời",
     "emailFooter": "Link có hiệu lực trong 7 ngày. Nếu bạn không quen người gửi, hãy bỏ qua email này."
+  },
+  "maintenance": {
+    "title": "Bảo trì",
+    "subtitle": "Việc định kỳ như vệ sinh máy lạnh, bảo dưỡng xe.",
+    "add": "Thêm lịch bảo trì",
+    "addShort": "Thêm lịch",
+    "edit": "Sửa lịch bảo trì",
+    "empty": "Chưa có lịch bảo trì nào. Thêm việc định kỳ như “Vệ sinh lưới lọc máy lạnh mỗi 3 tháng”.",
+    "itemEmpty": "Chưa có lịch bảo trì cho món đồ này.",
+    "taskTitle": "Việc cần làm",
+    "titlePlaceholder": "Vệ sinh lưới lọc máy lạnh",
+    "interval": "Lặp lại mỗi",
+    "intervalCount": "Số lượng",
+    "intervalUnit": "Đơn vị",
+    "units": {
+      "day": "{count, plural, other {ngày}}",
+      "week": "{count, plural, other {tuần}}",
+      "month": "{count, plural, other {tháng}}",
+      "year": "{count, plural, other {năm}}"
+    },
+    "every": "{count, plural, other {Mỗi # {unit, select, day {ngày} week {tuần} month {tháng} other {năm}}}}",
+    "startDate": "Lần đầu vào ngày",
+    "startDateHint": "Để trống: lần đầu là một chu kỳ sau hôm nay.",
+    "item": "Gắn với món đồ",
+    "itemHint": "Không bắt buộc. Gõ để tìm trong đồ dùng của bạn.",
+    "itemSearch": "Tìm món đồ…",
+    "itemResults": "Kết quả tìm món đồ",
+    "itemNone": "Không tìm thấy món đồ nào.",
+    "unlinkItem": "Bỏ gắn món đồ",
+    "notes": "Ghi chú",
+    "dueOn": "Hạn {date}",
+    "lastDone": "Lần cuối {date}",
+    "neverDone": "Chưa làm lần nào",
+    "markDone": "Đã làm",
+    "doneOn": "Ngày làm",
+    "doneOnHint": "Để trống là hôm nay. Lần tới tính từ ngày này.",
+    "doneNote": "Ghi chú (không bắt buộc)",
+    "doneToast": "Đã ghi nhận. Lịch đã chuyển sang lần tới.",
+    "history": "Lịch sử",
+    "actionsFor": "Thao tác cho {name}",
+    "menuFor": "Thêm thao tác cho {name}",
+    "delete": "Xoá lịch bảo trì",
+    "deleteConfirm": "Xoá lịch “{name}” cùng lịch sử của nó?",
+    "deleted": "Đã xoá lịch bảo trì.",
+    "sections": {
+      "due": "Cần làm ({count})",
+      "snoozed": "Đã hoãn ({count})",
+      "upcoming": "Sắp tới ({count})"
+    }
   }
 }

@@ -140,8 +140,40 @@ export async function runAlertDigest(options: DigestOptions = {}): Promise<UserD
         location_path_en: null,
       }));
     const groupLog = (rawGroupLog ?? []).map((l) => ({ ...l, item_id: l.group_id })) as (LogEntry & { id: string })[];
+
+    // Maintenance schedules: due/overdue tasks, logged separately.
+    const [{ data: rawTasks }, { data: rawTaskLog }] = await Promise.all([
+      db
+        .rpc("user_maintenance_alerts", { p_user_id: profile.id })
+        .select("task_id, title, item_name, kind, severity, days_left, threshold_key, snoozed"),
+      db
+        .from("maintenance_notifications_log")
+        .select("id, task_id, kind, threshold_key, channel")
+        .eq("user_id", profile.id)
+        .eq("household_id", householdId),
+    ]);
+    const taskAlerts: Alert[] = (rawTasks ?? [])
+      .filter((m) => !m.snoozed)
+      .map((m) => ({
+        item_id: m.task_id!,
+        href: `/maintenance#task-${m.task_id}`,
+        name: m.item_name ? `${m.title} · ${m.item_name}` : m.title!,
+        kind: m.kind!,
+        severity: m.severity ?? 2,
+        days_left: m.days_left,
+        threshold_key: m.threshold_key!,
+        replace_after_months: null,
+        location_path: null,
+        location_path_en: null,
+      }));
+    const taskLog = (rawTaskLog ?? []).map((l) => ({ ...l, item_id: l.task_id })) as (LogEntry & { id: string })[];
+
     const freshFor = (channel: Channel) =>
-      [...selectNewAlerts(groupAlerts, groupLog, channel), ...selectNewAlerts(alerts, log, channel)].sort(
+      [
+        ...selectNewAlerts(taskAlerts, taskLog, channel),
+        ...selectNewAlerts(groupAlerts, groupLog, channel),
+        ...selectNewAlerts(alerts, log, channel),
+      ].sort(
         (x, y) => y.severity - x.severity || (x.days_left ?? 0) - (y.days_left ?? 0),
       );
 
@@ -159,11 +191,14 @@ export async function runAlertDigest(options: DigestOptions = {}): Promise<UserD
     if (stale.length) await db.from("notifications_log").delete().in("id", stale.map((s) => s.id));
     const staleGroups = staleLogEntries(groupAlerts, groupLog) as (LogEntry & { id: string })[];
     if (staleGroups.length) await db.from("group_notifications_log").delete().in("id", staleGroups.map((s) => s.id));
+    const staleTasks = staleLogEntries(taskAlerts, taskLog) as (LogEntry & { id: string })[];
+    if (staleTasks.length) await db.from("maintenance_notifications_log").delete().in("id", staleTasks.map((s) => s.id));
 
     const locale: Locale = isLocale(profile.locale) ? profile.locale : "vi";
     const markSent = async (channel: Channel, sent: Alert[]) => {
       const items = sent.filter((a) => !a.href);
-      const groups = sent.filter((a) => a.href);
+      const groups = sent.filter((a) => a.href?.startsWith("/groups/"));
+      const tasks = sent.filter((a) => a.href?.startsWith("/maintenance"));
       if (items.length) {
         const { error: insertError } = await db.from("notifications_log").upsert(
           items.map((a) => ({
@@ -189,6 +224,20 @@ export async function runAlertDigest(options: DigestOptions = {}): Promise<UserD
             channel,
           })),
           { onConflict: "user_id,group_id,kind,threshold_key,channel", ignoreDuplicates: true },
+        );
+        if (insertError) result.errors.push(insertError.message);
+      }
+      if (tasks.length) {
+        const { error: insertError } = await db.from("maintenance_notifications_log").upsert(
+          tasks.map((a) => ({
+            user_id: profile.id,
+            household_id: householdId,
+            task_id: a.item_id,
+            kind: a.kind,
+            threshold_key: a.threshold_key,
+            channel,
+          })),
+          { onConflict: "user_id,task_id,kind,threshold_key,channel", ignoreDuplicates: true },
         );
         if (insertError) result.errors.push(insertError.message);
       }

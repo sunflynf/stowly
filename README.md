@@ -50,8 +50,8 @@ Useful local URLs:
 | `pnpm typecheck` | `next typegen` + `tsc --noEmit` |
 | `pnpm lint:i18n` | Fails if a message key exists in one locale but not the other |
 | `pnpm test` | Vitest unit tests. Covers i18n parity (keys and ICU arguments), validation, status/alert logic, digest rendering and WCAG AA contrast of every colour theme. |
-| `pnpm test:db` | Integration tests against local Supabase: RLS isolation between two users, storage policies, signup seeding, quantity RPC, search, and households: every shared table × every role (owner, editor, viewer, outsider, removed member), invites, roles, leaving, per-person logs and settings |
-| `pnpm test:e2e` | Playwright tests:<br>• sign-up + language switch<br>• quick add with photo + stepper + history<br>• search and filters<br>• dashboard → shopping list → restock + snooze<br>• QR labels and the `/l/<id>` link<br>• barcode duplicate check + manual entry<br>• **real camera scan** (Chromium's fake camera plays a QR video into the ZXing decoder)<br>• item groups (created from the item form)<br>• CSV import (Vietnamese file) + export round-trip<br>• household invite → join as viewer (read-only) → removed by the owner<br>• colour theme switch (Dark, Auto following the device, Fresh green), kept across reload and devices |
+| `pnpm test:db` | Integration tests against local Supabase: RLS isolation between two users, storage policies, signup seeding, quantity RPC, search, and households: every shared table × every role (owner, editor, viewer, outsider, removed member), invites, roles, leaving, per-person logs and settings; maintenance due dates, completion, alerts, snooze and digest de-duplication |
+| `pnpm test:e2e` | Playwright tests:<br>• sign-up + language switch<br>• quick add with photo + stepper + history<br>• search and filters<br>• dashboard → shopping list → restock + snooze<br>• QR labels and the `/l/<id>` link<br>• barcode duplicate check + manual entry<br>• **real camera scan** (Chromium's fake camera plays a QR video into the ZXing decoder)<br>• item groups (created from the item form)<br>• CSV import (Vietnamese file) + export round-trip<br>• household invite → join as viewer (read-only) → removed by the owner<br>• maintenance schedule on an item → due on dashboard/Alerts → mark done<br>• colour theme switch (Dark, Auto following the device, Fresh green), kept across reload and devices |
 | `pnpm bench:search` | Search latency against the seeded account, and as each `demo-member-N` of the same household when present (target p95 < 200 ms) |
 | `pnpm db:reset` / `pnpm db:types` | Re-apply migrations / regenerate `src/lib/database.types.ts` |
 | `pnpm vapid` | Generate VAPID keys for web push |
@@ -111,6 +111,7 @@ Useful local URLs:
 | **Spending** | Sidebar → **Chi tiêu**: pick a period. You get totals vs the previous period, the monthly chart (hover/focus a bar, or switch to the table), spending by category and by room, and the most expensive items. Purchases without a price or date are counted in a note. |
 | **Clean-up ideas** | Sidebar → **Gợi ý dọn dẹp**, also linked from the dashboard. Four tabs: unused for a long time, worn, broken, duplicates. Actions: give away, archive, keep, snooze 30 days, and merge duplicates into the older item; undo is available where safe. The "unused" threshold is in Settings. `pnpm seed:demo` backdates history so there is something to see. |
 | **Households** | Settings → **Thành viên**: name the household, set your display name, invite an email as Biên tập/Chỉ xem (without `RESEND_API_KEY` the link is shown to copy). Open the link in another browser: sign up or sign in with that email, then **Tham gia**. A viewer sees a "Chỉ xem" banner and no add/edit controls; an editor can change items. The owner changes roles and removes members; anyone can **Rời nhà này** except the last owner. Item history shows who made each change; switch households from the same section. `pnpm test:db` (role matrix), `pnpm seed:demo --count 5000 --members 3 && pnpm bench:search`. |
+| **Maintenance** | Sidebar → **Bảo trì** → **Thêm lịch bảo trì**: "Vệ sinh lưới lọc máy lạnh", every 3 months, optionally a first due date and an item (also from an item's page → **Thêm lịch**). Tasks due within your lead days (Settings → Cảnh báo, default 7) or overdue appear on the dashboard ("Bảo trì đến hạn"), on Alerts → **Bảo trì** and in the daily digest. **Đã làm** records the date (today by default) and a note in the task history and the item history, and moves the next due date; **Hoãn 7 ngày** works like other alerts. `pnpm seed:demo` adds four sample tasks. |
 | **Themes** | **Settings → Giao diện**: pick Tự động, Stowly xanh ngọc, Xanh lá tươi, Xanh biển dịu or Tối; the app recolours at once, keeps it after reload and on another device after signing in. With Tự động, switch the device between light and dark mode. `pnpm test` checks every theme's contrast. |
 | **M6** PWA, performance, E2E | `pnpm build && pnpm start`, then install from the browser; the offline page is served without a network. `pnpm seed:demo --count 5000 && pnpm bench:search`, then `pnpm test:e2e`. |
 
@@ -143,6 +144,7 @@ Measured on the local stack with 5,000 items (end-to-end via PostgREST):
   - A substring match runs on the normalised name.
   - Typo tolerance is per word (4+ letters), using `pg_trgm` strict word similarity.
   - GIN indexes back the full-text and trigram matching.
+- **Maintenance alerts.** `compute_maintenance_alerts(task, today, lead_days)` decides which tasks are due or overdue, the same pattern as `compute_item_alerts()`. The `maintenance_alerts` view, `dashboard_stats()` and the digest (`user_maintenance_alerts(user)`) all read it. The threshold key includes the due date, and `maintenance_notifications_log` is unique per person, so each reminder is sent once.
 - **No resends.** `notifications_log(user, item, kind, threshold_key, channel)` is unique, so each member gets each reminder once.
   - The threshold key includes the date and the bucket (e.g. `2026-11-01:7`), so the 30-, 7- and 1-day reminders each send once.
   - When an alert resolves, its log rows are cleared so it can fire again (e.g. restocked, then running low again).
@@ -249,6 +251,15 @@ Defaults chosen where the brief was open, or where the environment forced a choi
     - **Status colours** keep their meaning everywhere. Red and amber are shared by the light themes and re-tuned for Dark. Orange, mustard, red or neon main colours were left out because they would read as warnings.
     - **Per person**, like language: stored in `profiles.theme` and mirrored in the `STOWLY_THEME` cookie, so the server renders the right colours on first paint (no flash). It is applied in the browser at once when changed, and synced from the profile at sign-in on a new device. The status-bar colour (`theme-color`) follows the theme, with light/dark variants for Auto.
     - **Not themed on purpose:** printed QR labels and reports stay black on white. The installed app's splash colour (web manifest) stays teal, because the manifest is fetched once at install.
+
+23. **Maintenance schedules.**
+    - **Intervals** are a count of days, weeks, months or years. Months add calendar months, so 31 January + 1 month is 28 February.
+    - **First due date:** the start date if given; otherwise one interval after the task was created (in your timezone).
+    - **Next due date** counts from the day it was actually done, not from the previous due date, so a late job doesn't leave the next one already overdue. The done date can be backdated, but not set in the future.
+    - **Due vs overdue:** "due" (amber) from `maintenance_lead_days` before the date (per person, default 7, 0 = on the day); "overdue" (red) after it. Snoozing hides a task until the chosen date, like other snoozes, and marking it done clears the snooze.
+    - **Snooze and history are shared** by the household; the lead days are per person, like the other alert settings.
+    - **Items:** a task linked to an item is deleted with the item; marking it done also adds a "Đã bảo trì" event to the item's history. Tasks without an item are standalone.
+    - **Enum values** for the new alert kinds live in their own migration, because Postgres cannot use a new enum value in the transaction that adds it.
 
 ### Dependencies added (and why)
 

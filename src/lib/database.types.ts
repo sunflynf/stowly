@@ -311,6 +311,84 @@ isOneToOne: false
       referencedColumns: ["id","household_id"]
     }
                   ]
+                },"maintenance_log": {
+                  Row: {
+                    "actor_id": string | null,"created_at": string,"done_on": string,"household_id": string,"id": string,"note": string | null,"task_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "actor_id"?: string | null,"created_at"?: string,"done_on": string,"household_id"?: string,"id"?: string,"note"?: string | null,"task_id": string
+                  }
+                  Update: {
+                    "actor_id"?: string | null,"created_at"?: string,"done_on"?: string,"household_id"?: string,"id"?: string,"note"?: string | null,"task_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "maintenance_log_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "maintenance_log_task_id_household_id_fkey"
+      columns: ["task_id","household_id"]
+isOneToOne: false
+      referencedRelation: "maintenance_tasks"
+      referencedColumns: ["id","household_id"]
+    }
+                  ]
+                },"maintenance_notifications_log": {
+                  Row: {
+                    "channel": string,"household_id": string,"id": string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at": string,"task_id": string,"threshold_key": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "channel": string,"household_id": string,"id"?: string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"task_id": string,"threshold_key": string,"user_id": string
+                  }
+                  Update: {
+                    "channel"?: string,"household_id"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"task_id"?: string,"threshold_key"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "maintenance_notifications_log_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "maintenance_notifications_log_task_id_household_id_fkey"
+      columns: ["task_id","household_id"]
+isOneToOne: false
+      referencedRelation: "maintenance_tasks"
+      referencedColumns: ["id","household_id"]
+    }
+                  ]
+                },"maintenance_tasks": {
+                  Row: {
+                    "archived_at": string | null,"created_at": string,"created_by": string | null,"household_id": string,"id": string,"interval_count": number,"interval_unit": Database["public"]['Enums']["interval_unit"],"item_id": string | null,"last_done_on": string | null,"next_due": string,"notes": string | null,"snoozed_until": string | null,"start_date": string | null,"title": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "archived_at"?: string | null,"created_at"?: string,"created_by"?: string | null,"household_id"?: string,"id"?: string,"interval_count": number,"interval_unit": Database["public"]['Enums']["interval_unit"],"item_id"?: string | null,"last_done_on"?: string | null,"next_due"?: string,"notes"?: string | null,"snoozed_until"?: string | null,"start_date"?: string | null,"title": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "archived_at"?: string | null,"created_at"?: string,"created_by"?: string | null,"household_id"?: string,"id"?: string,"interval_count"?: number,"interval_unit"?: Database["public"]['Enums']["interval_unit"],"item_id"?: string | null,"last_done_on"?: string | null,"next_due"?: string,"notes"?: string | null,"snoozed_until"?: string | null,"start_date"?: string | null,"title"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "maintenance_tasks_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "maintenance_tasks_item_id_household_id_fkey"
+      columns: ["item_id","household_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id","household_id"]
+    }
+                  ]
                 },"notifications_log": {
                   Row: {
                     "channel": string,"household_id": string,"id": string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at": string,"threshold_key": string,"user_id": string
@@ -339,14 +417,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "active_household_id": string | null,"created_at": string,"currency": string,"digest_hour": number,"display_name": string | null,"expiry_lead_days": (number)[],"id": string,"locale": string,"notify_email": boolean,"notify_push": boolean,"theme": string,"timezone": string,"unused_after_days": number,"updated_at": string,"warranty_lead_days": number
+                    "active_household_id": string | null,"created_at": string,"currency": string,"digest_hour": number,"display_name": string | null,"expiry_lead_days": (number)[],"id": string,"locale": string,"maintenance_lead_days": number,"notify_email": boolean,"notify_push": boolean,"theme": string,"timezone": string,"unused_after_days": number,"updated_at": string,"warranty_lead_days": number
                   }
                   ComputedFields: never
                   Insert: {
-                    "active_household_id"?: string | null,"created_at"?: string,"currency"?: string,"digest_hour"?: number,"display_name"?: string | null,"expiry_lead_days"?: (number)[],"id": string,"locale"?: string,"notify_email"?: boolean,"notify_push"?: boolean,"theme"?: string,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
+                    "active_household_id"?: string | null,"created_at"?: string,"currency"?: string,"digest_hour"?: number,"display_name"?: string | null,"expiry_lead_days"?: (number)[],"id": string,"locale"?: string,"maintenance_lead_days"?: number,"notify_email"?: boolean,"notify_push"?: boolean,"theme"?: string,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
                   }
                   Update: {
-                    "active_household_id"?: string | null,"created_at"?: string,"currency"?: string,"digest_hour"?: number,"display_name"?: string | null,"expiry_lead_days"?: (number)[],"id"?: string,"locale"?: string,"notify_email"?: boolean,"notify_push"?: boolean,"theme"?: string,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
+                    "active_household_id"?: string | null,"created_at"?: string,"currency"?: string,"digest_hour"?: number,"display_name"?: string | null,"expiry_lead_days"?: (number)[],"id"?: string,"locale"?: string,"maintenance_lead_days"?: number,"notify_email"?: boolean,"notify_push"?: boolean,"theme"?: string,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
                   }
                   Relationships: [
                     {
@@ -488,11 +566,22 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"maintenance_alerts": {
+                  Row: {
+                    "days_left": number | null,"due_date": string | null,"household_id": string | null,"interval_count": number | null,"interval_unit": Database["public"]['Enums']["interval_unit"] | null,"item_id": string | null,"item_name": string | null,"kind": Database["public"]['Enums']["alert_kind"] | null,"severity": number | null,"snoozed": boolean | null,"snoozed_until": string | null,"task_id": string | null,"threshold_key": string | null,"title": string | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    
+                  ]
                 }
           }
           Functions: {
             "accept_household_invite":
 { Args: { "p_token": string }; Returns: string
+                           },
+"add_interval":
+{ Args: { "p_count": number,"p_from": string,"p_unit": Database["public"]['Enums']["interval_unit"] }; Returns: string
                            },
 "adjust_item_quantity":
 { Args: { "p_delta": number,"p_item_id": string,"p_note"?: string }; Returns: number
@@ -505,8 +594,16 @@ isOneToOne: false
               "category_id": string,"item_count": number
             }[]
                            },
+"complete_maintenance_task":
+{ Args: { "p_done_on"?: string,"p_note"?: string,"p_task_id": string }; Returns: string
+                           },
 "compute_item_alerts":
 { Args: { "p_expiry_lead_days": (number)[],"p_item": Omit<Database["public"]['Tables']["items"]['Row'], Database["public"]['Tables']["items"]['ComputedFields']>,"p_today": string,"p_warranty_lead_days": number }; Returns: {
+              "days_left": number,"due_date": string,"kind": Database["public"]['Enums']["alert_kind"],"severity": number,"threshold_key": string
+            }[]
+                           },
+"compute_maintenance_alerts":
+{ Args: { "p_lead_days": number,"p_task": Omit<Database["public"]['Tables']["maintenance_tasks"]['Row'], Database["public"]['Tables']["maintenance_tasks"]['ComputedFields']>,"p_today": string }; Returns: {
               "days_left": number,"due_date": string,"kind": Database["public"]['Enums']["alert_kind"],"severity": number,"threshold_key": string
             }[]
                            },
@@ -595,12 +692,17 @@ isOneToOne: false
               "category_id": string,"days_left": number,"due_date": string,"household_id": string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"location_id": string,"location_path": string,"location_path_en": string,"min_quantity": number,"name": string,"quantity": number,"replace_after_months": number,"severity": number,"snoozed": boolean,"snoozed_until": string,"threshold_key": string,"thumb_path": string,"unit": string
             }[]
                            },
+"user_maintenance_alerts":
+{ Args: { "p_user_id": string }; Returns: {
+              "days_left": number,"due_date": string,"household_id": string,"interval_count": number,"interval_unit": Database["public"]['Enums']["interval_unit"],"item_id": string,"item_name": string,"kind": Database["public"]['Enums']["alert_kind"],"severity": number,"snoozed": boolean,"snoozed_until": string,"task_id": string,"threshold_key": string,"title": string
+            }[]
+                           },
 "user_today":
 { Args: { "p_timezone": string }; Returns: string
                            }
           }
           Enums: {
-            "alert_kind": "expired"|"expiring_soon"|"out_of_stock"|"low_stock"|"warranty_ending"|"replace_due"|"lent_overdue","household_role": "owner"|"editor"|"viewer","item_condition": "new"|"good"|"worn"|"broken"|"given_away","item_event_type": "created"|"quantity_change"|"moved"|"status_change"
+            "alert_kind": "expired"|"expiring_soon"|"out_of_stock"|"low_stock"|"warranty_ending"|"replace_due"|"lent_overdue"|"maintenance_due"|"maintenance_overdue","household_role": "owner"|"editor"|"viewer","interval_unit": "day"|"week"|"month"|"year","item_condition": "new"|"good"|"worn"|"broken"|"given_away","item_event_type": "created"|"quantity_change"|"moved"|"status_change"|"maintenance"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -716,7 +818,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "alert_kind": ["expired", "expiring_soon", "out_of_stock", "low_stock", "warranty_ending", "replace_due", "lent_overdue"],"household_role": ["owner", "editor", "viewer"],"item_condition": ["new", "good", "worn", "broken", "given_away"],"item_event_type": ["created", "quantity_change", "moved", "status_change"]
+            "alert_kind": ["expired", "expiring_soon", "out_of_stock", "low_stock", "warranty_ending", "replace_due", "lent_overdue", "maintenance_due", "maintenance_overdue"],"household_role": ["owner", "editor", "viewer"],"interval_unit": ["day", "week", "month", "year"],"item_condition": ["new", "good", "worn", "broken", "given_away"],"item_event_type": ["created", "quantity_change", "moved", "status_change", "maintenance"]
           }
         }
 } as const

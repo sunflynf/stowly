@@ -261,6 +261,20 @@ export function SettingsPage() {
                 ))}
               </NativeSelect>
             </Field>
+            <Field label={t("alerts.maintenanceLead")} htmlFor="mlead" hint={t("alerts.maintenanceLeadHint")}>
+              <NativeSelect
+                id="mlead"
+                value={profile.maintenance_lead_days}
+                onChange={(e) => save.mutate({ maintenance_lead_days: Number(e.target.value) })}
+                aria-describedby="mlead-hint"
+              >
+                {[0, 1, 3, 7, 14, 30].map((d) => (
+                  <option key={d} value={d}>
+                    {t("alerts.maintenanceLeadOption", { days: d })}
+                  </option>
+                ))}
+              </NativeSelect>
+            </Field>
             <Field label={t("alerts.digestHour")} htmlFor="hour">
               <NativeSelect id="hour" value={profile.digest_hour} onChange={(e) => save.mutate({ digest_hour: Number(e.target.value) })}>
                 {Array.from({ length: 24 }, (_, h) => (

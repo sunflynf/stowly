@@ -26,8 +26,8 @@ test("accent-insensitive search, filters and inline stepper", async ({ page, use
   await search.fill("tu quan ao");
   await expect(page.getByRole("link", { name: /Áo khoác mùa đông/ })).toBeVisible();
 
-  await search.fill("");
-  await page.getByRole("checkbox", { name: "Chỉ tồn kho thấp" }).click();
+  // Low stock first (the "Tồn kho" view in the navigation).
+  await page.goto("/items?states=out_of_stock,low_stock&sort=low_stock");
   await expect(page.getByRole("heading", { name: "2 kết quả" })).toBeVisible();
   const rows = page.locator("tbody tr");
   await expect(rows.first()).toContainText("Cáp Lightning"); // out of stock sorts first

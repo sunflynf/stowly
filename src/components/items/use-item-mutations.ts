@@ -35,6 +35,7 @@ export function useInvalidateItems() {
       qc.invalidateQueries({ queryKey: qk.categoryCounts }),
       qc.invalidateQueries({ queryKey: qk.shopping }),
       qc.invalidateQueries({ queryKey: qk.groups }),
+      qc.invalidateQueries({ queryKey: qk.maintenance }),
       ...(id ? [qc.invalidateQueries({ queryKey: qk.item(id) })] : []),
     ]);
 }

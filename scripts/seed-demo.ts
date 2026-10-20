@@ -152,6 +152,19 @@ async function backdateHistory(householdId: string, userId: string) {
   }
 }
 
+/** A few recurring tasks: one overdue, one due soon, the rest later. */
+async function seedMaintenance(householdId: string) {
+  await db.from("maintenance_tasks").delete().eq("household_id", householdId);
+  const { data: ac } = await db.from("items").select("id").eq("household_id", householdId).limit(1).single();
+  const { error } = await db.from("maintenance_tasks").insert([
+    { household_id: householdId, title: "Vệ sinh lưới lọc máy lạnh", interval_count: 3, interval_unit: "month", start_date: isoOffset(-4), item_id: ac?.id ?? null },
+    { household_id: householdId, title: "Bảo dưỡng xe máy", interval_count: 6, interval_unit: "month", start_date: isoOffset(3) },
+    { household_id: householdId, title: "Thay lõi lọc nước", interval_count: 1, interval_unit: "year", start_date: isoOffset(60) },
+    { household_id: householdId, title: "Kiểm tra bình chữa cháy", interval_count: 2, interval_unit: "week", start_date: isoOffset(10) },
+  ]);
+  if (error) throw error;
+}
+
 async function fetchAllRows<T>(page: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: unknown }>): Promise<T[]> {
   const out: T[] = [];
   for (let from = 0; ; from += 1000) {
@@ -254,6 +267,7 @@ async function main() {
     process.stdout.write(`\r  ${inserted}/${rows.length}`);
   }
   await backdateHistory(householdId, userId);
+  await seedMaintenance(householdId);
   await addMembers(householdId);
   console.log(`\nDone. Sign in as ${email} / ${password}`);
 }
