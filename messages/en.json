@@ -951,5 +951,13 @@
     "empty": "No items with a purchase price match these filters.",
     "unpriced": "{count, plural, one {# matching item has no purchase price and is not listed.} other {# matching items have no purchase price and are not listed.}}",
     "truncated": "Showing the {shown} most valuable items; the total includes all of them."
+  },
+  "voice": {
+    "start": "Search by voice",
+    "stop": "Stop listening",
+    "listening": "Listening… say the item's name, e.g. “where's the drill?”.",
+    "noSpeech": "Didn't hear anything. Try again.",
+    "denied": "Allow microphone access to search by voice.",
+    "failed": "Couldn't recognise that. Try again or type to search."
   }
 }
