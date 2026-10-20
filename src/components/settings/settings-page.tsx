@@ -15,7 +15,9 @@ import { Field } from "@/components/ui/field";
 import { Input, NativeSelect } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
+import { DEFAULT_THEME, isThemePreference } from "@/lib/themes";
 import { MembersSection } from "./members-section";
+import { ThemePicker } from "./theme-picker";
 import { signOutAction } from "@/lib/actions/auth";
 import { sendTestPushAction, updateProfileAction } from "@/lib/actions/settings";
 import { getPushState, subscribePush, unsubscribePush, type PushState } from "@/lib/push-client";
@@ -136,6 +138,16 @@ export function SettingsPage() {
         <CardContent className="flex flex-col gap-2">
           <LanguageSwitcher />
           <p className="text-sm text-muted-foreground">{t("language.hint")}</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("appearance.title")}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-2">
+          <ThemePicker value={isThemePreference(profile.theme) ? profile.theme : DEFAULT_THEME} />
+          <p className="text-sm text-muted-foreground">{t("appearance.hint")}</p>
         </CardContent>
       </Card>
 
