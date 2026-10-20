@@ -2,11 +2,15 @@ import "server-only";
 import { cookies } from "next/headers";
 import { isLocale, isTimeZone, LOCALE_COOKIE, TIMEZONE_COOKIE, type Locale } from "@/i18n/config";
 import type { getSupabaseServer } from "@/lib/supabase/server";
+import { DEFAULT_THEME, isThemePreference, THEME_COOKIE, type ThemePreference } from "@/lib/themes";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 
-export async function setPreferenceCookies(prefs: { locale?: Locale; timezone?: string }) {
+export async function setPreferenceCookies(prefs: { locale?: Locale; timezone?: string; theme?: ThemePreference }) {
   const store = await cookies();
+  if (prefs.theme && isThemePreference(prefs.theme)) {
+    store.set(THEME_COOKIE, prefs.theme, { path: "/", maxAge: ONE_YEAR, sameSite: "lax" });
+  }
   if (prefs.locale && isLocale(prefs.locale)) {
     store.set(LOCALE_COOKIE, prefs.locale, { path: "/", maxAge: ONE_YEAR, sameSite: "lax" });
   }
@@ -15,10 +19,20 @@ export async function setPreferenceCookies(prefs: { locale?: Locale; timezone?: 
   }
 }
 
-/** After login, copy locale/timezone from the profile into cookies. */
+/** After login, copy locale/timezone/theme from the profile into cookies. */
 export async function syncPreferenceCookies(supabase: Awaited<ReturnType<typeof getSupabaseServer>>) {
-  const { data } = await supabase.from("profiles").select("locale, timezone").maybeSingle();
+  const { data } = await supabase.from("profiles").select("locale, timezone, theme").maybeSingle();
   if (data) {
-    await setPreferenceCookies({ locale: isLocale(data.locale) ? data.locale : undefined, timezone: data.timezone });
+    await setPreferenceCookies({
+      locale: isLocale(data.locale) ? data.locale : undefined,
+      timezone: data.timezone,
+      theme: isThemePreference(data.theme) ? data.theme : undefined,
+    });
   }
+}
+
+/** The theme to render with: the cookie, else the default. */
+export async function currentThemePreference(): Promise<ThemePreference> {
+  const value = (await cookies()).get(THEME_COOKIE)?.value;
+  return isThemePreference(value) ? value : DEFAULT_THEME;
 }
