@@ -5,6 +5,7 @@ import { fonts } from "@/i18n/fonts";
 import { locales } from "@/i18n/config";
 import { setPreferenceCookies } from "@/lib/preferences";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { THEME_PREFERENCES } from "@/lib/themes";
 import { fail, ok, validationFail, type ActionResult } from "./result";
 
 const localeSchema = z.enum(locales);
@@ -20,6 +21,23 @@ export async function setLocaleAction(input: unknown): Promise<ActionResult> {
   const { data } = await supabase.auth.getClaims();
   if (data?.claims) {
     const { error } = await supabase.from("profiles").update({ locale: parsed.data }).eq("id", data.claims.sub);
+    if (error) return fail("unknown");
+  }
+  return ok();
+}
+
+const themeSchema = z.enum(THEME_PREFERENCES);
+
+/** Changes the colour theme: cookie for this browser, plus the profile when signed in. */
+export async function setThemeAction(input: unknown): Promise<ActionResult> {
+  const parsed = themeSchema.safeParse(input);
+  if (!parsed.success) return validationFail(parsed.error);
+
+  await setPreferenceCookies({ theme: parsed.data });
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase.auth.getClaims();
+  if (data?.claims) {
+    const { error } = await supabase.from("profiles").update({ theme: parsed.data }).eq("id", data.claims.sub);
     if (error) return fail("unknown");
   }
   return ok();

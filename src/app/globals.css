@@ -1,40 +1,10 @@
 @import "tailwindcss";
 
 /*
- * Design tokens. Light theme first; a dark theme only needs to redefine these
- * variables under a [data-theme="dark"] / prefers-color-scheme selector.
+ * Design tokens. Colours are per theme and come from src/lib/themes.ts, which
+ * the root layout renders as CSS variables keyed by <html data-theme>.
  */
 :root {
-  --background: #f3f5f4;
-  --foreground: #14201c;
-  --card: #ffffff;
-  --card-foreground: #14201c;
-  --popover: #ffffff;
-  --popover-foreground: #14201c;
-
-  --primary: #0b6e63;
-  --primary-hover: #095c53;
-  --primary-foreground: #ffffff;
-  --accent: #e3f1ee;
-  --accent-foreground: #0a5a51;
-
-  --muted: #eef1ef;
-  --muted-foreground: #4b5c55;
-  --border: #e2e8e5;
-  --input: #cfd8d4;
-  --ring: #0b6e63;
-
-  --danger: #fde8e6;
-  --danger-foreground: #9f1d14;
-  --danger-solid: #b3261e;
-  --warning: #fdefd6;
-  --warning-foreground: #8a4b00;
-  --warning-solid: #b85c00;
-  --neutral: #eef1ef;
-  --neutral-foreground: #3b4a44;
-  --success: #e3f1ee;
-  --success-foreground: #0a5a51;
-
   /* One radius (medium) for every control, card, dialog and tile. */
   --radius: 10px;
 
