@@ -107,7 +107,14 @@
     "locationTooDeep": "Locations can be nested at most 6 levels deep.",
     "locationNotEmpty": "This location still contains items or sub-locations. Move them first.",
     "categoryInUse": "This category is in use.",
-    "unknown": "Something went wrong. Please try again."
+    "unknown": "Something went wrong. Please try again.",
+    "forbidden": "You have view-only access in this household.",
+    "lastOwner": "A household needs at least one owner. Make someone else an owner first.",
+    "alreadyMember": "This person is already a member.",
+    "inviteNotFound": "Invite not found.",
+    "inviteExpired": "This invite has expired. Ask the owner for a new one.",
+    "inviteUsed": "This invite has already been used.",
+    "inviteWrongEmail": "This invite is for a different email."
   },
   "placeholder": {
     "body": "This screen is under construction."
@@ -242,7 +249,9 @@
       "merge": "Merged duplicates",
       "barcode": "Barcode scan",
       "demo": "Demo data"
-    }
+    },
+    "byPerson": "by {name}",
+    "formerMember": "{name} (left)"
   },
   "locations": {
     "title": "Locations",
@@ -712,5 +721,76 @@
     "showMore": "Show {count, plural, one {# more} other {# more}}",
     "dashboard": "{count, plural, one {# clean-up idea} other {# clean-up ideas}}",
     "dashboardHint": "Unused for a long time, worn, broken or duplicated."
+  },
+  "members": {
+    "title": "Members",
+    "defaultName": "{name}'s home",
+    "householdName": "Household name",
+    "householdNameHint": "Shown to every member and in invites.",
+    "renamed": "Household renamed.",
+    "yourRole": "Your role: {role}",
+    "displayName": "Your display name",
+    "displayNameHint": "Shown in the member list and in item history.",
+    "displayNameSaved": "Display name saved.",
+    "you": "you",
+    "roles": {
+      "owner": "Owner",
+      "editor": "Editor",
+      "viewer": "Viewer"
+    },
+    "roleHints": {
+      "owner": "Everything, including members and household settings.",
+      "editor": "Add, edit and delete items; shopping list and alerts.",
+      "viewer": "Read-only: can look but not change anything."
+    },
+    "roleFor": "Role of {name}",
+    "roleChanged": "Role changed.",
+    "remove": "Remove from household",
+    "removeNamed": "Remove {name} from the household",
+    "removeConfirm": "Remove {name} from the household? They will no longer see the items here.",
+    "removed": "Member removed.",
+    "inviteTitle": "Invite someone",
+    "inviteEmail": "Their email",
+    "inviteRole": "Role",
+    "inviteSend": "Send invite",
+    "inviteSent": "Invite sent to {email}. You can also share this link:",
+    "inviteLinkOnly": "Email is not set up. Send this link to {email}:",
+    "inviteLink": "Invite link",
+    "copy": "Copy",
+    "copied": "Copied",
+    "pendingTitle": "Pending invites",
+    "inviteExpires": "expires {date}",
+    "inviteExpired": "expired",
+    "revoke": "Revoke",
+    "switchTitle": "Your households",
+    "memberCount": "{count, plural, one {# member} other {# members}}",
+    "current": "Current",
+    "switch": "Switch",
+    "switched": "Switched household.",
+    "leave": "Leave this household",
+    "leaveConfirm": "Leave {name}? You will no longer see its items unless you are invited again.",
+    "left": "You left the household.",
+    "lastOwnerHint": "You are the only owner. Make someone else an owner before leaving.",
+    "readOnly": "You have view-only access in this household."
+  },
+  "invite": {
+    "title": "Invitation",
+    "heading": "{inviter} invited you to {household}",
+    "roleLine": "Role: {role}",
+    "accept": "Join",
+    "signedOutHint": "Sign in or create an account with {email} to join.",
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "wrongEmail": "This invite is for {email}, but you are signed in as {current}.",
+    "switchAccount": "Sign out to switch account",
+    "expired": "This invite has expired. Ask the owner for a new one.",
+    "used": "This invite has already been used.",
+    "notFound": "Invite not found. Check the link.",
+    "goHome": "Go to overview",
+    "emailSubject": "{inviter} invited you to share Stowly",
+    "emailHeading": "{inviter} invited you to {household}",
+    "emailBody": "You have been invited to join {household} on Stowly as {role}, to keep track of the household's things together.",
+    "emailButton": "View invite",
+    "emailFooter": "The link is valid for 7 days. If you don't know the sender, ignore this email."
   }
 }

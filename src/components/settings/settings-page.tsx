@@ -15,6 +15,7 @@ import { Field } from "@/components/ui/field";
 import { Input, NativeSelect } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
+import { MembersSection } from "./members-section";
 import { signOutAction } from "@/lib/actions/auth";
 import { sendTestPushAction, updateProfileAction } from "@/lib/actions/settings";
 import { getPushState, subscribePush, unsubscribePush, type PushState } from "@/lib/push-client";
@@ -125,6 +126,8 @@ export function SettingsPage() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-5">
       <PageHeader title={t("title")} className="mb-0" />
+
+      <MembersSection />
 
       <Card>
         <CardHeader>

@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Bell, LayoutGrid, MapPin, Package, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavCounts } from "./use-nav-counts";
+import { CanEdit } from "./can-edit";
 
 const tabs = [
   { href: "/", label: "overview", icon: LayoutGrid, exact: true },
@@ -57,13 +58,15 @@ export function MobileTabBar() {
         {renderTab(tabs[0])}
         {renderTab(tabs[1])}
         <div className="flex flex-1 items-start justify-center">
-          <Link
-            href="/items/new"
-            aria-label={t("addItem")}
-            className="-mt-5 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-background"
-          >
-            <Plus className="size-7" aria-hidden />
-          </Link>
+          <CanEdit>
+            <Link
+              href="/items/new"
+              aria-label={t("addItem")}
+              className="-mt-5 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-background"
+            >
+              <Plus className="size-7" aria-hidden />
+            </Link>
+          </CanEdit>
         </div>
         {renderTab(tabs[2])}
         {renderTab(tabs[3])}

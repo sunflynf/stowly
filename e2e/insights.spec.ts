@@ -3,17 +3,17 @@ import { expect, signIn, test } from "./fixtures";
 const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000).toISOString().slice(0, 10);
 
 test("spending totals and clean-up suggestions (give away, keep, merge)", async ({ page, user, db }) => {
-  const { data: desk } = await db.from("locations").select("id").eq("user_id", user.id).eq("builtin_key", "desk").single();
+  const { data: desk } = await db.from("locations").select("id").eq("household_id", user.householdId).eq("builtin_key", "desk").single();
   const { data: items, error } = await db
     .from("items")
     .insert(
       [
-        { user_id: user.id, name: "Laptop", purchase_price: 20_000_000, purchase_date: daysAgo(40) },
-        { user_id: user.id, name: "Chuột", purchase_price: 500_000, purchase_date: daysAgo(10) },
-        { user_id: user.id, name: "Áo khoác cũ", condition: "worn" },
-        { user_id: user.id, name: "Đèn bàn", condition: "worn" },
-        { user_id: user.id, name: "Cáp HDMI", quantity: 2, location_id: desk!.id },
-        { user_id: user.id, name: "Cáp HDMI", quantity: 3, location_id: desk!.id },
+        { household_id: user.householdId, name: "Laptop", purchase_price: 20_000_000, purchase_date: daysAgo(40) },
+        { household_id: user.householdId, name: "Chuột", purchase_price: 500_000, purchase_date: daysAgo(10) },
+        { household_id: user.householdId, name: "Áo khoác cũ", condition: "worn" },
+        { household_id: user.householdId, name: "Đèn bàn", condition: "worn" },
+        { household_id: user.householdId, name: "Cáp HDMI", quantity: 2, location_id: desk!.id },
+        { household_id: user.householdId, name: "Cáp HDMI", quantity: 3, location_id: desk!.id },
       ],
       { defaultToNull: false },
     )
@@ -46,7 +46,7 @@ test("spending totals and clean-up suggestions (give away, keep, merge)", async 
   await lamp.getByRole("button", { name: "Giữ lại" }).click();
   await expect(lamp).toHaveCount(0);
 
-  const { data: coatRow } = await db.from("items").select("condition, archived_at").eq("user_id", user.id).eq("name", "Áo khoác cũ").single();
+  const { data: coatRow } = await db.from("items").select("condition, archived_at").eq("household_id", user.householdId).eq("name", "Áo khoác cũ").single();
   expect(coatRow!.condition).toBe("given_away");
   expect(coatRow!.archived_at).not.toBeNull();
 

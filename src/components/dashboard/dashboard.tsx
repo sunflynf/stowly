@@ -26,6 +26,7 @@ import { useCategoryCounts, useDashboardStats } from "@/lib/queries/stats";
 import { buildLocationTree, useCategories, useLabels, useLocations } from "@/lib/queries/taxonomy";
 import { cn } from "@/lib/utils";
 import { ScanButton } from "./scan-button";
+import { CanEdit } from "@/components/app-shell/can-edit";
 
 function StatCard({
   label,
@@ -249,12 +250,14 @@ export function Dashboard() {
         <div className="md:hidden">
           <ScanButton />
         </div>
-        <Button asChild size="lg" className="hidden h-[52px] md:inline-flex">
-          <Link href="/items/new">
-            <Plus />
-            {tn("addItem")}
-          </Link>
-        </Button>
+        <CanEdit>
+          <Button asChild size="lg" className="hidden h-[52px] md:inline-flex">
+            <Link href="/items/new">
+              <Plus />
+              {tn("addItem")}
+            </Link>
+          </Button>
+        </CanEdit>
       </div>
 
       <nav aria-label={t("quickFilters")} className="mb-5 hidden flex-wrap gap-2 md:flex">

@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { optionalText, requiredName, requiredNumber, uuid } from "@/lib/validation/common";
 import { suggestedBuyQuantity } from "@/lib/shopping";
-import { requireUser } from "./auth-guard";
+import { requireEditor } from "./auth-guard";
 import { fail, mapDbError, ok, validationFail, type ActionResult } from "./result";
 
 const addSchema = z.object({
@@ -15,8 +15,8 @@ const addSchema = z.object({
 });
 
 export async function addToShoppingAction(input: unknown): Promise<ActionResult<{ id: string }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = addSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
 
@@ -27,8 +27,8 @@ export async function addToShoppingAction(input: unknown): Promise<ActionResult<
 
 /** Adds every low/out-of-stock item that is not already on the list. */
 export async function addLowStockToShoppingAction(): Promise<ActionResult<{ added: number }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
 
   const [{ data: alerts, error }, { data: groupAlerts, error: groupError }, { data: open }] = await Promise.all([
     auth.supabase
@@ -71,8 +71,8 @@ const updateSchema = z.object({
 });
 
 export async function updateShoppingAction(id: unknown, input: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   const parsed = updateSchema.safeParse(input);
   if (!parsedId.success) return validationFail(parsedId.error);
@@ -90,8 +90,8 @@ export async function updateShoppingAction(id: unknown, input: unknown): Promise
 
 /** Marks an entry bought and, for linked items, adds the bought amount to stock. */
 export async function markBoughtAction(id: unknown, restock: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   const parsedRestock = z.boolean().safeParse(restock);
   if (!parsedId.success) return validationFail(parsedId.error);
@@ -131,8 +131,8 @@ export async function markBoughtAction(id: unknown, restock: unknown): Promise<A
 }
 
 export async function deleteShoppingAction(id: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   if (!parsedId.success) return validationFail(parsedId.error);
   const { error } = await auth.supabase.from("shopping_list").delete().eq("id", parsedId.data);
@@ -141,8 +141,8 @@ export async function deleteShoppingAction(id: unknown): Promise<ActionResult> {
 }
 
 export async function clearDoneShoppingAction(): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const { error } = await auth.supabase.from("shopping_list").delete().eq("done", true);
   if (error) return fail(mapDbError(error));
   return ok();

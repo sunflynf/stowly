@@ -21,16 +21,16 @@ const formSchema = z.object({
 });
 type FormValues = z.infer<typeof formSchema>;
 
-export function LoginForm({ next }: { next?: string }) {
+export function LoginForm({ next, email = "", initialMode = "signin" }: { next?: string; email?: string; initialMode?: Mode }) {
   const t = useTranslations();
   const vm = useValidationMessage();
-  const [mode, setMode] = useState<Mode>("signin");
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [message, setMessage] = useState<{ tone: "error" | "info"; text: string } | null>(null);
   const [pending, startTransition] = useTransition();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email, password: "" },
   });
   const { errors } = form.formState;
 
@@ -47,7 +47,7 @@ export function LoginForm({ next }: { next?: string }) {
       return;
     }
     startTransition(async () => {
-      const result = mode === "signin" ? await signInAction(values, next) : await signUpAction(values);
+      const result = mode === "signin" ? await signInAction(values, next) : await signUpAction(values, next);
       if (!result.ok) {
         setMessage({ tone: "error", text: t(`errors.${result.error}`) });
       } else if (mode === "signup") {

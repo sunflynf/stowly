@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { addDays, todayIn } from "@/lib/dates";
 import { optionalNumber, optionalText, requiredName, uuid } from "@/lib/validation/common";
-import { requireUser } from "./auth-guard";
+import { requireEditor } from "./auth-guard";
 import { fail, mapDbError, ok, validationFail, type ActionResult } from "./result";
 
 const groupSchema = z.object({
@@ -13,8 +13,8 @@ const groupSchema = z.object({
 });
 
 export async function createGroupAction(input: unknown): Promise<ActionResult<{ id: string }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = groupSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
   const { data, error } = await auth.supabase.from("item_groups").insert(parsed.data).select("id").single();
@@ -23,8 +23,8 @@ export async function createGroupAction(input: unknown): Promise<ActionResult<{ 
 }
 
 export async function updateGroupAction(id: unknown, input: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   const parsed = groupSchema.partial().safeParse(input);
   if (!parsedId.success) return validationFail(parsedId.error);
@@ -37,8 +37,8 @@ export async function updateGroupAction(id: unknown, input: unknown): Promise<Ac
 
 /** Deletes the group; its items stay, just ungrouped. */
 export async function deleteGroupAction(id: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   if (!parsedId.success) return validationFail(parsedId.error);
   const { data, error } = await auth.supabase.from("item_groups").delete().eq("id", parsedId.data).select("id");
@@ -54,8 +54,8 @@ const membersSchema = z.object({
 
 /** Moves items into a group (or out of any group with groupId = null). */
 export async function setItemsGroupAction(input: unknown): Promise<ActionResult<{ updated: number }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = membersSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
   const { data, error } = await auth.supabase
@@ -69,8 +69,8 @@ export async function setItemsGroupAction(input: unknown): Promise<ActionResult<
 
 /** Snoozes (days > 0) or unsnoozes (days = 0) a group's stock alert. */
 export async function snoozeGroupAction(id: unknown, days: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   const parsedDays = z.number().int().min(0).max(365).safeParse(days);
   if (!parsedId.success) return validationFail(parsedId.error);

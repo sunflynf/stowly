@@ -107,7 +107,14 @@
     "locationTooDeep": "Cây vị trí tối đa 6 cấp.",
     "locationNotEmpty": "Vị trí này còn chứa đồ hoặc vị trí con. Hãy chuyển chúng đi trước.",
     "categoryInUse": "Danh mục đang được sử dụng.",
-    "unknown": "Đã xảy ra lỗi. Vui lòng thử lại."
+    "unknown": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "forbidden": "Bạn chỉ có quyền xem trong nhà này.",
+    "lastOwner": "Nhà cần ít nhất một chủ nhà. Hãy chuyển quyền chủ nhà cho người khác trước.",
+    "alreadyMember": "Người này đã là thành viên.",
+    "inviteNotFound": "Không tìm thấy lời mời.",
+    "inviteExpired": "Lời mời đã hết hạn. Hãy nhờ chủ nhà gửi lời mời mới.",
+    "inviteUsed": "Lời mời này đã được dùng.",
+    "inviteWrongEmail": "Lời mời này dành cho một email khác."
   },
   "placeholder": {
     "body": "Màn hình này đang được xây dựng."
@@ -242,7 +249,9 @@
       "merge": "Gộp món trùng",
       "barcode": "Quét mã vạch",
       "demo": "Dữ liệu mẫu"
-    }
+    },
+    "byPerson": "bởi {name}",
+    "formerMember": "{name} (đã rời nhà)"
   },
   "locations": {
     "title": "Vị trí",
@@ -712,5 +721,76 @@
     "showMore": "Xem thêm {count, plural, other {# gợi ý}}",
     "dashboard": "{count, plural, other {# gợi ý dọn dẹp}}",
     "dashboardHint": "Đồ lâu không dùng, cũ, hỏng hoặc bị trùng."
+  },
+  "members": {
+    "title": "Thành viên",
+    "defaultName": "Nhà của {name}",
+    "householdName": "Tên nhà",
+    "householdNameHint": "Hiện cho mọi thành viên và trong lời mời.",
+    "renamed": "Đã đổi tên nhà.",
+    "yourRole": "Vai trò của bạn: {role}",
+    "displayName": "Tên hiển thị của bạn",
+    "displayNameHint": "Hiện trong danh sách thành viên và lịch sử thay đổi.",
+    "displayNameSaved": "Đã lưu tên hiển thị.",
+    "you": "bạn",
+    "roles": {
+      "owner": "Chủ nhà",
+      "editor": "Biên tập",
+      "viewer": "Chỉ xem"
+    },
+    "roleHints": {
+      "owner": "Toàn quyền, kể cả thành viên và cài đặt của nhà.",
+      "editor": "Thêm, sửa, xóa đồ dùng; danh sách mua sắm và cảnh báo.",
+      "viewer": "Chỉ xem, không thay đổi được gì."
+    },
+    "roleFor": "Vai trò của {name}",
+    "roleChanged": "Đã đổi vai trò.",
+    "remove": "Xóa khỏi nhà",
+    "removeNamed": "Xóa {name} khỏi nhà",
+    "removeConfirm": "Xóa {name} khỏi nhà? Họ sẽ không còn xem được đồ dùng ở đây.",
+    "removed": "Đã xóa thành viên.",
+    "inviteTitle": "Mời thành viên",
+    "inviteEmail": "Email người được mời",
+    "inviteRole": "Vai trò",
+    "inviteSend": "Gửi lời mời",
+    "inviteSent": "Đã gửi lời mời tới {email}. Bạn cũng có thể gửi đường link này:",
+    "inviteLinkOnly": "Chưa cấu hình gửi email. Hãy gửi đường link này cho {email}:",
+    "inviteLink": "Link lời mời",
+    "copy": "Sao chép",
+    "copied": "Đã chép",
+    "pendingTitle": "Lời mời đang chờ",
+    "inviteExpires": "hết hạn {date}",
+    "inviteExpired": "đã hết hạn",
+    "revoke": "Thu hồi",
+    "switchTitle": "Nhà của bạn",
+    "memberCount": "{count, plural, other {# thành viên}}",
+    "current": "Đang xem",
+    "switch": "Chuyển sang",
+    "switched": "Đã chuyển nhà.",
+    "leave": "Rời nhà này",
+    "leaveConfirm": "Rời {name}? Bạn sẽ không còn xem được đồ dùng ở đây cho đến khi được mời lại.",
+    "left": "Bạn đã rời nhà.",
+    "lastOwnerHint": "Bạn là chủ nhà duy nhất. Hãy chuyển quyền chủ nhà cho người khác trước khi rời.",
+    "readOnly": "Bạn chỉ có quyền xem trong nhà này."
+  },
+  "invite": {
+    "title": "Lời mời tham gia",
+    "heading": "{inviter} mời bạn vào {household}",
+    "roleLine": "Vai trò: {role}",
+    "accept": "Tham gia",
+    "signedOutHint": "Đăng nhập hoặc tạo tài khoản bằng {email} để tham gia.",
+    "signIn": "Đăng nhập",
+    "signUp": "Tạo tài khoản",
+    "wrongEmail": "Lời mời này dành cho {email}, nhưng bạn đang đăng nhập bằng {current}.",
+    "switchAccount": "Đăng xuất để đổi tài khoản",
+    "expired": "Lời mời đã hết hạn. Hãy nhờ chủ nhà gửi lời mời mới.",
+    "used": "Lời mời này đã được dùng.",
+    "notFound": "Không tìm thấy lời mời. Hãy kiểm tra lại đường link.",
+    "goHome": "Về trang tổng quan",
+    "emailSubject": "{inviter} mời bạn dùng chung Stowly",
+    "emailHeading": "{inviter} mời bạn vào {household}",
+    "emailBody": "Bạn được mời tham gia {household} trên Stowly với vai trò {role}, để cùng quản lý đồ dùng trong nhà.",
+    "emailButton": "Xem lời mời",
+    "emailFooter": "Link có hiệu lực trong 7 ngày. Nếu bạn không quen người gửi, hãy bỏ qua email này."
   }
 }

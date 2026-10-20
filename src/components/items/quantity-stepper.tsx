@@ -2,6 +2,7 @@
 
 import { useFormatter, useTranslations } from "next-intl";
 import { Minus, Plus } from "lucide-react";
+import { useHousehold } from "@/lib/queries/household";
 import { cn } from "@/lib/utils";
 import { useAdjustQuantity } from "./use-item-mutations";
 
@@ -14,12 +15,29 @@ interface Props {
   className?: string;
 }
 
-/** Inline +/- that writes through `adjust_item_quantity` (atomic, logged). */
+/** Inline +/- that writes through `adjust_item_quantity` (atomic, logged). Read-only for viewers. */
 export function QuantityStepper({ id, name, quantity, low, size = "sm", className }: Props) {
   const t = useTranslations("item");
   const format = useFormatter();
   const adjust = useAdjustQuantity();
+  const { canEdit } = useHousehold();
   const change = (delta: number) => adjust.mutate({ id, delta });
+
+  if (!canEdit) {
+    return (
+      <output
+        aria-label={t("quantityOf", { name })}
+        className={cn(
+          "text-center tabular-nums",
+          size === "lg" ? "min-w-10 text-3xl font-bold" : "min-w-8 font-semibold",
+          low && "text-danger-foreground",
+          className,
+        )}
+      >
+        {format.number(quantity, "quantity")}
+      </output>
+    );
+  }
 
   if (size === "lg") {
     return (

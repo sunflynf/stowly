@@ -4,8 +4,10 @@
  *   pnpm seed:demo                 # ~150 items for demo@stowly.local
  *   pnpm seed:demo --count 5000    # performance data set
  *   pnpm seed:demo --email me@x.com --password secret123 --count 300
+ *   pnpm seed:demo --count 5000 --members 3   # plus demo-member-1..3@stowly.local in the same household
  *
- * Uses the service-role key from .env.local. Existing items of the account are replaced.
+ * Uses the service-role key from .env.local. Existing items of the account's household are replaced.
+ * Members (editor, viewer, editor, ...) share the demo password.
  */
 import { createClient } from "@supabase/supabase-js";
 import { existsSync } from "node:fs";
@@ -19,6 +21,7 @@ for (let i = 2; i < process.argv.length; i += 2) args.set(process.argv[i].replac
 const email = args.get("email") ?? "demo@stowly.local";
 const password = args.get("password") ?? "demo-password";
 const count = Number(args.get("count") ?? 150);
+const members = Number(args.get("members") ?? 0);
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -72,14 +75,33 @@ const CATALOG: Record<string, { names: string[]; locations: string[]; tags: stri
   },
 };
 
-async function getOrCreateUser(): Promise<string> {
+async function getOrCreateUser(address: string): Promise<string> {
   const { data: list, error } = await db.auth.admin.listUsers({ perPage: 1000 });
   if (error) throw error;
-  const existing = list.users.find((u) => u.email === email);
+  const existing = list.users.find((u) => u.email === address);
   if (existing) return existing.id;
-  const { data, error: createError } = await db.auth.admin.createUser({ email, password, email_confirm: true });
+  const { data, error: createError } = await db.auth.admin.createUser({ email: address, password, email_confirm: true });
   if (createError || !data.user) throw createError ?? new Error("createUser failed");
   return data.user.id;
+}
+
+async function householdOf(userId: string): Promise<string> {
+  const { data, error } = await db.from("profiles").select("active_household_id").eq("id", userId).single();
+  if (error || !data.active_household_id) throw error ?? new Error("user has no household");
+  return data.active_household_id;
+}
+
+/** Adds demo-member-N@stowly.local to the household (alternating editor/viewer) and makes it their active one. */
+async function addMembers(householdId: string) {
+  for (let n = 1; n <= members; n++) {
+    const memberId = await getOrCreateUser(`demo-member-${n}@stowly.local`);
+    const { error } = await db
+      .from("household_members")
+      .upsert({ household_id: householdId, user_id: memberId, role: n % 2 === 1 ? "editor" : "viewer" }, { onConflict: "household_id,user_id" });
+    if (error) throw error;
+    await db.from("profiles").update({ active_household_id: householdId }).eq("id", memberId);
+  }
+  if (members > 0) console.log(`Members: demo-member-1..${members}@stowly.local / ${password}`);
 }
 
 /**
@@ -87,12 +109,12 @@ async function getOrCreateUser(): Promise<string> {
  * the past), and about a third of consumables get recent usage. Without this every
  * item would look brand new and nothing would be "unused for a long time".
  */
-async function backdateHistory(userId: string) {
+async function backdateHistory(householdId: string, userId: string) {
   const items = await fetchAllRows<{ id: string; name: string; purchase_date: string | null; min_quantity: number | null; quantity: number }>(
-    (from, to) => db.from("items").select("id, name, purchase_date, min_quantity, quantity").eq("user_id", userId).range(from, to),
+    (from, to) => db.from("items").select("id, name, purchase_date, min_quantity, quantity").eq("household_id", householdId).range(from, to),
   );
   const events = await fetchAllRows<{ id: string; item_id: string; type: string }>((from, to) =>
-    db.from("item_events").select("id, item_id, type").eq("user_id", userId).eq("type", "created").range(from, to),
+    db.from("item_events").select("id, item_id, type").eq("household_id", householdId).eq("type", "created").range(from, to),
   );
   const createdAt = new Map(
     items.map((i) => [i.id, i.purchase_date ? `${i.purchase_date}T09:00:00Z` : new Date(Date.now() - (30 + rand() * 900) * 86_400_000).toISOString()]),
@@ -101,13 +123,13 @@ async function backdateHistory(userId: string) {
     const chunk = items.slice(start, start + 500);
     const { error } = await db
       .from("items")
-      .upsert(chunk.map((i) => ({ id: i.id, user_id: userId, name: i.name, created_at: createdAt.get(i.id)! })), { onConflict: "id" });
+      .upsert(chunk.map((i) => ({ id: i.id, household_id: householdId, name: i.name, created_at: createdAt.get(i.id)! })), { onConflict: "id" });
     if (error) throw error;
   }
   for (let start = 0; start < events.length; start += 500) {
     const chunk = events.slice(start, start + 500);
     const { error } = await db.from("item_events").upsert(
-      chunk.map((e) => ({ id: e.id, user_id: userId, item_id: e.item_id, type: "created" as const, created_at: createdAt.get(e.item_id)! })),
+      chunk.map((e) => ({ id: e.id, household_id: householdId, actor_id: userId, item_id: e.item_id, type: "created" as const, created_at: createdAt.get(e.item_id)! })),
       { onConflict: "id" },
     );
     if (error) throw error;
@@ -115,7 +137,8 @@ async function backdateHistory(userId: string) {
   const usage = items
     .filter((i) => i.min_quantity !== null && chance(0.35))
     .map((i) => ({
-      user_id: userId,
+      household_id: householdId,
+      actor_id: userId,
       item_id: i.id,
       type: "quantity_change" as const,
       delta: -1,
@@ -140,15 +163,16 @@ async function fetchAllRows<T>(page: (from: number, to: number) => PromiseLike<{
 }
 
 async function main() {
-  const userId = await getOrCreateUser();
-  console.log(`Seeding ${count} items for ${email} (${userId})`);
+  const userId = await getOrCreateUser(email);
+  const householdId = await householdOf(userId);
+  console.log(`Seeding ${count} items for ${email} (household ${householdId})`);
 
-  await db.from("items").delete().eq("user_id", userId);
-  await db.from("tags").delete().eq("user_id", userId);
-  await db.from("shopping_list").delete().eq("user_id", userId);
+  await db.from("items").delete().eq("household_id", householdId);
+  await db.from("tags").delete().eq("household_id", householdId);
+  await db.from("shopping_list").delete().eq("household_id", householdId);
 
-  const { data: categories } = await db.from("categories").select("id, builtin_key").eq("user_id", userId);
-  const { data: locations } = await db.from("locations").select("id, builtin_key").eq("user_id", userId);
+  const { data: categories } = await db.from("categories").select("id, builtin_key").eq("household_id", householdId);
+  const { data: locations } = await db.from("locations").select("id, builtin_key").eq("household_id", householdId);
   const catId = new Map((categories ?? []).map((c) => [c.builtin_key, c.id]));
   const locId = new Map((locations ?? []).map((l) => [l.builtin_key, l.id]));
 
@@ -162,7 +186,7 @@ async function main() {
     if (locId.has(e.key)) continue;
     const { data } = await db
       .from("locations")
-      .insert({ user_id: userId, parent_id: locId.get(e.parent)!, name: e.name, name_en: e.name_en, builtin_key: e.key })
+      .insert({ household_id: householdId, parent_id: locId.get(e.parent)!, name: e.name, name_en: e.name_en, builtin_key: e.key })
       .select("id")
       .single();
     if (data) locId.set(e.key, data.id);
@@ -173,7 +197,7 @@ async function main() {
   const tagNames = [...new Set(Object.values(CATALOG).flatMap((c) => c.tags))];
   const { data: tags } = await db
     .from("tags")
-    .insert(tagNames.map((name) => ({ user_id: userId, name })))
+    .insert(tagNames.map((name) => ({ household_id: householdId, name })))
     .select("id, name");
   const tagId = new Map((tags ?? []).map((t) => [t.name, t.id]));
 
@@ -189,7 +213,7 @@ async function main() {
     const consumable = key === "food" || key === "household" || key === "stationery" || base.startsWith("Pin") || base.startsWith("Dây sạc");
     const quantity = consumable ? Math.floor(rand() * 8) : 1;
     rows.push({
-      user_id: userId,
+      household_id: householdId,
       name,
       category_id: catId.get(key) ?? null,
       location_id: locId.get(pick(cat.locations)) ?? null,
@@ -220,7 +244,7 @@ async function main() {
     const { data, error } = await db.from("items").insert(rows.slice(start, start + batch)).select("id");
     if (error) throw error;
     const links = data.flatMap((item, j) =>
-      rowTags[start + j].map((t) => ({ user_id: userId, item_id: item.id, tag_id: tagId.get(t)! })),
+      rowTags[start + j].map((t) => ({ household_id: householdId, item_id: item.id, tag_id: tagId.get(t)! })),
     );
     if (links.length) {
       const { error: tagError } = await db.from("item_tags").insert(links);
@@ -229,7 +253,8 @@ async function main() {
     inserted += data.length;
     process.stdout.write(`\r  ${inserted}/${rows.length}`);
   }
-  await backdateHistory(userId);
+  await backdateHistory(householdId, userId);
+  await addMembers(householdId);
   console.log(`\nDone. Sign in as ${email} / ${password}`);
 }
 

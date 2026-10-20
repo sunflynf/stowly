@@ -2,15 +2,24 @@
 
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { publicEnv } from "@/lib/env";
 import { syncPreferenceCookies } from "@/lib/preferences";
 import { magicLinkSchema, safeNextPath, signInSchema, signUpSchema } from "@/lib/validation/auth";
 import { fail, ok, validationFail, type ActionResult } from "./result";
 
-function isAllowedEmail(email: string) {
+/** ALLOWED_EMAIL (when set) may sign up, and so may anyone with an open household invite. */
+async function isAllowedEmail(email: string) {
   const allowed = process.env.ALLOWED_EMAIL?.trim().toLowerCase();
-  return !allowed || allowed === email;
+  if (!allowed || allowed === email) return true;
+  const { count } = await getSupabaseAdmin()
+    .from("household_invites")
+    .select("id", { count: "exact", head: true })
+    .eq("email", email)
+    .is("accepted_at", null)
+    .gt("expires_at", new Date().toISOString());
+  return (count ?? 0) > 0;
 }
 
 function authError(error: { status?: number; code?: string; message: string }) {
@@ -31,24 +40,26 @@ export async function signInAction(input: unknown, next?: string): Promise<Actio
   redirect(safeNextPath(next));
 }
 
-export async function signUpAction(input: unknown): Promise<ActionResult<{ needsConfirmation: boolean }>> {
+export async function signUpAction(input: unknown, next?: string): Promise<ActionResult<{ needsConfirmation: boolean }>> {
   const parsed = signUpSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
-  if (!isAllowedEmail(parsed.data.email)) return fail("signupNotAllowed");
+  if (!(await isAllowedEmail(parsed.data.email))) return fail("signupNotAllowed");
 
   const supabase = await getSupabaseServer();
   const locale = await getLocale();
+  const callback = new URL("/auth/callback", publicEnv.siteUrl());
+  callback.searchParams.set("next", safeNextPath(next));
   const { data, error } = await supabase.auth.signUp({
     ...parsed.data,
     options: {
       data: { locale },
-      emailRedirectTo: `${publicEnv.siteUrl()}/auth/callback`,
+      emailRedirectTo: callback.toString(),
     },
   });
   if (error) return authError(error);
   if (data.session) {
     await syncPreferenceCookies(supabase);
-    redirect("/");
+    redirect(safeNextPath(next));
   }
   return ok({ needsConfirmation: true });
 }

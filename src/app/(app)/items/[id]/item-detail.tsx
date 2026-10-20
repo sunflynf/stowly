@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { deleteItemAction } from "@/lib/actions/items";
 import { monthsBetween, todayIn } from "@/lib/dates";
 import { useFormats } from "@/lib/hooks/use-format";
+import { useHousehold, useHouseholdPeople } from "@/lib/queries/household";
 import { useItem, useItemAlerts, useItemEvents, usePhotoUrls, type ItemDetail } from "@/lib/queries/items";
 import { useLabels, useLocations } from "@/lib/queries/taxonomy";
 import { alertStatus, itemStatus } from "@/lib/status";
@@ -74,6 +75,12 @@ function History({ id }: { id: string }) {
   const labels = useLabels();
   const { data: events = [] } = useItemEvents(id);
   const { data: locations = [] } = useLocations();
+  const { data: people } = useHouseholdPeople();
+  const actor = (uid: string | null) => {
+    const p = uid ? people?.get(uid) : undefined;
+    if (!p) return null;
+    return p.is_member ? p.display_name : t("formerMember", { name: p.display_name });
+  };
   const locName = (lid: string | null) => {
     const l = locations.find((x) => x.id === lid);
     return l ? labels.locationPath(l) : "—";
@@ -112,9 +119,10 @@ function History({ id }: { id: string }) {
                     </span>
                   )}
                 </span>
-                <time dateTime={e.created_at} className="shrink-0 text-xs text-muted-foreground">
-                  {format.dateTime(new Date(e.created_at), "dateTime")}
-                </time>
+                <span className="flex shrink-0 flex-col items-end text-xs text-muted-foreground">
+                  <time dateTime={e.created_at}>{format.dateTime(new Date(e.created_at), "dateTime")}</time>
+                  {actor(e.actor_id) && <span>{t("byPerson", { name: actor(e.actor_id) ?? "" })}</span>}
+                </span>
               </li>
             );
           })}
@@ -140,6 +148,7 @@ export function ItemDetailView({ id }: { id: string }) {
   const patch = usePatchItem();
   const invalidate = useInvalidateItems();
   const onError = useErrorToast();
+  const { canEdit } = useHousehold();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   if (isPending) {
@@ -219,8 +228,9 @@ export function ItemDetailView({ id }: { id: string }) {
       <PageHeader
         title={t("detailTitle")}
         back="/items"
-        mobileAction={menu}
+        mobileAction={canEdit ? menu : undefined}
         actions={
+          canEdit && (
           <>
             <Button variant="outline" asChild>
               <Link href={`/items/${id}/edit`}>
@@ -230,10 +240,11 @@ export function ItemDetailView({ id }: { id: string }) {
             </Button>
             {menu}
           </>
+          )
         }
       />
 
-      <div className="flex flex-col gap-4 pb-24 md:pb-0">
+      <div className={cn("flex flex-col gap-4 md:pb-0", canEdit && "pb-24")}>
         <Photos item={item} />
 
         <div>
@@ -354,6 +365,7 @@ export function ItemDetailView({ id }: { id: string }) {
         <History id={id} />
       </div>
 
+      {canEdit && (
       <div className="fixed inset-x-0 bottom-0 z-40 flex gap-3 border-t border-border bg-card px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:static md:mt-4 md:border-0 md:bg-transparent md:p-0">
         <Button className="flex-1 md:flex-none" disabled={addToShopping.isPending} onClick={() => addToShopping.mutate(item)}>
           {t("addToShopping")}
@@ -362,6 +374,7 @@ export function ItemDetailView({ id }: { id: string }) {
           <Link href={`/items/${id}/edit`}>{tc("common.edit")}</Link>
         </Button>
       </div>
+      )}
 
       <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <DialogContent>

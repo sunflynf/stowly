@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/lib/database.types";
 
-const PUBLIC_PATHS = ["/login", "/auth", "/offline", "/api/cron", "/manifest.webmanifest", "/sw.js"];
+const PUBLIC_PATHS = ["/login", "/auth", "/invite", "/offline", "/api/cron", "/manifest.webmanifest", "/sw.js"];
 
 /** Refreshes the Supabase session cookie and guards private routes. */
 export async function updateSession(request: NextRequest) {

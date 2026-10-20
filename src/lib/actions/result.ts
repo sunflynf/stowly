@@ -7,6 +7,7 @@ export type ActionResult<T = void> =
 
 export type ActionError =
   | "unauthorized"
+  | "forbidden"
   | "validation"
   | "notFound"
   | "conflict"
@@ -18,6 +19,12 @@ export type ActionError =
   | "locationTooDeep"
   | "locationNotEmpty"
   | "categoryInUse"
+  | "lastOwner"
+  | "alreadyMember"
+  | "inviteNotFound"
+  | "inviteExpired"
+  | "inviteUsed"
+  | "inviteWrongEmail"
   | "unknown";
 
 export function ok(): { ok: true; data: void };
@@ -46,6 +53,14 @@ export function mapDbError(error: { code?: string; message?: string } | null): A
   if (msg.includes("photo_limit_reached")) return "photoLimit";
   if (msg.includes("location_cycle")) return "locationCycle";
   if (msg.includes("location_too_deep")) return "locationTooDeep";
+  if (msg.includes("last_owner")) return "lastOwner";
+  if (msg.includes("invite_not_found")) return "inviteNotFound";
+  if (msg.includes("invite_expired")) return "inviteExpired";
+  if (msg.includes("invite_used")) return "inviteUsed";
+  if (msg.includes("invite_wrong_email")) return "inviteWrongEmail";
+  if (msg.includes("not_a_member")) return "forbidden";
+  // Row level security rejected the write (e.g. a viewer).
+  if (error.code === "42501") return "forbidden";
   if (error.code === "23503") return "conflict";
   if (error.code === "23505") return "conflict";
   if (error.code === "P0002" || error.code === "PGRST116") return "notFound";

@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { anonClient, createTestUser, deleteTestUser, type Client } from "./helpers";
+import { anonClient, createTestUser, deleteTestUser, type TestUser } from "./helpers";
 
-let a: { id: string; client: Client };
-let b: { id: string; client: Client };
+let a: TestUser;
+let b: TestUser;
 let itemId: string;
 let categoryId: string;
 let locationId: string;
@@ -60,7 +60,7 @@ describe("row level security", () => {
   });
 
   it("another user cannot insert rows owned by someone else", async () => {
-    const { error } = await b.client.from("items").insert({ name: "spoof", user_id: a.id });
+    const { error } = await b.client.from("items").insert({ name: "spoof", household_id: a.householdId });
     expect(error).not.toBeNull();
   });
 
@@ -90,7 +90,7 @@ describe("row level security", () => {
   it("users cannot write the notification log", async () => {
     const { error } = await a.client
       .from("notifications_log")
-      .insert({ user_id: a.id, item_id: itemId, kind: "low_stock", threshold_key: "low", channel: "email" });
+      .insert({ user_id: a.id, household_id: a.householdId, item_id: itemId, kind: "low_stock", threshold_key: "low", channel: "email" });
     expect(error).not.toBeNull();
   });
 
@@ -103,7 +103,7 @@ describe("row level security", () => {
   });
 
   it("photos in storage are only readable by their owner", async () => {
-    const path = `${a.id}/${itemId}/test.webp`;
+    const path = `${a.householdId}/${itemId}/test.webp`;
     const bytes = new Uint8Array([82, 73, 70, 70]);
     const { error: upErr } = await a.client.storage.from("item-photos").upload(path, bytes, { contentType: "image/webp" });
     expect(upErr).toBeNull();
@@ -111,7 +111,7 @@ describe("row level security", () => {
     expect(bReadErr).not.toBeNull();
     const { error: bUpErr } = await b.client.storage
       .from("item-photos")
-      .upload(`${a.id}/${itemId}/evil.webp`, bytes, { contentType: "image/webp" });
+      .upload(`${a.householdId}/${itemId}/evil.webp`, bytes, { contentType: "image/webp" });
     expect(bUpErr).not.toBeNull();
     await a.client.storage.from("item-photos").remove([path]);
   });

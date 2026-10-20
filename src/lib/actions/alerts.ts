@@ -4,7 +4,7 @@ import { z } from "zod";
 import { addDays, todayIn } from "@/lib/dates";
 import { ALERT_KINDS } from "@/lib/types";
 import { optionalDate, uuid } from "@/lib/validation/common";
-import { requireUser, type ServerSupabase } from "./auth-guard";
+import { requireEditor, type ServerSupabase } from "./auth-guard";
 import { fail, mapDbError, ok, validationFail, type ActionResult } from "./result";
 
 const alertRef = z.object({ itemId: uuid, kind: z.enum(ALERT_KINDS) });
@@ -15,8 +15,8 @@ async function userToday(supabase: ServerSupabase) {
 }
 
 export async function snoozeAlertAction(input: unknown, days: unknown = 7): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = alertRef.safeParse(input);
   const parsedDays = z.number().int().min(1).max(365).safeParse(days);
   if (!parsed.success) return validationFail(parsed.error);
@@ -31,8 +31,8 @@ export async function snoozeAlertAction(input: unknown, days: unknown = 7): Prom
 }
 
 export async function unsnoozeAlertAction(input: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = alertRef.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
   const { error } = await auth.supabase
@@ -51,8 +51,8 @@ const replacedSchema = z.object({ itemId: uuid, newExpiry: optionalDate.optional
  * expiry date is replaced by the new one (or cleared).
  */
 export async function markReplacedAction(input: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = replacedSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
 
@@ -71,8 +71,8 @@ export async function markReplacedAction(input: unknown): Promise<ActionResult> 
 
 /** Lent book came back: clears lent_to / lent_due. */
 export async function markReturnedAction(itemId: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(itemId);
   if (!parsedId.success) return validationFail(parsedId.error);
 

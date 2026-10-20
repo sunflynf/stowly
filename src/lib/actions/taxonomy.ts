@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CATEGORY_ICON_NAMES } from "@/lib/category-icons";
 import { optionalText, requiredName, uuid } from "@/lib/validation/common";
 import { attributeDefsSchema, tagNameSchema } from "@/lib/validation/item";
-import { requireUser } from "./auth-guard";
+import { requireEditor } from "./auth-guard";
 import { fail, mapDbError, ok, validationFail, type ActionResult } from "./result";
 
 
@@ -16,8 +16,8 @@ const categorySchema = z.object({
 });
 
 export async function createCategoryAction(input: unknown): Promise<ActionResult<{ id: string }>> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsed = categorySchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
 
@@ -32,8 +32,8 @@ export async function createCategoryAction(input: unknown): Promise<ActionResult
 }
 
 export async function updateCategoryAction(id: unknown, input: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   const parsed = categorySchema.partial().safeParse(input);
   if (!parsedId.success) return validationFail(parsedId.error);
@@ -47,8 +47,8 @@ export async function updateCategoryAction(id: unknown, input: unknown): Promise
 
 /** Deleting a category leaves its items uncategorised (FK sets null). */
 export async function deleteCategoryAction(id: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   if (!parsedId.success) return validationFail(parsedId.error);
   const { data, error } = await auth.supabase.from("categories").delete().eq("id", parsedId.data).select("id");
@@ -58,8 +58,8 @@ export async function deleteCategoryAction(id: unknown): Promise<ActionResult> {
 }
 
 export async function moveCategoryAction(id: unknown, direction: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   const parsedDir = z.enum(["up", "down"]).safeParse(direction);
   if (!parsedId.success) return validationFail(parsedId.error);
@@ -80,8 +80,8 @@ export async function moveCategoryAction(id: unknown, direction: unknown): Promi
 }
 
 export async function renameTagAction(id: unknown, name: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   const parsedName = tagNameSchema.safeParse(name);
   if (!parsedId.success) return validationFail(parsedId.error);
@@ -93,8 +93,8 @@ export async function renameTagAction(id: unknown, name: unknown): Promise<Actio
 }
 
 export async function deleteTagAction(id: unknown): Promise<ActionResult> {
-  const auth = await requireUser();
-  if (!auth) return fail("unauthorized");
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   if (!parsedId.success) return validationFail(parsedId.error);
   const { data, error } = await auth.supabase.from("tags").delete().eq("id", parsedId.data).select("id");

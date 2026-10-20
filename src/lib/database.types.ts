@@ -7,277 +7,355 @@ export type Database = {
           Tables: {
             "alert_snoozes": {
                   Row: {
-                    "created_at": string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"until": string,"user_id": string
+                    "created_at": string,"household_id": string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"until": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"until": string,"user_id"?: string
+                    "created_at"?: string,"household_id"?: string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"until": string
                   }
                   Update: {
-                    "created_at"?: string,"item_id"?: string,"kind"?: Database["public"]['Enums']["alert_kind"],"until"?: string,"user_id"?: string
+                    "created_at"?: string,"household_id"?: string,"item_id"?: string,"kind"?: Database["public"]['Enums']["alert_kind"],"until"?: string
                   }
                   Relationships: [
                     {
-      foreignKeyName: "alert_snoozes_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      foreignKeyName: "alert_snoozes_household_id_fkey"
+      columns: ["household_id"]
 isOneToOne: false
-      referencedRelation: "item_alerts"
-      referencedColumns: ["item_id","user_id"]
+      referencedRelation: "households"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "alert_snoozes_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      columns: ["item_id","household_id"]
 isOneToOne: false
       referencedRelation: "items"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     }
                   ]
                 },"categories": {
                   Row: {
-                    "builtin_key": string | null,"created_at": string,"default_attributes": NonNullable<Json>,"icon": string,"id": string,"name": string,"name_en": string | null,"sort_order": number,"updated_at": string,"user_id": string
+                    "builtin_key": string | null,"created_at": string,"default_attributes": NonNullable<Json>,"household_id": string,"icon": string,"id": string,"name": string,"name_en": string | null,"sort_order": number,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "builtin_key"?: string | null,"created_at"?: string,"default_attributes"?: NonNullable<Json>,"icon"?: string,"id"?: string,"name": string,"name_en"?: string | null,"sort_order"?: number,"updated_at"?: string,"user_id"?: string
+                    "builtin_key"?: string | null,"created_at"?: string,"default_attributes"?: NonNullable<Json>,"household_id"?: string,"icon"?: string,"id"?: string,"name": string,"name_en"?: string | null,"sort_order"?: number,"updated_at"?: string
                   }
                   Update: {
-                    "builtin_key"?: string | null,"created_at"?: string,"default_attributes"?: NonNullable<Json>,"icon"?: string,"id"?: string,"name"?: string,"name_en"?: string | null,"sort_order"?: number,"updated_at"?: string,"user_id"?: string
+                    "builtin_key"?: string | null,"created_at"?: string,"default_attributes"?: NonNullable<Json>,"household_id"?: string,"icon"?: string,"id"?: string,"name"?: string,"name_en"?: string | null,"sort_order"?: number,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "categories_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"group_notifications_log": {
+                  Row: {
+                    "channel": string,"group_id": string,"household_id": string,"id": string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at": string,"threshold_key": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "channel": string,"group_id": string,"household_id": string,"id"?: string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"threshold_key": string,"user_id": string
+                  }
+                  Update: {
+                    "channel"?: string,"group_id"?: string,"household_id"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"threshold_key"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "group_notifications_log_group_id_user_id_fkey"
+      columns: ["group_id","household_id"]
+isOneToOne: false
+      referencedRelation: "item_group_stats"
+      referencedColumns: ["id","household_id"]
+    },{
+      foreignKeyName: "group_notifications_log_group_id_user_id_fkey"
+      columns: ["group_id","household_id"]
+isOneToOne: false
+      referencedRelation: "item_groups"
+      referencedColumns: ["id","household_id"]
+    },{
+      foreignKeyName: "group_notifications_log_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"household_invites": {
+                  Row: {
+                    "accepted_at": string | null,"accepted_by": string | null,"created_at": string,"email": string,"expires_at": string,"household_id": string,"id": string,"invited_by": string | null,"role": Database["public"]['Enums']["household_role"],"token_hash": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "accepted_at"?: string | null,"accepted_by"?: string | null,"created_at"?: string,"email": string,"expires_at"?: string,"household_id"?: string,"id"?: string,"invited_by"?: string | null,"role"?: Database["public"]['Enums']["household_role"],"token_hash": string
+                  }
+                  Update: {
+                    "accepted_at"?: string | null,"accepted_by"?: string | null,"created_at"?: string,"email"?: string,"expires_at"?: string,"household_id"?: string,"id"?: string,"invited_by"?: string | null,"role"?: Database["public"]['Enums']["household_role"],"token_hash"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "household_invites_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"household_members": {
+                  Row: {
+                    "household_id": string,"joined_at": string,"role": Database["public"]['Enums']["household_role"],"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "household_id": string,"joined_at"?: string,"role"?: Database["public"]['Enums']["household_role"],"user_id": string
+                  }
+                  Update: {
+                    "household_id"?: string,"joined_at"?: string,"role"?: Database["public"]['Enums']["household_role"],"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "household_members_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"households": {
+                  Row: {
+                    "created_at": string,"id": string,"name": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"name"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"name"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
                     
                   ]
-                },"group_notifications_log": {
-                  Row: {
-                    "channel": string,"group_id": string,"id": string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at": string,"threshold_key": string,"user_id": string
-                  }
-                  ComputedFields: never
-                  Insert: {
-                    "channel": string,"group_id": string,"id"?: string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"threshold_key": string,"user_id": string
-                  }
-                  Update: {
-                    "channel"?: string,"group_id"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"threshold_key"?: string,"user_id"?: string
-                  }
-                  Relationships: [
-                    {
-      foreignKeyName: "group_notifications_log_group_id_user_id_fkey"
-      columns: ["group_id","user_id"]
-isOneToOne: false
-      referencedRelation: "group_alerts"
-      referencedColumns: ["group_id","user_id"]
-    },{
-      foreignKeyName: "group_notifications_log_group_id_user_id_fkey"
-      columns: ["group_id","user_id"]
-isOneToOne: false
-      referencedRelation: "item_group_stats"
-      referencedColumns: ["id","user_id"]
-    },{
-      foreignKeyName: "group_notifications_log_group_id_user_id_fkey"
-      columns: ["group_id","user_id"]
-isOneToOne: false
-      referencedRelation: "item_groups"
-      referencedColumns: ["id","user_id"]
-    }
-                  ]
                 },"item_events": {
                   Row: {
-                    "created_at": string,"delta": number | null,"from_condition": Database["public"]['Enums']["item_condition"] | null,"from_location_id": string | null,"id": string,"item_id": string,"note": string | null,"quantity_after": number | null,"to_condition": Database["public"]['Enums']["item_condition"] | null,"to_location_id": string | null,"type": Database["public"]['Enums']["item_event_type"],"user_id": string
+                    "actor_id": string | null,"created_at": string,"delta": number | null,"from_condition": Database["public"]['Enums']["item_condition"] | null,"from_location_id": string | null,"household_id": string,"id": string,"item_id": string,"note": string | null,"quantity_after": number | null,"to_condition": Database["public"]['Enums']["item_condition"] | null,"to_location_id": string | null,"type": Database["public"]['Enums']["item_event_type"]
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"delta"?: number | null,"from_condition"?: Database["public"]['Enums']["item_condition"] | null,"from_location_id"?: string | null,"id"?: string,"item_id": string,"note"?: string | null,"quantity_after"?: number | null,"to_condition"?: Database["public"]['Enums']["item_condition"] | null,"to_location_id"?: string | null,"type": Database["public"]['Enums']["item_event_type"],"user_id"?: string
+                    "actor_id"?: string | null,"created_at"?: string,"delta"?: number | null,"from_condition"?: Database["public"]['Enums']["item_condition"] | null,"from_location_id"?: string | null,"household_id"?: string,"id"?: string,"item_id": string,"note"?: string | null,"quantity_after"?: number | null,"to_condition"?: Database["public"]['Enums']["item_condition"] | null,"to_location_id"?: string | null,"type": Database["public"]['Enums']["item_event_type"]
                   }
                   Update: {
-                    "created_at"?: string,"delta"?: number | null,"from_condition"?: Database["public"]['Enums']["item_condition"] | null,"from_location_id"?: string | null,"id"?: string,"item_id"?: string,"note"?: string | null,"quantity_after"?: number | null,"to_condition"?: Database["public"]['Enums']["item_condition"] | null,"to_location_id"?: string | null,"type"?: Database["public"]['Enums']["item_event_type"],"user_id"?: string
+                    "actor_id"?: string | null,"created_at"?: string,"delta"?: number | null,"from_condition"?: Database["public"]['Enums']["item_condition"] | null,"from_location_id"?: string | null,"household_id"?: string,"id"?: string,"item_id"?: string,"note"?: string | null,"quantity_after"?: number | null,"to_condition"?: Database["public"]['Enums']["item_condition"] | null,"to_location_id"?: string | null,"type"?: Database["public"]['Enums']["item_event_type"]
                   }
                   Relationships: [
                     {
-      foreignKeyName: "item_events_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      foreignKeyName: "item_events_household_id_fkey"
+      columns: ["household_id"]
 isOneToOne: false
-      referencedRelation: "item_alerts"
-      referencedColumns: ["item_id","user_id"]
+      referencedRelation: "households"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "item_events_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      columns: ["item_id","household_id"]
 isOneToOne: false
       referencedRelation: "items"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     }
                   ]
                 },"item_groups": {
                   Row: {
-                    "created_at": string,"id": string,"min_quantity": number | null,"name": string,"snoozed_until": string | null,"unit": string | null,"updated_at": string,"user_id": string
+                    "created_at": string,"household_id": string,"id": string,"min_quantity": number | null,"name": string,"snoozed_until": string | null,"unit": string | null,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"id"?: string,"min_quantity"?: number | null,"name": string,"snoozed_until"?: string | null,"unit"?: string | null,"updated_at"?: string,"user_id"?: string
+                    "created_at"?: string,"household_id"?: string,"id"?: string,"min_quantity"?: number | null,"name": string,"snoozed_until"?: string | null,"unit"?: string | null,"updated_at"?: string
                   }
                   Update: {
-                    "created_at"?: string,"id"?: string,"min_quantity"?: number | null,"name"?: string,"snoozed_until"?: string | null,"unit"?: string | null,"updated_at"?: string,"user_id"?: string
-                  }
-                  Relationships: [
-                    
-                  ]
-                },"item_photos": {
-                  Row: {
-                    "created_at": string,"id": string,"item_id": string,"sort_order": number,"storage_path": string,"thumb_path": string | null,"user_id": string
-                  }
-                  ComputedFields: never
-                  Insert: {
-                    "created_at"?: string,"id"?: string,"item_id": string,"sort_order"?: number,"storage_path": string,"thumb_path"?: string | null,"user_id"?: string
-                  }
-                  Update: {
-                    "created_at"?: string,"id"?: string,"item_id"?: string,"sort_order"?: number,"storage_path"?: string,"thumb_path"?: string | null,"user_id"?: string
+                    "created_at"?: string,"household_id"?: string,"id"?: string,"min_quantity"?: number | null,"name"?: string,"snoozed_until"?: string | null,"unit"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
                     {
-      foreignKeyName: "item_photos_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      foreignKeyName: "item_groups_household_id_fkey"
+      columns: ["household_id"]
 isOneToOne: false
-      referencedRelation: "item_alerts"
-      referencedColumns: ["item_id","user_id"]
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"item_photos": {
+                  Row: {
+                    "created_at": string,"household_id": string,"id": string,"item_id": string,"sort_order": number,"storage_path": string,"thumb_path": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"household_id"?: string,"id"?: string,"item_id": string,"sort_order"?: number,"storage_path": string,"thumb_path"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"household_id"?: string,"id"?: string,"item_id"?: string,"sort_order"?: number,"storage_path"?: string,"thumb_path"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "item_photos_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "item_photos_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      columns: ["item_id","household_id"]
 isOneToOne: false
       referencedRelation: "items"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     }
                   ]
                 },"item_tags": {
                   Row: {
-                    "item_id": string,"tag_id": string,"user_id": string
+                    "household_id": string,"item_id": string,"tag_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "item_id": string,"tag_id": string,"user_id"?: string
+                    "household_id"?: string,"item_id": string,"tag_id": string
                   }
                   Update: {
-                    "item_id"?: string,"tag_id"?: string,"user_id"?: string
+                    "household_id"?: string,"item_id"?: string,"tag_id"?: string
                   }
                   Relationships: [
                     {
-      foreignKeyName: "item_tags_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      foreignKeyName: "item_tags_household_id_fkey"
+      columns: ["household_id"]
 isOneToOne: false
-      referencedRelation: "item_alerts"
-      referencedColumns: ["item_id","user_id"]
+      referencedRelation: "households"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "item_tags_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      columns: ["item_id","household_id"]
 isOneToOne: false
       referencedRelation: "items"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     },{
       foreignKeyName: "item_tags_tag_id_user_id_fkey"
-      columns: ["tag_id","user_id"]
+      columns: ["tag_id","household_id"]
 isOneToOne: false
       referencedRelation: "tags"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     }
                   ]
                 },"items": {
                   Row: {
-                    "archived_at": string | null,"attributes": NonNullable<Json>,"barcode": string | null,"category_id": string | null,"condition": Database["public"]['Enums']["item_condition"],"created_at": string,"expiry_date": string | null,"group_id": string | null,"id": string,"last_replaced_at": string | null,"location_id": string | null,"min_quantity": number | null,"name": string,"name_norm": string | null,"notes": string | null,"opened_date": string | null,"purchase_date": string | null,"purchase_place": string | null,"purchase_price": number | null,"quantity": number,"replace_after_months": number | null,"search_text": string,"search_vector": unknown,"unit": string | null,"updated_at": string,"user_id": string,"warranty_until": string | null
+                    "archived_at": string | null,"attributes": NonNullable<Json>,"barcode": string | null,"category_id": string | null,"condition": Database["public"]['Enums']["item_condition"],"created_at": string,"expiry_date": string | null,"group_id": string | null,"household_id": string,"id": string,"last_replaced_at": string | null,"location_id": string | null,"min_quantity": number | null,"name": string,"name_norm": string | null,"notes": string | null,"opened_date": string | null,"purchase_date": string | null,"purchase_place": string | null,"purchase_price": number | null,"quantity": number,"replace_after_months": number | null,"search_text": string,"search_vector": unknown,"unit": string | null,"updated_at": string,"warranty_until": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"expiry_date"?: string | null,"group_id"?: string | null,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name": string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"user_id"?: string,"warranty_until"?: string | null
+                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"expiry_date"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name": string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"warranty_until"?: string | null
                   }
                   Update: {
-                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"expiry_date"?: string | null,"group_id"?: string | null,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name"?: string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"user_id"?: string,"warranty_until"?: string | null
+                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"expiry_date"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name"?: string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"warranty_until"?: string | null
                   }
                   Relationships: [
                     {
       foreignKeyName: "items_category_id_user_id_fkey"
-      columns: ["category_id","user_id"]
+      columns: ["category_id","household_id"]
 isOneToOne: false
       referencedRelation: "categories"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     },{
       foreignKeyName: "items_group_fkey"
-      columns: ["group_id","user_id"]
-isOneToOne: false
-      referencedRelation: "group_alerts"
-      referencedColumns: ["group_id","user_id"]
-    },{
-      foreignKeyName: "items_group_fkey"
-      columns: ["group_id","user_id"]
+      columns: ["group_id","household_id"]
 isOneToOne: false
       referencedRelation: "item_group_stats"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     },{
       foreignKeyName: "items_group_fkey"
-      columns: ["group_id","user_id"]
+      columns: ["group_id","household_id"]
 isOneToOne: false
       referencedRelation: "item_groups"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
+    },{
+      foreignKeyName: "items_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "items_location_id_user_id_fkey"
-      columns: ["location_id","user_id"]
+      columns: ["location_id","household_id"]
 isOneToOne: false
       referencedRelation: "locations"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     }
                   ]
                 },"locations": {
                   Row: {
-                    "builtin_key": string | null,"created_at": string,"id": string,"name": string,"name_en": string | null,"parent_id": string | null,"path_ids": (string)[],"path_text": string,"path_text_en": string,"sort_order": number,"updated_at": string,"user_id": string
+                    "builtin_key": string | null,"created_at": string,"household_id": string,"id": string,"name": string,"name_en": string | null,"parent_id": string | null,"path_ids": (string)[],"path_text": string,"path_text_en": string,"sort_order": number,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "builtin_key"?: string | null,"created_at"?: string,"id"?: string,"name": string,"name_en"?: string | null,"parent_id"?: string | null,"path_ids"?: (string)[],"path_text"?: string,"path_text_en"?: string,"sort_order"?: number,"updated_at"?: string,"user_id"?: string
+                    "builtin_key"?: string | null,"created_at"?: string,"household_id"?: string,"id"?: string,"name": string,"name_en"?: string | null,"parent_id"?: string | null,"path_ids"?: (string)[],"path_text"?: string,"path_text_en"?: string,"sort_order"?: number,"updated_at"?: string
                   }
                   Update: {
-                    "builtin_key"?: string | null,"created_at"?: string,"id"?: string,"name"?: string,"name_en"?: string | null,"parent_id"?: string | null,"path_ids"?: (string)[],"path_text"?: string,"path_text_en"?: string,"sort_order"?: number,"updated_at"?: string,"user_id"?: string
+                    "builtin_key"?: string | null,"created_at"?: string,"household_id"?: string,"id"?: string,"name"?: string,"name_en"?: string | null,"parent_id"?: string | null,"path_ids"?: (string)[],"path_text"?: string,"path_text_en"?: string,"sort_order"?: number,"updated_at"?: string
                   }
                   Relationships: [
                     {
+      foreignKeyName: "locations_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "locations_parent_id_user_id_fkey"
-      columns: ["parent_id","user_id"]
+      columns: ["parent_id","household_id"]
 isOneToOne: false
       referencedRelation: "locations"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     }
                   ]
                 },"notifications_log": {
                   Row: {
-                    "channel": string,"id": string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at": string,"threshold_key": string,"user_id": string
+                    "channel": string,"household_id": string,"id": string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at": string,"threshold_key": string,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "channel": string,"id"?: string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"threshold_key": string,"user_id": string
+                    "channel": string,"household_id": string,"id"?: string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"threshold_key": string,"user_id": string
                   }
                   Update: {
-                    "channel"?: string,"id"?: string,"item_id"?: string,"kind"?: Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"threshold_key"?: string,"user_id"?: string
+                    "channel"?: string,"household_id"?: string,"id"?: string,"item_id"?: string,"kind"?: Database["public"]['Enums']["alert_kind"],"sent_at"?: string,"threshold_key"?: string,"user_id"?: string
                   }
                   Relationships: [
                     {
-      foreignKeyName: "notifications_log_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      foreignKeyName: "notifications_log_household_id_fkey"
+      columns: ["household_id"]
 isOneToOne: false
-      referencedRelation: "item_alerts"
-      referencedColumns: ["item_id","user_id"]
+      referencedRelation: "households"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "notifications_log_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      columns: ["item_id","household_id"]
 isOneToOne: false
       referencedRelation: "items"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     }
                   ]
                 },"profiles": {
                   Row: {
-                    "created_at": string,"currency": string,"digest_hour": number,"expiry_lead_days": (number)[],"id": string,"locale": string,"notify_email": boolean,"notify_push": boolean,"timezone": string,"unused_after_days": number,"updated_at": string,"warranty_lead_days": number
+                    "active_household_id": string | null,"created_at": string,"currency": string,"digest_hour": number,"display_name": string | null,"expiry_lead_days": (number)[],"id": string,"locale": string,"notify_email": boolean,"notify_push": boolean,"timezone": string,"unused_after_days": number,"updated_at": string,"warranty_lead_days": number
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"currency"?: string,"digest_hour"?: number,"expiry_lead_days"?: (number)[],"id": string,"locale"?: string,"notify_email"?: boolean,"notify_push"?: boolean,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
+                    "active_household_id"?: string | null,"created_at"?: string,"currency"?: string,"digest_hour"?: number,"display_name"?: string | null,"expiry_lead_days"?: (number)[],"id": string,"locale"?: string,"notify_email"?: boolean,"notify_push"?: boolean,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
                   }
                   Update: {
-                    "created_at"?: string,"currency"?: string,"digest_hour"?: number,"expiry_lead_days"?: (number)[],"id"?: string,"locale"?: string,"notify_email"?: boolean,"notify_push"?: boolean,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
+                    "active_household_id"?: string | null,"created_at"?: string,"currency"?: string,"digest_hour"?: number,"display_name"?: string | null,"expiry_lead_days"?: (number)[],"id"?: string,"locale"?: string,"notify_email"?: boolean,"notify_push"?: boolean,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
                   }
                   Relationships: [
-                    
+                    {
+      foreignKeyName: "profiles_active_household_id_fkey"
+      columns: ["active_household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"push_subscriptions": {
                   Row: {
@@ -295,94 +373,94 @@ isOneToOne: false
                   ]
                 },"shopping_list": {
                   Row: {
-                    "created_at": string,"done": boolean,"done_at": string | null,"group_id": string | null,"id": string,"item_id": string | null,"name": string,"quantity": number,"unit": string | null,"user_id": string
+                    "created_at": string,"done": boolean,"done_at": string | null,"group_id": string | null,"household_id": string,"id": string,"item_id": string | null,"name": string,"quantity": number,"unit": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"done"?: boolean,"done_at"?: string | null,"group_id"?: string | null,"id"?: string,"item_id"?: string | null,"name": string,"quantity"?: number,"unit"?: string | null,"user_id"?: string
+                    "created_at"?: string,"done"?: boolean,"done_at"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"item_id"?: string | null,"name": string,"quantity"?: number,"unit"?: string | null
                   }
                   Update: {
-                    "created_at"?: string,"done"?: boolean,"done_at"?: string | null,"group_id"?: string | null,"id"?: string,"item_id"?: string | null,"name"?: string,"quantity"?: number,"unit"?: string | null,"user_id"?: string
+                    "created_at"?: string,"done"?: boolean,"done_at"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"item_id"?: string | null,"name"?: string,"quantity"?: number,"unit"?: string | null
                   }
                   Relationships: [
                     {
       foreignKeyName: "shopping_list_group_fkey"
-      columns: ["group_id","user_id"]
-isOneToOne: false
-      referencedRelation: "group_alerts"
-      referencedColumns: ["group_id","user_id"]
-    },{
-      foreignKeyName: "shopping_list_group_fkey"
-      columns: ["group_id","user_id"]
+      columns: ["group_id","household_id"]
 isOneToOne: false
       referencedRelation: "item_group_stats"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     },{
       foreignKeyName: "shopping_list_group_fkey"
-      columns: ["group_id","user_id"]
+      columns: ["group_id","household_id"]
 isOneToOne: false
       referencedRelation: "item_groups"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     },{
-      foreignKeyName: "shopping_list_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      foreignKeyName: "shopping_list_household_id_fkey"
+      columns: ["household_id"]
 isOneToOne: false
-      referencedRelation: "item_alerts"
-      referencedColumns: ["item_id","user_id"]
+      referencedRelation: "households"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "shopping_list_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      columns: ["item_id","household_id"]
 isOneToOne: false
       referencedRelation: "items"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     }
                   ]
                 },"suggestion_dismissals": {
                   Row: {
-                    "created_at": string,"item_id": string,"reason": string,"until": string | null,"user_id": string
+                    "created_at": string,"household_id": string,"item_id": string,"reason": string,"until": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"item_id": string,"reason": string,"until"?: string | null,"user_id"?: string
+                    "created_at"?: string,"household_id"?: string,"item_id": string,"reason": string,"until"?: string | null
                   }
                   Update: {
-                    "created_at"?: string,"item_id"?: string,"reason"?: string,"until"?: string | null,"user_id"?: string
+                    "created_at"?: string,"household_id"?: string,"item_id"?: string,"reason"?: string,"until"?: string | null
                   }
                   Relationships: [
                     {
-      foreignKeyName: "suggestion_dismissals_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      foreignKeyName: "suggestion_dismissals_household_id_fkey"
+      columns: ["household_id"]
 isOneToOne: false
-      referencedRelation: "item_alerts"
-      referencedColumns: ["item_id","user_id"]
+      referencedRelation: "households"
+      referencedColumns: ["id"]
     },{
       foreignKeyName: "suggestion_dismissals_item_id_user_id_fkey"
-      columns: ["item_id","user_id"]
+      columns: ["item_id","household_id"]
 isOneToOne: false
       referencedRelation: "items"
-      referencedColumns: ["id","user_id"]
+      referencedColumns: ["id","household_id"]
     }
                   ]
                 },"tags": {
                   Row: {
-                    "created_at": string,"id": string,"name": string,"user_id": string
+                    "created_at": string,"household_id": string,"id": string,"name": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"id"?: string,"name": string,"user_id"?: string
+                    "created_at"?: string,"household_id"?: string,"id"?: string,"name": string
                   }
                   Update: {
-                    "created_at"?: string,"id"?: string,"name"?: string,"user_id"?: string
+                    "created_at"?: string,"household_id"?: string,"id"?: string,"name"?: string
                   }
                   Relationships: [
-                    
+                    {
+      foreignKeyName: "tags_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    }
                   ]
                 }
           }
           Views: {
             "group_alerts": {
                   Row: {
-                    "group_id": string | null,"kind": Database["public"]['Enums']["alert_kind"] | null,"members": number | null,"min_quantity": number | null,"name": string | null,"severity": number | null,"snoozed": boolean | null,"snoozed_until": string | null,"threshold_key": string | null,"total": number | null,"unit": string | null,"user_id": string | null
+                    "group_id": string | null,"household_id": string | null,"kind": Database["public"]['Enums']["alert_kind"] | null,"members": number | null,"min_quantity": number | null,"name": string | null,"severity": number | null,"snoozed": boolean | null,"snoozed_until": string | null,"threshold_key": string | null,"total": number | null,"unit": string | null
                   }
                   ComputedFields: never
                   Relationships: [
@@ -390,37 +468,37 @@ isOneToOne: false
                   ]
                 },"item_alerts": {
                   Row: {
-                    "category_id": string | null,"days_left": number | null,"due_date": string | null,"item_id": string | null,"kind": Database["public"]['Enums']["alert_kind"] | null,"location_id": string | null,"location_path": string | null,"location_path_en": string | null,"min_quantity": number | null,"name": string | null,"quantity": number | null,"replace_after_months": number | null,"severity": number | null,"snoozed": boolean | null,"snoozed_until": string | null,"threshold_key": string | null,"thumb_path": string | null,"unit": string | null,"user_id": string | null
-                  }
-                  ComputedFields: never
-                  Relationships: [
-                    {
-      foreignKeyName: "items_category_id_user_id_fkey"
-      columns: ["category_id","user_id"]
-isOneToOne: false
-      referencedRelation: "categories"
-      referencedColumns: ["id","user_id"]
-    },{
-      foreignKeyName: "items_location_id_user_id_fkey"
-      columns: ["location_id","user_id"]
-isOneToOne: false
-      referencedRelation: "locations"
-      referencedColumns: ["id","user_id"]
-    }
-                  ]
-                },"item_group_stats": {
-                  Row: {
-                    "id": string | null,"members": number | null,"min_quantity": number | null,"name": string | null,"snoozed_until": string | null,"total": number | null,"unit": string | null,"user_id": string | null
+                    "category_id": string | null,"days_left": number | null,"due_date": string | null,"household_id": string | null,"item_id": string | null,"kind": Database["public"]['Enums']["alert_kind"] | null,"location_id": string | null,"location_path": string | null,"location_path_en": string | null,"min_quantity": number | null,"name": string | null,"quantity": number | null,"replace_after_months": number | null,"severity": number | null,"snoozed": boolean | null,"snoozed_until": string | null,"threshold_key": string | null,"thumb_path": string | null,"unit": string | null
                   }
                   ComputedFields: never
                   Relationships: [
                     
                   ]
+                },"item_group_stats": {
+                  Row: {
+                    "household_id": string | null,"id": string | null,"members": number | null,"min_quantity": number | null,"name": string | null,"snoozed_until": string | null,"total": number | null,"unit": string | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    {
+      foreignKeyName: "item_groups_household_id_fkey"
+      columns: ["household_id"]
+isOneToOne: false
+      referencedRelation: "households"
+      referencedColumns: ["id"]
+    }
+                  ]
                 }
           }
           Functions: {
-            "adjust_item_quantity":
+            "accept_household_invite":
+{ Args: { "p_token": string }; Returns: string
+                           },
+"adjust_item_quantity":
 { Args: { "p_delta": number,"p_item_id": string,"p_note"?: string }; Returns: number
+                           },
+"can_edit_household":
+{ Args: Record<PropertyKey, never>; Returns: boolean
                            },
 "category_counts":
 { Args: Record<PropertyKey, never>; Returns: {
@@ -432,15 +510,47 @@ isOneToOne: false
               "days_left": number,"due_date": string,"kind": Database["public"]['Enums']["alert_kind"],"severity": number,"threshold_key": string
             }[]
                            },
+"current_household_id":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
+"current_household_role":
+{ Args: Record<PropertyKey, never>; Returns: Database["public"]['Enums']["household_role"]
+                           },
 "dashboard_stats":
 { Args: Record<PropertyKey, never>; Returns: Json
                            },
 "f_unaccent":
 { Args: { "input": string }; Returns: string
                            },
+"household_invite_preview":
+{ Args: { "p_token": string }; Returns: {
+              "email": string,"household_name": string,"inviter_name": string,"owner_name": string,"role": Database["public"]['Enums']["household_role"],"status": string
+            }[]
+                           },
+"household_member_list":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "display_name": string,"email": string,"joined_at": string,"role": Database["public"]['Enums']["household_role"],"user_id": string
+            }[]
+                           },
+"household_people":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "display_name": string,"is_member": boolean,"user_id": string
+            }[]
+                           },
+"is_household_owner":
+{ Args: Record<PropertyKey, never>; Returns: boolean
+                           },
 "location_counts":
 { Args: Record<PropertyKey, never>; Returns: {
               "item_count": number,"location_id": string
+            }[]
+                           },
+"my_household_ids":
+{ Args: Record<PropertyKey, never>; Returns: (string)[]
+                           },
+"my_households":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "active": boolean,"id": string,"members": number,"name": string,"owner_name": string,"role": Database["public"]['Enums']["household_role"]
             }[]
                            },
 "normalize_search":
@@ -475,12 +585,22 @@ isOneToOne: false
               "category_id": string,"condition": Database["public"]['Enums']["item_condition"],"duplicate_of": string,"duplicates": number,"idle_days": number,"item_id": string,"last_activity": string,"location_id": string,"location_path": string,"location_path_en": string,"name": string,"purchase_price": number,"quantity": number,"reason": string,"thumb_path": string,"unit": string
             }[]
                            },
+"user_group_alerts":
+{ Args: { "p_user_id": string }; Returns: {
+              "group_id": string,"household_id": string,"kind": Database["public"]['Enums']["alert_kind"],"members": number,"min_quantity": number,"name": string,"severity": number,"snoozed": boolean,"snoozed_until": string,"threshold_key": string,"total": number,"unit": string
+            }[]
+                           },
+"user_item_alerts":
+{ Args: { "p_user_id": string }; Returns: {
+              "category_id": string,"days_left": number,"due_date": string,"household_id": string,"item_id": string,"kind": Database["public"]['Enums']["alert_kind"],"location_id": string,"location_path": string,"location_path_en": string,"min_quantity": number,"name": string,"quantity": number,"replace_after_months": number,"severity": number,"snoozed": boolean,"snoozed_until": string,"threshold_key": string,"thumb_path": string,"unit": string
+            }[]
+                           },
 "user_today":
 { Args: { "p_timezone": string }; Returns: string
                            }
           }
           Enums: {
-            "alert_kind": "expired"|"expiring_soon"|"out_of_stock"|"low_stock"|"warranty_ending"|"replace_due"|"lent_overdue","item_condition": "new"|"good"|"worn"|"broken"|"given_away","item_event_type": "created"|"quantity_change"|"moved"|"status_change"
+            "alert_kind": "expired"|"expiring_soon"|"out_of_stock"|"low_stock"|"warranty_ending"|"replace_due"|"lent_overdue","household_role": "owner"|"editor"|"viewer","item_condition": "new"|"good"|"worn"|"broken"|"given_away","item_event_type": "created"|"quantity_change"|"moved"|"status_change"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -596,7 +716,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "alert_kind": ["expired", "expiring_soon", "out_of_stock", "low_stock", "warranty_ending", "replace_due", "lent_overdue"],"item_condition": ["new", "good", "worn", "broken", "given_away"],"item_event_type": ["created", "quantity_change", "moved", "status_change"]
+            "alert_kind": ["expired", "expiring_soon", "out_of_stock", "low_stock", "warranty_ending", "replace_due", "lent_overdue"],"household_role": ["owner", "editor", "viewer"],"item_condition": ["new", "good", "worn", "broken", "given_away"],"item_event_type": ["created", "quantity_change", "moved", "status_change"]
           }
         }
 } as const

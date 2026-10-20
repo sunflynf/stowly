@@ -1,14 +1,14 @@
 import { expect, signIn, test } from "./fixtures";
 
 test("QR label: print sheet, short link opens the location after sign-in", async ({ page, user, db }) => {
-  const { data: desk } = await db.from("locations").select("id").eq("user_id", user.id).eq("builtin_key", "desk").single();
+  const { data: desk } = await db.from("locations").select("id").eq("household_id", user.householdId).eq("builtin_key", "desk").single();
   const { data: drawer, error } = await db
     .from("locations")
-    .insert({ user_id: user.id, parent_id: desk!.id, name: "Ngăn kéo 2" })
+    .insert({ household_id: user.householdId, parent_id: desk!.id, name: "Ngăn kéo 2" })
     .select("id")
     .single();
   expect(error).toBeNull();
-  await db.from("items").insert({ user_id: user.id, name: "Cáp HDMI 2m", location_id: drawer!.id });
+  await db.from("items").insert({ household_id: user.householdId, name: "Cáp HDMI 2m", location_id: drawer!.id });
 
   // A scanned label opens /l/<id>; signed-out visitors go through login and land on the location.
   await page.goto(`/l/${drawer!.id}`);
@@ -33,7 +33,7 @@ test("QR label: print sheet, short link opens the location after sign-in", async
 });
 
 test("barcode: existing item is recognised, new code is saved and searchable @mobile", async ({ page, user, db }) => {
-  await db.from("items").insert({ user_id: user.id, name: "Pin AA Panasonic", quantity: 2, barcode: "8887549512345" });
+  await db.from("items").insert({ household_id: user.householdId, name: "Pin AA Panasonic", quantity: 2, barcode: "8887549512345" });
   await signIn(page, user);
 
   // Arriving from the scanner with a code you already own.

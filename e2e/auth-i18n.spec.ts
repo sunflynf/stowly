@@ -25,7 +25,7 @@ test("sign up, land on the Vietnamese dashboard, switch to English, sign out", a
   // The choice is stored in the profile, so it survives a new session.
   await page.getByRole("button", { name: "Sign out" }).first().click();
   await expect(page).toHaveURL(/\/login/);
-  await signIn(page, { id: "", email, password: "long-enough-password" });
+  await signIn(page, { email, password: "long-enough-password" });
   await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
 
   const { data } = await db.auth.admin.listUsers({ perPage: 1000 });

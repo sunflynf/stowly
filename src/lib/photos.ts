@@ -25,14 +25,14 @@ async function compress(file: File, maxSide: number, maxSizeMB: number) {
 /** Resizes a photo client-side (1600px main + 320px thumbnail), uploads both and registers them. */
 export async function uploadItemPhoto(itemId: string, file: File) {
   const supabase = getSupabaseBrowser();
-  const { data } = await supabase.auth.getSession();
-  const userId = data.session?.user.id;
-  if (!userId) throw new Error("unauthorized");
+  // Photos live under the household folder, which members can read and editors write.
+  const { data: householdId } = await supabase.rpc("current_household_id");
+  if (!householdId) throw new Error("unauthorized");
 
   const [main, thumb] = await Promise.all([compress(file, 1600, 0.6), compress(file, 320, 0.05)]);
   const id = crypto.randomUUID();
-  const storagePath = `${userId}/${itemId}/${id}.${EXT[main.type] ?? "jpg"}`;
-  const thumbPath = `${userId}/${itemId}/${id}_t.${EXT[thumb.type] ?? "jpg"}`;
+  const storagePath = `${householdId}/${itemId}/${id}.${EXT[main.type] ?? "jpg"}`;
+  const thumbPath = `${householdId}/${itemId}/${id}_t.${EXT[thumb.type] ?? "jpg"}`;
 
   const bucket = supabase.storage.from(PHOTO_BUCKET);
   const [a, b] = await Promise.all([

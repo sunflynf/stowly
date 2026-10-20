@@ -12,6 +12,9 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const params = await searchParams;
   const next = typeof params.next === "string" ? params.next : undefined;
   const linkError = params.error === "link";
+  // Invite links send people here with their email and, for new accounts, the sign-up form.
+  const email = typeof params.email === "string" ? params.email.slice(0, 254) : undefined;
+  const initialMode = params.mode === "signup" ? "signup" : "signin";
   const t = await getTranslations();
 
   return (
@@ -34,7 +37,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
             {t("auth.linkInvalid")}
           </p>
         )}
-        <LoginForm next={next} />
+        <LoginForm next={next} email={email} initialMode={initialMode} />
         <div className="mt-8 flex justify-center">
           <LanguageSwitcher />
         </div>
