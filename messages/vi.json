@@ -56,7 +56,8 @@
     "maintenance": "Bảo trì",
     "insurance": "Báo cáo bảo hiểm",
     "collapseSidebar": "Thu gọn thanh bên",
-    "expandSidebar": "Mở rộng thanh bên"
+    "expandSidebar": "Mở rộng thanh bên",
+    "loans": "Cho mượn"
   },
   "auth": {
     "title": "Đăng nhập",
@@ -148,7 +149,10 @@
     "warranty_left": "{months, plural, other {Bảo hành còn # tháng}}",
     "archived": "Đã lưu trữ",
     "maintenance_due": "{days, plural, =0 {Đến hạn hôm nay} other {Còn # ngày}}",
-    "maintenance_overdue": "{days, plural, =0 {Đến hạn hôm nay} other {Trễ # ngày}}"
+    "maintenance_overdue": "{days, plural, =0 {Đến hạn hôm nay} other {Trễ # ngày}}",
+    "borrow_due": "{days, plural, =0 {Trả hôm nay} other {Còn # ngày để trả}}",
+    "borrow_overdue": "{days, plural, other {Trễ hạn trả # ngày}}",
+    "borrowed": "Đồ mượn, cần trả"
   },
   "item": {
     "fields": {
@@ -225,7 +229,10 @@
       "quantity_change": "{delta} → còn {quantity}",
       "moved": "Chuyển từ {from} sang {to}",
       "status_change": "Tình trạng: {from} → {to}",
-      "maintenance": "Đã bảo trì"
+      "maintenance": "Đã bảo trì",
+      "lent": "Cho mượn",
+      "borrowed": "Mượn về",
+      "returned": "Đã trả lại"
     },
     "delete": "Xoá món đồ",
     "deleteConfirm": "Xoá “{name}”? Thao tác này không thể hoàn tác.",
@@ -466,7 +473,7 @@
       "stock": "Tồn kho",
       "warranty": "Bảo hành",
       "replace": "Cần thay",
-      "lent": "Cho mượn",
+      "lent": "Mượn & cho mượn",
       "snoozed": "Đã hoãn",
       "maintenance": "Bảo trì"
     },
@@ -951,5 +958,34 @@
     "empty": "Không có món đồ nào có giá mua khớp bộ lọc.",
     "unpriced": "{count, plural, other {# món đồ khớp bộ lọc chưa có giá mua nên không được liệt kê.}}",
     "truncated": "Chỉ hiển thị {shown} món giá trị nhất; tổng vẫn tính tất cả."
+  },
+  "loans": {
+    "title": "Cho mượn / mượn",
+    "pageTitle": "Mượn & cho mượn",
+    "subtitle": "Đồ bạn đang cho mượn và đồ bạn đang mượn của người khác.",
+    "empty": "Không có món nào đang cho mượn hay đang mượn. Mở một món đồ và chọn “Cho mượn”.",
+    "none": "Món này đang ở nhà.",
+    "lend": "Cho mượn",
+    "borrow": "Đây là đồ mượn",
+    "lentTo": "Cho ai mượn",
+    "borrowedFrom": "Mượn của ai",
+    "dueBack": "Hẹn trả ngày",
+    "giveBackBy": "Cần trả trước ngày",
+    "dueHint": "Không bắt buộc. Có ngày thì sẽ được nhắc.",
+    "note": "Ghi chú (không bắt buộc)",
+    "lentNow": "Đang cho {person} mượn",
+    "borrowedNow": "Mượn của {person}",
+    "since": "từ {date}",
+    "dueBackOn": "hẹn trả {date}",
+    "giveBackOn": "trả trước {date}",
+    "noDue": "chưa hẹn ngày trả",
+    "markReturned": "Đã trả lại",
+    "markGivenBack": "Đã trả cho chủ",
+    "lentToast": "Đã ghi: cho {person} mượn.",
+    "borrowedToast": "Đã ghi: mượn của {person}.",
+    "returnedToast": "Đã ghi nhận món đồ về lại nhà.",
+    "givenBackToast": "Đã ghi nhận đã trả lại.",
+    "lentSection": "Đang cho mượn ({count})",
+    "borrowedSection": "Đang mượn ({count})"
   }
 }

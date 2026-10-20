@@ -8,6 +8,7 @@ import { AlertTriangle, Archive, ArchiveRestore, Camera, MoreVertical, Pencil, S
 import { toast } from "sonner";
 import { PageHeader } from "@/components/app-shell/page-header";
 import { ItemDocuments } from "@/components/documents/item-documents";
+import { LoanCard } from "@/components/loans/loan-card";
 import { ItemMaintenance } from "@/components/maintenance/item-maintenance";
 import { QuantityStepper } from "@/components/items/quantity-stepper";
 import { StatusBadge, useStatusLabel } from "@/components/items/status-badge";
@@ -105,6 +106,8 @@ function History({ id }: { id: string }) {
                 quantity: qty(e.quantity_after),
               });
             else if (e.type === "maintenance") text = t("events.maintenance");
+            // Loan events keep the person in the note.
+            else if (e.type === "lent" || e.type === "borrowed" || e.type === "returned") text = t(`events.${e.type}`);
             else if (e.type === "moved") text = t("events.moved", { from: locName(e.from_location_id), to: locName(e.to_location_id) });
             else
               text = t("events.status_change", {
@@ -376,6 +379,8 @@ export function ItemDetailView({ id }: { id: string }) {
         </section>
 
         <ItemDocuments itemId={id} />
+
+        <LoanCard itemId={id} attributes={item.attributes} />
 
         <ItemMaintenance itemId={id} itemName={item.name} />
 
