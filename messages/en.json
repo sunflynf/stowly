@@ -52,7 +52,9 @@
     "account": "Account",
     "groups": "Item groups",
     "stats": "Spending",
-    "suggestions": "Clean-up ideas"
+    "suggestions": "Clean-up ideas",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar"
   },
   "auth": {
     "title": "Sign in",

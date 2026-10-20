@@ -52,7 +52,9 @@
     "account": "Tài khoản",
     "groups": "Nhóm đồ",
     "stats": "Chi tiêu",
-    "suggestions": "Gợi ý dọn dẹp"
+    "suggestions": "Gợi ý dọn dẹp",
+    "collapseSidebar": "Thu gọn thanh bên",
+    "expandSidebar": "Mở rộng thanh bên"
   },
   "auth": {
     "title": "Đăng nhập",

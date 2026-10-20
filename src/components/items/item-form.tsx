@@ -31,6 +31,8 @@ interface ItemFormProps {
   photos?: ExistingPhoto[];
   /** Barcode handed over by the scanner (quick add). */
   initialBarcode?: string;
+  /** Rendered inside the drawer: the action bar sticks to the bottom of the drawer instead of the page. */
+  embedded?: boolean;
 }
 
 function stepNumber(value: string, delta: number) {
@@ -38,7 +40,7 @@ function stepNumber(value: string, delta: number) {
   return String(Math.max(0, Math.round((n + delta) * 1000) / 1000));
 }
 
-export function ItemForm({ mode, itemId, initial, photos = [], initialBarcode }: ItemFormProps) {
+export function ItemForm({ mode, itemId, initial, photos = [], initialBarcode, embedded = false }: ItemFormProps) {
   const t = useTranslations("item");
   const tc = useTranslations();
   const vm = useValidationMessage();
@@ -368,7 +370,12 @@ export function ItemForm({ mode, itemId, initial, photos = [], initialBarcode }:
         </>
       )}
 
-      <div className="fixed inset-x-0 bottom-0 z-40 flex gap-3 border-t border-border bg-card px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:static md:justify-end md:border-0 md:bg-transparent md:p-0">
+      <div
+        className={cn(
+          "fixed inset-x-0 bottom-0 z-40 flex gap-3 border-t border-border bg-card px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:static md:justify-end md:border-0 md:bg-transparent md:p-0",
+          embedded && "md:sticky md:bottom-0 md:-mx-5 md:-mb-5 md:border-t md:bg-card md:px-5 md:py-3",
+        )}
+      >
         {mode === "quick" && (
           <Button variant="outline" className="flex-1 md:flex-none" disabled={pending} onClick={() => void submit(true)()}>
             {t("saveAndAddAnother")}

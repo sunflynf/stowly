@@ -8,7 +8,7 @@ function ShellSkeleton() {
   return (
     <div className="flex min-h-dvh" aria-busy>
       <div className="hidden w-60 shrink-0 border-r border-border bg-card md:block" />
-      <div className="mx-auto w-full max-w-[1120px] flex-1 px-4 pt-4 md:px-10 md:pt-9">
+      <div className="w-full flex-1 px-4 pt-4 md:px-8 md:pt-9 xl:px-10">
         <div className="mb-6 h-9 w-56 animate-pulse rounded-md bg-muted" />
         <div className="h-[52px] animate-pulse rounded-md bg-muted" />
       </div>
@@ -16,7 +16,7 @@ function ShellSkeleton() {
   );
 }
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ children, drawer }: { children: React.ReactNode; drawer?: React.ReactNode }) {
   return (
     <ClientGate fallback={<ShellSkeleton />}>
       <div className="flex min-h-dvh">
@@ -24,9 +24,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex min-w-0 flex-1 flex-col">
           <OfflineBanner />
           <ReadOnlyBanner />
-          <main id="main" className="mx-auto w-full max-w-[1120px] flex-1 px-4 pt-4 pb-28 md:px-10 md:pt-9 md:pb-12 print:max-w-none print:p-0">
+          <main id="main" className="w-full flex-1 px-4 pt-4 pb-28 md:px-8 md:pt-9 md:pb-12 xl:px-10 print:p-0">
             {children}
           </main>
+          {drawer}
         </div>
         <MobileTabBar />
       </div>
