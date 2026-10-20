@@ -525,7 +525,25 @@
       "title": "Account",
       "signedInAs": "Signed in as {email}"
     },
-    "saved": "Settings saved"
+    "saved": "Settings saved",
+    "appearance": {
+      "title": "Appearance",
+      "hint": "Colours apply to you only; each member picks their own. Status colours (red, amber) keep their meaning in every theme.",
+      "themes": {
+        "auto": "Auto",
+        "teal": "Stowly teal",
+        "green": "Fresh green",
+        "blue": "Calm blue",
+        "dark": "Dark"
+      },
+      "hints": {
+        "auto": "Follows your device's light/dark mode",
+        "teal": "Default",
+        "green": "Natural, moss green",
+        "blue": "Soft and coastal",
+        "dark": "Easy on the eyes at night"
+      }
+    }
   },
   "notifications": {
     "subject": "{count, plural, one {Stowly: # item needs attention} other {Stowly: # items need attention}}",
