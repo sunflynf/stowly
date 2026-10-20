@@ -45,7 +45,7 @@ function Photos({ item }: { item: ItemDetail }) {
     return (
       <Link
         href={`/items/${item.id}/edit`}
-        className="flex h-40 flex-col items-center justify-center gap-2 rounded-[var(--radius-lg)] border border-dashed border-input bg-muted text-sm text-muted-foreground md:h-56"
+        className="flex h-40 flex-col items-center justify-center gap-2 rounded-md border border-dashed border-input bg-muted text-sm text-muted-foreground md:h-56"
       >
         <Camera className="size-6" aria-hidden />
         {t("photoCount", { count: 0 })}
@@ -61,7 +61,7 @@ function Photos({ item }: { item: ItemDetail }) {
           <img
             src={urls[p.storage_path]}
             alt={t("photoN", { n: i + 1, name: item.name })}
-            className="aspect-[4/3] w-full rounded-[var(--radius-lg)] bg-muted object-cover"
+            className="aspect-[4/3] w-full rounded-md bg-muted object-cover"
           />
         </li>
       ))}
@@ -89,7 +89,7 @@ function History({ id }: { id: string }) {
   const qty = (n: number | null) => format.number(Number(n ?? 0), "quantity");
 
   return (
-    <section className="rounded-[var(--radius-lg)] border border-border bg-card p-4 md:p-5">
+    <section className="rounded-md border border-border bg-card p-4 md:p-5">
       <h2 className="mb-2 font-semibold">{t("history")}</h2>
       {events.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("noHistory")}</p>
@@ -155,7 +155,7 @@ export function ItemDetailView({ id }: { id: string }) {
 
   if (isPending) {
     return (
-      <div className="mx-auto flex max-w-2xl flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <Skeleton className="h-40" />
         <Skeleton className="h-8 w-2/3" />
         <Skeleton className="h-24" />
@@ -164,7 +164,7 @@ export function ItemDetailView({ id }: { id: string }) {
   }
   if (!item) {
     return (
-      <div className="mx-auto max-w-2xl">
+      <div>
         <PageHeader title={t("detailTitle")} back="/items" />
         <p className="text-muted-foreground">{t("notFound")}</p>
       </div>
@@ -226,7 +226,7 @@ export function ItemDetailView({ id }: { id: string }) {
   const replaceMonths = (since: string | null) => (since ? monthsBetween(since, today) : 0);
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div>
       <PageHeader
         title={t("detailTitle")}
         back="/items"
@@ -275,7 +275,7 @@ export function ItemDetailView({ id }: { id: string }) {
                 key={a.kind}
                 role="status"
                 className={cn(
-                  "flex items-start gap-2 rounded-[var(--radius)] px-4 py-3 text-[15px] font-semibold",
+                  "flex items-start gap-2 rounded-md px-4 py-3 text-[15px] font-semibold",
                   s.tone === "danger" && "bg-danger text-danger-foreground",
                   s.tone === "warning" && "bg-warning text-warning-foreground",
                   s.tone === "success" && "bg-success text-success-foreground",
@@ -288,7 +288,7 @@ export function ItemDetailView({ id }: { id: string }) {
             );
           })}
 
-        <section className="flex items-center justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-4">
+        <section className="flex items-center justify-between gap-4 rounded-md border border-border bg-card p-4">
           <div>
             <h2 className="text-[15px] font-medium">{t("fields.quantity")}</h2>
             <p className="text-sm text-muted-foreground">
@@ -298,7 +298,7 @@ export function ItemDetailView({ id }: { id: string }) {
           <QuantityStepper id={item.id} name={item.name} quantity={item.quantity} low={low} size="lg" />
         </section>
 
-        <section className="rounded-[var(--radius-lg)] border border-border bg-card px-4 py-1">
+        <section className="rounded-md border border-border bg-card px-4 py-1">
           <h2 className="sr-only">{t("info")}</h2>
           <dl>
             <InfoRow label={t("fields.location")}>

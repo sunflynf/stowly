@@ -8,8 +8,6 @@ export function useNavCounts(): Partial<Record<NavCount, number>> {
   if (!data) return {};
   return {
     items: data.total_items,
-    expiring: data.expiring_30d + data.expired,
-    lowStock: data.low_stock,
     attention: data.attention,
   };
 }

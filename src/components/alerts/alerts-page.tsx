@@ -116,7 +116,7 @@ export function AlertsPage() {
   const ref = (a: AlertRow) => ({ itemId: a.item_id, kind: a.kind });
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div>
       <PageHeader title={t("title")} subtitle={t("subtitle", { count: counts.all })} />
 
       <div role="tablist" aria-label={t("title")} className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
@@ -145,7 +145,7 @@ export function AlertsPage() {
             <Skeleton className="h-28" />
           </div>
         ) : visible.length === 0 && visibleGroups.length === 0 && visibleTasks.length === 0 ? (
-          <p className="rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
+          <p className="rounded-md border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
         ) : (
           <ul className="flex flex-col gap-3">
             {visibleTasks.map((m) => (
@@ -181,7 +181,7 @@ export function AlertsPage() {
               const status = h.status(a);
               const expiryKind = a.kind === "expired" || a.kind === "expiring_soon";
               return (
-                <li key={`${a.item_id}-${a.kind}`} className="rounded-[var(--radius-lg)] border border-border bg-card p-4">
+                <li key={`${a.item_id}-${a.kind}`} className="rounded-md border border-border bg-card p-4">
                   <Link href={`/items/${a.item_id}`} className="flex items-center gap-3">
                     <ItemThumb name={a.name} url={a.thumb_path ? urls[a.thumb_path] : undefined} />
                     <span className="min-w-0 flex-1">

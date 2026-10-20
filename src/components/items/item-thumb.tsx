@@ -11,15 +11,22 @@ export function ItemThumb({
 }: {
   name: string;
   url?: string | null;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "fill";
   className?: string;
 }) {
-  const dims = size === "sm" ? "size-10 text-sm" : size === "lg" ? "size-16 text-xl" : "size-12 text-base";
+  const dims =
+    size === "sm"
+      ? "size-10 text-sm"
+      : size === "lg"
+        ? "size-16 text-xl"
+        : size === "fill"
+          ? "aspect-[4/3] w-full text-4xl"
+          : "size-12 text-base";
   const letter = name.trim().charAt(0).toLocaleUpperCase() || "?";
   return (
     <span
       className={cn(
-        "flex shrink-0 items-center justify-center overflow-hidden rounded-[10px] bg-muted font-semibold text-neutral-foreground",
+        "flex shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted font-semibold text-neutral-foreground",
         dims,
         className,
       )}

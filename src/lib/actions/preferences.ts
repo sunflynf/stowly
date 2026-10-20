@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { fonts } from "@/i18n/fonts";
 import { locales } from "@/i18n/config";
 import { setPreferenceCookies } from "@/lib/preferences";
 import { getSupabaseServer } from "@/lib/supabase/server";
@@ -8,6 +9,7 @@ import { THEME_PREFERENCES } from "@/lib/themes";
 import { fail, ok, validationFail, type ActionResult } from "./result";
 
 const localeSchema = z.enum(locales);
+const fontSchema = z.enum(fonts);
 
 /** Changes the UI language. Works before login (cookie only) and after (also saved to the profile). */
 export async function setLocaleAction(input: unknown): Promise<ActionResult> {
@@ -38,5 +40,13 @@ export async function setThemeAction(input: unknown): Promise<ActionResult> {
     const { error } = await supabase.from("profiles").update({ theme: parsed.data }).eq("id", data.claims.sub);
     if (error) return fail("unknown");
   }
+  return ok();
+}
+
+/** Changes the UI font. Device-level preference (cookie only), also available before login. */
+export async function setFontAction(input: unknown): Promise<ActionResult> {
+  const parsed = fontSchema.safeParse(input);
+  if (!parsed.success) return validationFail(parsed.error);
+  await setPreferenceCookies({ font: parsed.data });
   return ok();
 }

@@ -106,7 +106,7 @@ export function TaxonomyManager() {
                 const name = labels.category(c);
                 return (
                   <li key={c.id} className="flex min-h-14 items-center gap-3 border-b border-border py-1 last:border-0">
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-accent text-accent-foreground">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
                       <Icon className="size-5" aria-hidden />
                     </span>
                     <Link href={`/items?categories=${c.id}`} className="min-w-0 flex-1 hover:underline">

@@ -44,7 +44,7 @@ export function MaintenancePage() {
           <Skeleton className="h-32" />
         </div>
       ) : !tasks?.length ? (
-        <p className="rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
+        <p className="rounded-md border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
       ) : (
         <div className="flex flex-col gap-6">
           {sections

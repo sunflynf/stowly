@@ -44,7 +44,7 @@ export function ScanButton() {
         type="button"
         aria-label={t("button")}
         onClick={() => setOpen(true)}
-        className="flex size-[52px] shrink-0 items-center justify-center rounded-[var(--radius)] border border-input bg-card hover:bg-muted"
+        className="flex size-[52px] shrink-0 items-center justify-center rounded-md border border-input bg-card hover:bg-muted"
       >
         <ScanLine className="size-5" aria-hidden />
       </button>

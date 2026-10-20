@@ -66,7 +66,7 @@ export default async function InvitePage({ params }: PageProps<"/invite/[token]"
       body = (
         <>
           {intro}
-          <p role="alert" className="rounded-[var(--radius)] bg-warning px-3 py-2 text-sm font-medium text-warning-foreground">
+          <p role="alert" className="rounded-md bg-warning px-3 py-2 text-sm font-medium text-warning-foreground">
             {t("wrongEmail", { email: invite.email, current: currentEmail })}
           </p>
           <form action={signOutAction}>
@@ -89,7 +89,7 @@ export default async function InvitePage({ params }: PageProps<"/invite/[token]"
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm">
-        <div className="flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-5">
+        <div className="flex flex-col gap-4 rounded-md border border-border bg-card p-5">
           <h1 className="text-xl font-bold">{t("title")}</h1>
           {body}
           {currentEmail && (

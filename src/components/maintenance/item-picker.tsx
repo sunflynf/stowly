@@ -35,7 +35,7 @@ export function ItemPicker({ id, value, onChange }: { id: string; value: PickedI
 
   if (value) {
     return (
-      <div className="flex min-h-11 items-center justify-between gap-2 rounded-[var(--radius)] border border-input bg-card px-3">
+      <div className="flex min-h-11 items-center justify-between gap-2 rounded-md border border-input bg-card px-3">
         <span className="truncate font-medium">{value.name}</span>
         <Button type="button" variant="ghost" size="icon" aria-label={t("unlinkItem")} onClick={() => onChange(null)}>
           <X />
@@ -48,7 +48,7 @@ export function ItemPicker({ id, value, onChange }: { id: string; value: PickedI
     <div className="flex flex-col gap-1">
       <Input id={id} value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("itemSearch")} autoComplete="off" />
       {debounced.length >= 2 && (
-        <ul className="max-h-56 overflow-y-auto rounded-[var(--radius)] border border-border bg-card" aria-label={t("itemResults")}>
+        <ul className="max-h-56 overflow-y-auto rounded-md border border-border bg-card" aria-label={t("itemResults")}>
           {results.length === 0 ? (
             <li className="px-3 py-2 text-sm text-muted-foreground">{t("itemNone")}</li>
           ) : (

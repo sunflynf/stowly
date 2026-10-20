@@ -5,9 +5,19 @@
  * the root layout renders as CSS variables keyed by <html data-theme>.
  */
 :root {
-  --radius: 12px;
-  --radius-lg: 14px;
+  /* One radius (medium) for every control, card, dialog and tile. */
+  --radius: 10px;
+
+  --app-font: var(--font-be-vietnam-pro), ui-sans-serif, system-ui, sans-serif;
 }
+
+/* User-selectable UI font (cookie → data-font on <html>); all have Vietnamese glyphs. */
+html[data-font="inter"] { --app-font: var(--font-inter), ui-sans-serif, system-ui, sans-serif; }
+html[data-font="noto-sans"] { --app-font: var(--font-noto-sans), ui-sans-serif, system-ui, sans-serif; }
+html[data-font="roboto"] { --app-font: var(--font-roboto), ui-sans-serif, system-ui, sans-serif; }
+html[data-font="lexend"] { --app-font: var(--font-lexend), ui-sans-serif, system-ui, sans-serif; }
+html[data-font="nunito-sans"] { --app-font: var(--font-nunito-sans), ui-sans-serif, system-ui, sans-serif; }
+html[data-font="system"] { --app-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 
 @theme {
   /* Desktop layout starts at ~800px; below that the mobile layout is used. */
@@ -42,12 +52,12 @@
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
 
-  --radius-sm: 8px;
-  --radius-md: 10px;
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
   --radius-lg: var(--radius);
-  --radius-xl: var(--radius-lg);
+  --radius-xl: var(--radius);
 
-  --font-sans: var(--font-be-vietnam-pro), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--app-font);
 }
 
 @layer base {
@@ -60,7 +70,7 @@
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans);
+    font-family: var(--app-font);
     -webkit-tap-highlight-color: transparent;
   }
   :focus-visible {

@@ -100,7 +100,7 @@ export function SuggestionsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div>
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
       <div role="tablist" aria-label={t("title")} className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
@@ -130,11 +130,11 @@ export function SuggestionsPage() {
             <Skeleton className="h-28" />
           </div>
         ) : visible.length === 0 ? (
-          <p className="rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
+          <p className="rounded-md border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
         ) : (
           <ul className="flex flex-col gap-3">
             {visible.map((r) => (
-              <li key={`${r.item_id}-${r.reason}`} className="rounded-[var(--radius-lg)] border border-border bg-card p-4">
+              <li key={`${r.item_id}-${r.reason}`} className="rounded-md border border-border bg-card p-4">
                 <Link href={`/items/${r.item_id}`} className="flex items-center gap-3">
                   <ItemThumb name={r.name} url={r.thumb_path ? urls[r.thumb_path] : undefined} />
                   <span className="min-w-0 flex-1">

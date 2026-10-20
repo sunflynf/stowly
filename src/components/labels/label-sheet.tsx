@@ -55,7 +55,7 @@ export function LabelSheet({ initialIds }: { initialIds: string[] }) {
 
       <div className="grid gap-5 lg:grid-cols-[18rem_1fr] print:block">
         <aside className="flex flex-col gap-4 print:hidden">
-          <section className="rounded-[var(--radius-lg)] border border-border bg-card p-4">
+          <section className="rounded-md border border-border bg-card p-4">
             <div className="mb-2 flex items-center justify-between gap-2">
               <h2 className="font-semibold">{t("select")}</h2>
               <span className="flex gap-1">
@@ -82,7 +82,7 @@ export function LabelSheet({ initialIds }: { initialIds: string[] }) {
             </ul>
           </section>
 
-          <section className="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4">
+          <section className="flex flex-col gap-3 rounded-md border border-border bg-card p-4">
             <fieldset>
               <legend className="mb-2 text-sm font-semibold">{t("size")}</legend>
               <div className="flex gap-2" role="radiogroup">
@@ -94,7 +94,7 @@ export function LabelSheet({ initialIds }: { initialIds: string[] }) {
                     aria-checked={size === s}
                     onClick={() => setSize(s)}
                     className={cn(
-                      "min-h-11 flex-1 rounded-[var(--radius)] border px-3 text-sm font-medium",
+                      "min-h-11 flex-1 rounded-md border px-3 text-sm font-medium",
                       size === s ? "border-primary bg-accent text-accent-foreground" : "border-input bg-card hover:bg-muted",
                     )}
                   >
@@ -115,7 +115,7 @@ export function LabelSheet({ initialIds }: { initialIds: string[] }) {
           </section>
         </aside>
 
-        <section aria-label={t("preview")} className="overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-card p-4 print:overflow-visible print:border-0 print:p-0">
+        <section aria-label={t("preview")} className="overflow-x-auto rounded-md border border-border bg-card p-4 print:overflow-visible print:border-0 print:p-0">
           {chosen.length === 0 ? (
             <p className="p-6 text-center text-muted-foreground print:hidden">{t("empty")}</p>
           ) : (

@@ -15,6 +15,7 @@ import { Field } from "@/components/ui/field";
 import { Input, NativeSelect } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
+import { FontPicker } from "./font-picker";
 import { DEFAULT_THEME, isThemePreference } from "@/lib/themes";
 import { MembersSection } from "./members-section";
 import { ThemePicker } from "./theme-picker";
@@ -116,7 +117,7 @@ export function SettingsPage() {
 
   if (!profile) {
     return (
-      <div className="mx-auto max-w-2xl">
+      <div>
         <PageHeader title={t("title")} />
         <Skeleton className="h-96" />
       </div>
@@ -126,7 +127,7 @@ export function SettingsPage() {
   const leads = profile.expiry_lead_days;
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <PageHeader title={t("title")} className="mb-0" />
 
       <MembersSection />
@@ -148,6 +149,16 @@ export function SettingsPage() {
         <CardContent className="flex flex-col gap-2">
           <ThemePicker value={isThemePreference(profile.theme) ? profile.theme : DEFAULT_THEME} />
           <p className="text-sm text-muted-foreground">{t("appearance.hint")}</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("font.title")}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <FontPicker />
+          <p className="text-sm text-muted-foreground">{t("font.hint")}</p>
         </CardContent>
       </Card>
 

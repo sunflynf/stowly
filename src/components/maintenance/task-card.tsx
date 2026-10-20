@@ -88,9 +88,9 @@ export function TaskCard({ task, alert, showItem = true }: { task: MaintenanceTa
   const snoozed = alert?.snoozed ?? false;
 
   return (
-    <li id={`task-${task.id}`} className="scroll-mt-24 rounded-[var(--radius-lg)] border border-border bg-card p-4">
+    <li id={`task-${task.id}`} className="scroll-mt-24 rounded-md border border-border bg-card p-4">
       <div className="flex items-start gap-3">
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-accent text-accent-foreground">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
           <Wrench className="size-5" aria-hidden />
         </span>
         <div className="min-w-0 flex-1">
