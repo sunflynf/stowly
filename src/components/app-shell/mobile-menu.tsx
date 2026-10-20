@@ -3,15 +3,12 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Boxes, ChartColumn, Clock, Sparkles, Layers, LogOut, Menu, Settings, ShoppingCart, Tag } from "lucide-react";
+import { Boxes, ChartColumn, Sparkles, LogOut, Menu, Settings, ShoppingCart, Tag } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { signOutAction } from "@/lib/actions/auth";
-import { EXPIRING_HREF, STOCK_HREF } from "./nav-config";
 
 const links = [
   { href: "/shopping", label: "shopping", icon: ShoppingCart },
-  { href: EXPIRING_HREF, label: "expiring", icon: Clock },
-  { href: STOCK_HREF, label: "stock", icon: Layers },
   { href: "/groups", label: "groups", icon: Boxes },
   { href: "/stats", label: "stats", icon: ChartColumn },
   { href: "/suggestions", label: "suggestions", icon: Sparkles },

@@ -127,7 +127,6 @@ export function FilterBar({
   const conditionOptions = ITEM_CONDITIONS.map((c) => ({ value: c, label: tc(c) }));
   const stateOptions = ALERT_KINDS.filter((k) => k !== "low_stock" && k !== "out_of_stock").map((k) => ({ value: k, label: ts(k) }));
   const location = locations.find((l) => l.id === params.location);
-  const lowOnly = params.states.includes("low_stock") && params.states.includes("out_of_stock");
   const [priceMin, setPriceMin] = useState(params.priceMin?.toString() ?? "");
   const [priceMax, setPriceMax] = useState(params.priceMax?.toString() ?? "");
 
@@ -241,21 +240,6 @@ export function FilterBar({
           </Button>
         </form>
       </Chip>
-
-      <label className="inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2 px-2 text-[15px] font-medium whitespace-nowrap">
-        <Checkbox
-          checked={lowOnly}
-          onCheckedChange={(c) =>
-            onChange({
-              states: c
-                ? [...nonStockStates, "out_of_stock", "low_stock"]
-                : nonStockStates,
-              sort: c ? "low_stock" : params.sort === "low_stock" ? "updated" : params.sort,
-            })
-          }
-        />
-        {t("lowOnly")}
-      </label>
 
       {hasFilters && (
         <Button

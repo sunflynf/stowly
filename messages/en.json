@@ -41,7 +41,6 @@
     "itemsShort": "Items",
     "locations": "Locations",
     "expiring": "Expiring",
-    "stock": "Stock",
     "alerts": "Alerts",
     "shopping": "Shopping list",
     "categories": "Categories & tags",
@@ -345,7 +344,6 @@
       "tags": "Tags",
       "price": "Price",
       "all": "All",
-      "lowOnly": "Low stock only",
       "archived": "Archived",
       "priceMin": "From",
       "priceMax": "To",
@@ -371,6 +369,12 @@
       "expiry": "Expiry date",
       "low_stock": "Low stock first",
       "current": "Sort: {value}"
+    },
+    "views": {
+      "label": "View",
+      "all": "All",
+      "expiring": "Expiring",
+      "stock": "Low stock"
     }
   },
   "dashboard": {

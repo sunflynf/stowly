@@ -41,7 +41,6 @@
     "itemsShort": "Đồ dùng",
     "locations": "Vị trí",
     "expiring": "Sắp hết hạn",
-    "stock": "Tồn kho",
     "alerts": "Cảnh báo",
     "shopping": "Danh sách mua",
     "categories": "Danh mục & thẻ",
@@ -345,7 +344,6 @@
       "tags": "Thẻ",
       "price": "Giá",
       "all": "Tất cả",
-      "lowOnly": "Chỉ tồn kho thấp",
       "archived": "Đã lưu trữ",
       "priceMin": "Từ",
       "priceMax": "Đến",
@@ -371,6 +369,12 @@
       "expiry": "Hạn dùng gần nhất",
       "low_stock": "Tồn kho thấp trước",
       "current": "Sắp xếp: {value}"
+    },
+    "views": {
+      "label": "Chế độ xem",
+      "all": "Tất cả",
+      "expiring": "Sắp hết hạn",
+      "stock": "Sắp hết hàng"
     }
   },
   "dashboard": {
