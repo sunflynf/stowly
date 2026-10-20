@@ -26,6 +26,7 @@ import { useItem, useItemAlerts, useItemEvents, usePhotoUrls, type ItemDetail } 
 import { useLabels, useLocations } from "@/lib/queries/taxonomy";
 import { alertStatus, itemStatus } from "@/lib/status";
 import { attributeDefsSchema } from "@/lib/validation/item";
+import { emptyOn, usageSummary } from "@/lib/usage";
 import { cn } from "@/lib/utils";
 
 // Notes written by the app itself (vs. typed by the user) are translated.
@@ -182,6 +183,10 @@ export function ItemDetailView({ id }: { id: string }) {
   const attrDefs = attributeDefsSchema.safeParse(item.category?.default_attributes ?? []);
   const attrs = (item.attributes ?? {}) as Record<string, string>;
   const qty = (n: number | null) => format.number(Number(n ?? 0), "quantity");
+  // Learned from the quantity history (see usage_rate migration).
+  const usage = item.usage_per_day !== null ? usageSummary(Number(item.usage_per_day)) : null;
+  const usageEmpty =
+    item.usage_per_day !== null && item.usage_last_at ? emptyOn(Number(item.quantity), Number(item.usage_per_day), item.usage_last_at) : null;
 
   const remove = async () => {
     try {
@@ -298,6 +303,16 @@ export function ItemDetailView({ id }: { id: string }) {
             <p className="text-sm text-muted-foreground">
               {item.min_quantity !== null ? t("thresholdValue", { threshold: qty(item.min_quantity) }) : t("fields.minQuantityHint")}
             </p>
+            {usage && (
+              <p className="mt-1 text-sm text-muted-foreground">
+                {usage.kind === "perDays"
+                  ? t("usage.perDays", { days: usage.days })
+                  : usage.kind === "perWeek"
+                    ? t("usage.perWeek", { amount: format.number(usage.amount) })
+                    : t("usage.perDay", { amount: format.number(usage.amount) })}
+                {usageEmpty && item.quantity > 0 ? ` · ${t("usage.emptyOn", { date: fmtDate(usageEmpty) })}` : ""}
+              </p>
+            )}
           </div>
           <QuantityStepper id={item.id} name={item.name} quantity={item.quantity} low={low} size="lg" />
         </section>

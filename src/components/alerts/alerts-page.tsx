@@ -36,7 +36,7 @@ type Tab = "all" | "expiry" | "stock" | "warranty" | "replace" | "lent" | "maint
 const TABS: Record<Tab, readonly AlertKind[] | null> = {
   all: null,
   expiry: ["expired", "expiring_soon"],
-  stock: ["out_of_stock", "low_stock"],
+  stock: ["out_of_stock", "low_stock", "running_out"],
   warranty: ["warranty_ending"],
   replace: ["replace_due"],
   lent: ["lent_overdue", "borrow_due"],

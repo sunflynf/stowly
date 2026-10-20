@@ -136,16 +136,24 @@ async function backdateHistory(householdId: string, userId: string) {
   }
   const usage = items
     .filter((i) => i.min_quantity !== null && chance(0.35))
-    .map((i) => ({
-      household_id: householdId,
-      actor_id: userId,
-      item_id: i.id,
-      type: "quantity_change" as const,
-      delta: -1,
-      quantity_after: i.quantity,
-      note: "demo",
-      created_at: new Date(Date.now() - rand() * 60 * 86_400_000).toISOString(),
-    }));
+    .flatMap((i) => {
+      // A few consumables are used regularly (every ~8–20 days), so usage-rate
+      // predictions ("running out in 5 days") have something to learn from.
+      const regular = chance(0.25);
+      const every = 8 + Math.floor(rand() * 12);
+      const times = regular ? 4 : 1;
+      const lastAgo = regular ? 1 + Math.floor(rand() * every) : rand() * 60;
+      return Array.from({ length: times }, (_, k) => ({
+        household_id: householdId,
+        actor_id: userId,
+        item_id: i.id,
+        type: "quantity_change" as const,
+        delta: -1,
+        quantity_after: i.quantity,
+        note: "demo",
+        created_at: new Date(Date.now() - (lastAgo + k * every) * 86_400_000).toISOString(),
+      }));
+    });
   for (let start = 0; start < usage.length; start += 500) {
     const { error } = await db.from("item_events").insert(usage.slice(start, start + 500));
     if (error) throw error;
