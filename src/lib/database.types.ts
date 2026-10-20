@@ -443,14 +443,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "active_household_id": string | null,"created_at": string,"currency": string,"digest_hour": number,"display_name": string | null,"expiry_lead_days": (number)[],"id": string,"locale": string,"maintenance_lead_days": number,"notify_email": boolean,"notify_push": boolean,"timezone": string,"unused_after_days": number,"updated_at": string,"warranty_lead_days": number
+                    "active_household_id": string | null,"created_at": string,"currency": string,"digest_hour": number,"display_name": string | null,"expiry_lead_days": (number)[],"id": string,"locale": string,"maintenance_lead_days": number,"notify_email": boolean,"notify_push": boolean,"theme": string,"timezone": string,"unused_after_days": number,"updated_at": string,"warranty_lead_days": number
                   }
                   ComputedFields: never
                   Insert: {
-                    "active_household_id"?: string | null,"created_at"?: string,"currency"?: string,"digest_hour"?: number,"display_name"?: string | null,"expiry_lead_days"?: (number)[],"id": string,"locale"?: string,"maintenance_lead_days"?: number,"notify_email"?: boolean,"notify_push"?: boolean,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
+                    "active_household_id"?: string | null,"created_at"?: string,"currency"?: string,"digest_hour"?: number,"display_name"?: string | null,"expiry_lead_days"?: (number)[],"id": string,"locale"?: string,"maintenance_lead_days"?: number,"notify_email"?: boolean,"notify_push"?: boolean,"theme"?: string,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
                   }
                   Update: {
-                    "active_household_id"?: string | null,"created_at"?: string,"currency"?: string,"digest_hour"?: number,"display_name"?: string | null,"expiry_lead_days"?: (number)[],"id"?: string,"locale"?: string,"maintenance_lead_days"?: number,"notify_email"?: boolean,"notify_push"?: boolean,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
+                    "active_household_id"?: string | null,"created_at"?: string,"currency"?: string,"digest_hour"?: number,"display_name"?: string | null,"expiry_lead_days"?: (number)[],"id"?: string,"locale"?: string,"maintenance_lead_days"?: number,"notify_email"?: boolean,"notify_push"?: boolean,"theme"?: string,"timezone"?: string,"unused_after_days"?: number,"updated_at"?: string,"warranty_lead_days"?: number
                   }
                   Relationships: [
                     {
