@@ -26,7 +26,7 @@ function DialogContent({
           side === "center" &&
             "top-1/2 left-1/2 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-md",
           side === "bottom" && "inset-x-0 bottom-0 rounded-t-md pb-[max(1.25rem,env(safe-area-inset-bottom))]",
-          side === "right" && "inset-y-0 right-0 h-full w-full max-w-md",
+          side === "right" && "inset-y-0 right-0 h-full max-h-none w-full max-w-md",
           className,
         )}
         {...props}
