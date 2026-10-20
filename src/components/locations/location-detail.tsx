@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
-import { ChevronRight, Plus, QrCode as QrIcon } from "lucide-react";
+import { ChevronRight, Folder, Plus, QrCode as QrIcon } from "lucide-react";
 import { PageHeader } from "@/components/app-shell/page-header";
-import { ItemList, ItemTable } from "@/components/search/item-results";
+import { ItemCards } from "@/components/search/item-results";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { parseItemSearch, useItemSearch } from "@/lib/queries/search";
@@ -99,10 +99,15 @@ export function LocationDetail({ id }: { id: string }) {
               <li key={c.id}>
                 <Link
                   href={`/locations/${c.id}`}
-                  className="flex min-h-14 flex-col justify-center rounded-md border border-border bg-card px-4 py-2 hover:border-input"
+                  className="flex min-h-14 items-center gap-3 rounded-md border border-border bg-card px-3 py-2 hover:border-input"
                 >
-                  <span className="font-medium">{labels.location(c)}</span>
-                  <span className="text-sm text-muted-foreground">{t("itemCount", { count: subtreeCount(c.id) })}</span>
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
+                    <Folder className="size-5" aria-hidden />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate font-medium">{labels.location(c)}</span>
+                    <span className="block text-sm text-muted-foreground">{t("itemCount", { count: subtreeCount(c.id) })}</span>
+                  </span>
                 </Link>
               </li>
             ))}
@@ -123,12 +128,7 @@ export function LocationDetail({ id }: { id: string }) {
           <p className="px-4 pb-6 text-muted-foreground md:px-5">{t("emptyHere")}</p>
         ) : (
           <>
-            <div className="hidden md:block">
-              <ItemTable rows={rows} />
-            </div>
-            <div className="md:hidden">
-              <ItemList rows={rows} />
-            </div>
+            <ItemCards rows={rows} />
             {search.hasNextPage && (
               <div className="border-t border-border px-4 py-3">
                 <Button variant="secondary" size="sm" onClick={() => void search.fetchNextPage()} disabled={search.isFetchingNextPage}>

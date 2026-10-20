@@ -284,7 +284,9 @@
     "addHere": "Add item here",
     "notFound": "This location could not be found.",
     "breadcrumb": "Location path",
-    "emptyHere": "Nothing stored here yet."
+    "emptyHere": "Nothing stored here yet.",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all"
   },
   "categoriesPage": {
     "title": "Categories & tags",

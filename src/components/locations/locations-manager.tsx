@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
-import { ChevronRight, FolderPlus, MoreVertical, MoveRight, Pencil, Plus, QrCode, Trash2 } from "lucide-react";
+import { ChevronRight, Folder, FolderOpen, FolderPlus, ChevronsDownUp, ChevronsUpDown, MoreVertical, MoveRight, Pencil, Plus, QrCode, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/app-shell/page-header";
 import { unwrap, useErrorToast } from "@/components/items/use-item-mutations";
@@ -37,6 +37,26 @@ function totalCount(node: LocationNode, counts: Map<string, number>): number {
   return (counts.get(node.id) ?? 0) + node.children.reduce((sum, c) => sum + totalCount(c, counts), 0);
 }
 
+const COLLAPSED_KEY = "stowly.locations.collapsed";
+
+// The signed-in app renders after hydration (ClientGate), so reading storage here is safe.
+function readCollapsed(): Set<string> {
+  try {
+    const raw = JSON.parse(localStorage.getItem(COLLAPSED_KEY) ?? "[]");
+    return new Set(Array.isArray(raw) ? raw.filter((v): v is string => typeof v === "string") : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function writeCollapsed(ids: Set<string>) {
+  try {
+    localStorage.setItem(COLLAPSED_KEY, JSON.stringify([...ids]));
+  } catch {
+    // Storage unavailable (private mode): the tree still works, just not remembered.
+  }
+}
+
 export function LocationsManager() {
   const t = useTranslations("locations");
   const tc = useTranslations("common");
@@ -46,7 +66,7 @@ export function LocationsManager() {
   const { data: rows, isPending } = useLocations();
   const { data: counts = new Map<string, number>() } = useLocationCounts();
   const tree = useMemo(() => buildLocationTree(rows ?? []), [rows]);
-  const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
+  const [collapsed, setCollapsed] = useState<Set<string>>(readCollapsed);
   const [dialog, setDialog] = useState<DialogState>(null);
   const [name, setName] = useState("");
   const [nameEn, setNameEn] = useState("");
@@ -93,25 +113,42 @@ export function LocationsManager() {
     if (dialog.type === "delete") void run(async () => unwrap(await deleteLocationAction(dialog.node.id)), tc("deleted"));
   };
 
-  const toggle = (id: string) =>
-    setCollapsed((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+  const updateCollapsed = (next: Set<string>) => {
+    setCollapsed(next);
+    writeCollapsed(next);
+  };
 
-  const renderNode = (node: LocationNode) => {
+  const toggle = (id: string) => {
+    const next = new Set(collapsed);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    updateCollapsed(next);
+  };
+
+  const parents = useMemo(() => flattenTree(tree).filter((n) => n.children.length > 0), [tree]);
+  const allCollapsed = parents.length > 0 && parents.every((n) => collapsed.has(n.id));
+
+  const renderNode = (node: LocationNode, isLast: boolean) => {
     const isCollapsed = collapsed.has(node.id);
     const label = labels.location(node);
     const count = totalCount(node, counts);
+    const hasChildren = node.children.length > 0;
     return (
-      <li key={node.id} role="treeitem" aria-expanded={node.children.length ? !isCollapsed : undefined} aria-selected={false}>
-        <div
-          className="flex min-h-14 items-center gap-1 border-b border-border pr-2"
-          style={{ paddingLeft: `${node.depth * 1.5 + 0.25}rem` }}
-        >
-          {node.children.length ? (
+      <li
+        key={node.id}
+        role="treeitem"
+        aria-expanded={hasChildren ? !isCollapsed : undefined}
+        aria-selected={false}
+        className={cn(
+          "relative",
+          // Connector lines: an elbow into this row, plus a trunk that continues down to later siblings.
+          node.depth > 0 &&
+            "pl-5 before:absolute before:top-0 before:left-0 before:h-7 before:w-5 before:rounded-bl-md before:border-b before:border-l before:border-input",
+          node.depth > 0 && !isLast && "after:absolute after:top-7 after:bottom-0 after:left-0 after:border-l after:border-input",
+        )}
+      >
+        <div className="flex min-h-14 items-center gap-1 rounded-md pr-1 hover:bg-muted/60">
+          {hasChildren ? (
             <button
               type="button"
               onClick={() => toggle(node.id)}
@@ -128,9 +165,20 @@ export function LocationsManager() {
             className="flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-md px-1 hover:underline"
             aria-label={t("viewItems", { name: label })}
           >
+            <span
+              className={cn(
+                "flex size-8 shrink-0 items-center justify-center rounded-md",
+                node.depth === 0 ? "bg-accent text-accent-foreground" : "text-primary",
+              )}
+              aria-hidden
+            >
+              {hasChildren && !isCollapsed ? <FolderOpen className="size-5" /> : <Folder className="size-5" />}
+            </span>
             <span className={cn("truncate text-[15px]", node.depth === 0 && "font-semibold")}>{label}</span>
           </Link>
-          <span className="shrink-0 text-sm text-muted-foreground tabular-nums">{t("itemCount", { count })}</span>
+          <span className="shrink-0 rounded-full bg-muted px-2.5 py-0.5 text-sm text-muted-foreground tabular-nums">
+            {t("itemCount", { count })}
+          </span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" aria-label={`${tc("more")}: ${label}`}>
@@ -170,7 +218,12 @@ export function LocationsManager() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        {node.children.length > 0 && !isCollapsed && <ul role="group">{node.children.map(renderNode)}</ul>}
+        {hasChildren && !isCollapsed && (
+          // Aligned with the centre of the parent's chevron so the trunk drops from the folder column.
+          <ul role="group" className="ml-[1.375rem]">
+            {node.children.map((c, i) => renderNode(c, i === node.children.length - 1))}
+          </ul>
+        )}
       </li>
     );
   };
@@ -208,9 +261,21 @@ export function LocationsManager() {
         ) : tree.length === 0 ? (
           <p className="p-6 text-center text-muted-foreground">{t("empty")}</p>
         ) : (
-          <ul role="tree" aria-label={t("title")} className="-mb-px">
-            {tree.map(renderNode)}
-          </ul>
+          <>
+            <div className="flex justify-end border-b border-border px-2 py-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => updateCollapsed(allCollapsed ? new Set() : new Set(parents.map((n) => n.id)))}
+              >
+                {allCollapsed ? <ChevronsUpDown /> : <ChevronsDownUp />}
+                {allCollapsed ? t("expandAll") : t("collapseAll")}
+              </Button>
+            </div>
+            <ul role="tree" aria-label={t("title")} className="flex flex-col gap-0.5 p-2">
+              {tree.map((n, i) => renderNode(n, i === tree.length - 1))}
+            </ul>
+          </>
         )}
       </div>
 

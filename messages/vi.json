@@ -284,7 +284,9 @@
     "addHere": "Thêm đồ vào đây",
     "notFound": "Không tìm thấy vị trí này.",
     "breadcrumb": "Đường dẫn vị trí",
-    "emptyHere": "Chưa có món đồ nào ở đây."
+    "emptyHere": "Chưa có món đồ nào ở đây.",
+    "expandAll": "Mở rộng tất cả",
+    "collapseAll": "Thu gọn tất cả"
   },
   "categoriesPage": {
     "title": "Danh mục & thẻ",
