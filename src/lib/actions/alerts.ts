@@ -5,6 +5,7 @@ import { addDays, todayIn } from "@/lib/dates";
 import { ALERT_KINDS } from "@/lib/types";
 import { optionalDate, uuid } from "@/lib/validation/common";
 import { requireEditor, type ServerSupabase } from "./auth-guard";
+import { endLoanAction } from "./loans";
 import { fail, mapDbError, ok, validationFail, type ActionResult } from "./result";
 
 const alertRef = z.object({ itemId: uuid, kind: z.enum(ALERT_KINDS) });
@@ -69,19 +70,7 @@ export async function markReplacedAction(input: unknown): Promise<ActionResult> 
   return ok();
 }
 
-/** Lent book came back: clears lent_to / lent_due. */
+/** A lent or borrowed item came back (or was given back): same as ending the loan. */
 export async function markReturnedAction(itemId: unknown): Promise<ActionResult> {
-  const auth = await requireEditor();
-  if ("error" in auth) return fail(auth.error);
-  const parsedId = uuid.safeParse(itemId);
-  if (!parsedId.success) return validationFail(parsedId.error);
-
-  const { data: item } = await auth.supabase.from("items").select("attributes").eq("id", parsedId.data).maybeSingle();
-  if (!item) return fail("notFound");
-  const attrs = { ...(item.attributes as Record<string, unknown>) };
-  delete attrs.lent_to;
-  delete attrs.lent_due;
-  const { error } = await auth.supabase.from("items").update({ attributes: attrs as Record<string, string> }).eq("id", parsedId.data);
-  if (error) return fail(mapDbError(error));
-  return ok();
+  return endLoanAction(itemId);
 }

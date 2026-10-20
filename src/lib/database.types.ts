@@ -731,7 +731,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "alert_kind": "expired"|"expiring_soon"|"out_of_stock"|"low_stock"|"warranty_ending"|"replace_due"|"lent_overdue"|"maintenance_due"|"maintenance_overdue","document_kind": "warranty"|"invoice"|"manual"|"other","household_role": "owner"|"editor"|"viewer","interval_unit": "day"|"week"|"month"|"year","item_condition": "new"|"good"|"worn"|"broken"|"given_away","item_event_type": "created"|"quantity_change"|"moved"|"status_change"|"maintenance"
+            "alert_kind": "expired"|"expiring_soon"|"out_of_stock"|"low_stock"|"warranty_ending"|"replace_due"|"lent_overdue"|"maintenance_due"|"maintenance_overdue"|"borrow_due","document_kind": "warranty"|"invoice"|"manual"|"other","household_role": "owner"|"editor"|"viewer","interval_unit": "day"|"week"|"month"|"year","item_condition": "new"|"good"|"worn"|"broken"|"given_away","item_event_type": "created"|"quantity_change"|"moved"|"status_change"|"maintenance"|"lent"|"borrowed"|"returned"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -847,7 +847,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "alert_kind": ["expired", "expiring_soon", "out_of_stock", "low_stock", "warranty_ending", "replace_due", "lent_overdue", "maintenance_due", "maintenance_overdue"],"document_kind": ["warranty", "invoice", "manual", "other"],"household_role": ["owner", "editor", "viewer"],"interval_unit": ["day", "week", "month", "year"],"item_condition": ["new", "good", "worn", "broken", "given_away"],"item_event_type": ["created", "quantity_change", "moved", "status_change", "maintenance"]
+            "alert_kind": ["expired", "expiring_soon", "out_of_stock", "low_stock", "warranty_ending", "replace_due", "lent_overdue", "maintenance_due", "maintenance_overdue", "borrow_due"],"document_kind": ["warranty", "invoice", "manual", "other"],"household_role": ["owner", "editor", "viewer"],"interval_unit": ["day", "week", "month", "year"],"item_condition": ["new", "good", "worn", "broken", "given_away"],"item_event_type": ["created", "quantity_change", "moved", "status_change", "maintenance", "lent", "borrowed", "returned"]
           }
         }
 } as const
