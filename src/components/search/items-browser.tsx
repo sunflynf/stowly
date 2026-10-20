@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { Plus } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { LayoutGrid, List, Plus } from "lucide-react";
 import { PageHeader } from "@/components/app-shell/page-header";
 import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/input";
@@ -14,10 +14,23 @@ import { useIsDesktop } from "@/lib/hooks/use-media-query";
 import { itemSearchToQuery, parseItemSearch, SORTS, useItemSearch, type ItemSearchParams } from "@/lib/queries/search";
 import { useDashboardStats } from "@/lib/queries/stats";
 import { FilterBar } from "./filter-bar";
-import { ItemList, ItemTable } from "./item-results";
+import { ItemCards, ItemList, ItemTable } from "./item-results";
 import { SearchBox } from "./search-box";
 import { ViewTabs } from "./view-tabs";
 import { CanEdit } from "@/components/app-shell/can-edit";
+import { cn } from "@/lib/utils";
+
+type Layout = "list" | "cards";
+const LAYOUT_KEY = "stowly.items.layout";
+
+// The signed-in app renders after hydration (ClientGate), so reading storage in the initializer is safe.
+function readLayout(): Layout {
+  try {
+    return localStorage.getItem(LAYOUT_KEY) === "cards" ? "cards" : "list";
+  } catch {
+    return "list";
+  }
+}
 
 export function ItemsBrowser() {
   const t = useTranslations("items");
@@ -30,6 +43,16 @@ export function ItemsBrowser() {
   const params = useMemo(() => parseItemSearch(new URLSearchParams(searchParams.toString())), [searchParams]);
   const { data: stats } = useDashboardStats();
   const isDesktop = useIsDesktop();
+  const [layout, setLayout] = useState<Layout>(readLayout);
+
+  const changeLayout = (next: Layout) => {
+    setLayout(next);
+    try {
+      localStorage.setItem(LAYOUT_KEY, next);
+    } catch {
+      // Not remembered when storage is unavailable.
+    }
+  };
   const search = useItemSearch(params);
   const rows = useMemo(() => search.data?.pages.flatMap((p) => p.rows) ?? [], [search.data]);
   const total = search.data?.pages[0]?.total ?? 0;
@@ -94,6 +117,28 @@ export function ItemsBrowser() {
           <h2 className="font-semibold" aria-live="polite">
             {search.isPending ? " " : heading}
           </h2>
+          <div className="flex items-center gap-2">
+          <div role="group" aria-label={t("layout.label")} className="flex rounded-md border border-input bg-card p-0.5">
+            {(["list", "cards"] as const).map((l) => {
+              const Icon = l === "list" ? List : LayoutGrid;
+              return (
+                <button
+                  key={l}
+                  type="button"
+                  aria-pressed={layout === l}
+                  aria-label={t(`layout.${l}`)}
+                  title={t(`layout.${l}`)}
+                  onClick={() => changeLayout(l)}
+                  className={cn(
+                    "flex size-9 items-center justify-center rounded-md",
+                    layout === l ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:bg-muted",
+                  )}
+                >
+                  <Icon className="size-[18px]" aria-hidden />
+                </button>
+              );
+            })}
+          </div>
           <label className="flex items-center gap-2 text-sm">
             <span className="sr-only">{t("sort.label")}</span>
             <NativeSelect
@@ -108,6 +153,7 @@ export function ItemsBrowser() {
               ))}
             </NativeSelect>
           </label>
+          </div>
         </div>
 
         {search.isPending ? (
@@ -126,14 +172,18 @@ export function ItemsBrowser() {
             {stats?.total_items === 0 && addButton}
           </div>
         ) : (
-          <>
-            <div className="hidden md:block">
-              <ItemTable rows={rows} />
-            </div>
-            <div className="md:hidden">
-              <ItemList rows={rows} />
-            </div>
-          </>
+          layout === "cards" ? (
+            <ItemCards rows={rows} />
+          ) : (
+            <>
+              <div className="hidden md:block">
+                <ItemTable rows={rows} />
+              </div>
+              <div className="md:hidden">
+                <ItemList rows={rows} />
+              </div>
+            </>
+          )
         )}
 
         {rows.length > 0 && (

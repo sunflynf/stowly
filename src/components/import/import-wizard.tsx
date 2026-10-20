@@ -161,7 +161,7 @@ export function ImportWizard() {
   const card = "rounded-md border border-border bg-card p-4 md:p-5";
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <PageHeader title={t("title")} subtitle={t("subtitle")} back="/settings" className="mb-0" />
 
       {results && counts ? (

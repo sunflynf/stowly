@@ -8,19 +8,9 @@ import { LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { signOutAction } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
 import { LogoMark } from "./logo";
+import { SIDEBAR_COOKIE } from "./sidebar-state";
 import { isActive, primaryNav, secondaryNav, settingsNav, type NavItem } from "./nav-config";
 import { useNavCounts } from "./use-nav-counts";
-
-const COLLAPSED_KEY = "stowly.sidebar.collapsed";
-
-// The signed-in app renders after hydration (ClientGate), so reading storage in the initializer is safe.
-function readCollapsed() {
-  try {
-    return localStorage.getItem(COLLAPSED_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
 
 function NavLink({ item, count, collapsed }: { item: NavItem; count?: number; collapsed: boolean }) {
   const t = useTranslations("nav");
@@ -61,19 +51,16 @@ function NavLink({ item, count, collapsed }: { item: NavItem; count?: number; co
   );
 }
 
-export function Sidebar() {
+/** `initiallyCollapsed` comes from a cookie read on the server, so the first paint (and the skeleton) match. */
+export function Sidebar({ initiallyCollapsed }: { initiallyCollapsed: boolean }) {
   const t = useTranslations();
   const counts = useNavCounts();
-  const [collapsed, setCollapsed] = useState(readCollapsed);
+  const [collapsed, setCollapsed] = useState(initiallyCollapsed);
 
   const toggle = () => {
     const next = !collapsed;
     setCollapsed(next);
-    try {
-      localStorage.setItem(COLLAPSED_KEY, next ? "1" : "0");
-    } catch {
-      // Not remembered when storage is unavailable.
-    }
+    document.cookie = `${SIDEBAR_COOKIE}=${next ? "1" : "0"}; path=/; max-age=31536000; samesite=lax`;
   };
 
   const ToggleIcon = collapsed ? PanelLeftOpen : PanelLeftClose;

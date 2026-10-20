@@ -117,7 +117,7 @@ export function SettingsPage() {
 
   if (!profile) {
     return (
-      <div className="mx-auto max-w-2xl">
+      <div>
         <PageHeader title={t("title")} />
         <Skeleton className="h-96" />
       </div>
@@ -127,7 +127,7 @@ export function SettingsPage() {
   const leads = profile.expiry_lead_days;
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <PageHeader title={t("title")} className="mb-0" />
 
       <MembersSection />
