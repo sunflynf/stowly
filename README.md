@@ -195,7 +195,7 @@ Defaults chosen where the brief was open, or where the environment forced a choi
 12. **Scanning.** The scanner uses the browser's native `BarcodeDetector` when it supports the needed formats, and otherwise the ZXing WebAssembly ponyfill (`barcode-detector`). That covers iPhone Safari, Firefox and desktop browsers. The `.wasm` file is copied to `public/vendor/` on install and served by the app itself, never from a CDN. Every scan dialog also accepts a typed code.
     - A scanned **QR label** (`…/l/<location-id>`) opens that location. Labels are recognised on any host, so labels printed from another domain still work here.
     - A scanned **product barcode** opens the item you already own with that barcode. If you don't own one, quick add opens with the code filled in.
-13. **Dark mode.** Available as a theme since decision 24.
+13. **Dark mode.** Available as a theme since decision 22.
 14. **Performance tweak.** `compute_item_alerts()` and `user_today()` deliberately omit `SET search_path` so Postgres can inline them; every name is schema-qualified. Inlining made the alerts view about 10× faster.
 15. **QR labels.**
     - Labels encode a short link, `/l/<id>`, which keeps the QR code coarse and easy to scan. It redirects to `/locations/<id>`, a page showing sub-locations and every item inside, including items in sub-locations.
@@ -249,7 +249,15 @@ Defaults chosen where the brief was open, or where the environment forced a choi
     - **Display names:** optional; otherwise the part of the email before "@". Former members still appear by name in history, marked as having left.
     - **Viewers** see a read-only banner. Add/edit controls are hidden on the main screens; every write is also rejected by the server (`forbidden`) and by RLS.
 
-22. **Maintenance schedules.**
+22. **Colour themes.**
+    - **Themes:** Stowly teal (default, unchanged), Fresh green, Calm blue, Dark, and Auto (teal, or Dark when the device is in dark mode). Teal stays the default so existing users see no change.
+    - **Single source:** `src/lib/themes.ts` holds every colour. The root layout renders it as CSS variables keyed by `<html data-theme>`, and a unit test checks every text/background pair each theme uses against WCAG AA (4.5 : 1 for text, 3 : 1 for focus rings and meters).
+    - **Highlight colours:** in the light themes the light shades (`#7FB069`, `#7FB7BE`) are used only as tints. Buttons and links use the deep colour, because the light shades are about 2.2–2.5 : 1 on white.
+    - **Status colours** keep their meaning everywhere. Red and amber are shared by the light themes and re-tuned for Dark. Orange, mustard, red or neon main colours were left out because they would read as warnings.
+    - **Per person**, like language: stored in `profiles.theme` and mirrored in the `STOWLY_THEME` cookie, so the server renders the right colours on first paint (no flash). It is applied in the browser at once when changed, and synced from the profile at sign-in on a new device. The status-bar colour (`theme-color`) follows the theme, with light/dark variants for Auto.
+    - **Not themed on purpose:** printed QR labels and reports stay black on white. The installed app's splash colour (web manifest) stays teal, because the manifest is fetched once at install.
+
+23. **Maintenance schedules.**
     - **Intervals** are a count of days, weeks, months or years. Months add calendar months, so 31 January + 1 month is 28 February.
     - **First due date:** the start date if given; otherwise one interval after the task was created (in your timezone).
     - **Next due date** counts from the day it was actually done, not from the previous due date, so a late job doesn't leave the next one already overdue. The done date can be backdated, but not set in the future.
@@ -258,7 +266,7 @@ Defaults chosen where the brief was open, or where the environment forced a choi
     - **Items:** a task linked to an item is deleted with the item; marking it done also adds a "Đã bảo trì" event to the item's history. Tasks without an item are standalone.
     - **Enum values** for the new alert kinds live in their own migration, because Postgres cannot use a new enum value in the transaction that adds it.
 
-23. **Documents and insurance report.**
+24. **Documents and insurance report.**
     - **Accepted files:** PDF, JPEG, PNG and WebP. HEIC is not accepted, because most browsers can't display it; iPhones convert photos to JPEG when uploading through the browser. A document keeps its original file name and a type (warranty card, invoice, manual, other), chosen when uploading.
     - **Deleting** a document or its item also deletes the stored file.
     - **Claim warranty** shows "Chưa ghi" for missing facts rather than hiding them, so you can see what the shop may ask for. Serial, brand and model come from the item's attributes (`serial`, `brand`, `model`, which the Electronics category has by default).
@@ -266,14 +274,6 @@ Defaults chosen where the brief was open, or where the environment forced a choi
     - **Printing:** the page uses the existing A4 `@page` rules. Filters, navigation and buttons are hidden in print, and the total is a normal last row so it isn't repeated on every page. "Save as PDF" in the print dialog produces the PDF; no PDF library is used.
     - **Backup:** `item_documents` rows (with `storage_path`) are part of the JSON export, like photos.
     - No new dependencies.
-
-24. **Colour themes.**
-    - **Themes:** Stowly teal (default, unchanged), Fresh green, Calm blue, Dark, and Auto (teal, or Dark when the device is in dark mode). Teal stays the default so existing users see no change.
-    - **Single source:** `src/lib/themes.ts` holds every colour. The root layout renders it as CSS variables keyed by `<html data-theme>`, and a unit test checks every text/background pair each theme uses against WCAG AA (4.5 : 1 for text, 3 : 1 for focus rings and meters).
-    - **Highlight colours:** in the light themes the light shades (`#7FB069`, `#7FB7BE`) are used only as tints. Buttons and links use the deep colour, because the light shades are about 2.2–2.5 : 1 on white.
-    - **Status colours** keep their meaning everywhere. Red and amber are shared by the light themes and re-tuned for Dark. Orange, mustard, red or neon main colours were left out because they would read as warnings.
-    - **Per person**, like language: stored in `profiles.theme` and mirrored in the `STOWLY_THEME` cookie, so the server renders the right colours on first paint (no flash). It is applied in the browser at once when changed, and synced from the profile at sign-in on a new device. The status-bar colour (`theme-color`) follows the theme, with light/dark variants for Auto.
-    - **Not themed on purpose:** printed QR labels and reports stay black on white. The installed app's splash colour (web manifest) stays teal, because the manifest is fetched once at install.
 
 ### Dependencies added (and why)
 
