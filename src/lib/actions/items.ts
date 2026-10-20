@@ -81,22 +81,40 @@ export async function patchItemAction(id: unknown, input: unknown): Promise<Acti
   return ok();
 }
 
+/** Moves an item to the trash (restorable for 30 days). */
 export async function deleteItemAction(id: unknown): Promise<ActionResult> {
   const auth = await requireEditor();
   if ("error" in auth) return fail(auth.error);
   const parsedId = uuid.safeParse(id);
   if (!parsedId.success) return validationFail(parsedId.error);
-
-  const [{ data: photos }, { data: documents }] = await Promise.all([
-    auth.supabase.from("item_photos").select("storage_path, thumb_path").eq("item_id", parsedId.data),
-    auth.supabase.from("item_documents").select("storage_path").eq("item_id", parsedId.data),
-  ]);
-  const { data, error } = await auth.supabase.from("items").delete().eq("id", parsedId.data).select("id");
+  const { error } = await auth.supabase.rpc("trash_item", { p_item_id: parsedId.data });
   if (error) return fail(mapDbError(error));
-  if (!data.length) return fail("notFound");
-  const paths = (photos ?? []).flatMap((p) => [p.storage_path, p.thumb_path].filter((x): x is string => Boolean(x)));
-  if (paths.length) await auth.supabase.storage.from(PHOTO_BUCKET).remove(paths);
-  if (documents?.length) await auth.supabase.storage.from(DOCUMENT_BUCKET).remove(documents.map((d) => d.storage_path));
+  return ok();
+}
+
+/** Brings an item back from the trash (also the "undo" after deleting). */
+export async function restoreItemAction(id: unknown): Promise<ActionResult> {
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
+  const parsedId = uuid.safeParse(id);
+  if (!parsedId.success) return validationFail(parsedId.error);
+  const { error } = await auth.supabase.rpc("restore_item", { p_item_id: parsedId.data });
+  if (error) return fail(mapDbError(error));
+  return ok();
+}
+
+/** Removes a trashed item for good, with its photo and document files. */
+export async function deleteForeverAction(id: unknown): Promise<ActionResult> {
+  const auth = await requireEditor();
+  if ("error" in auth) return fail(auth.error);
+  const parsedId = uuid.safeParse(id);
+  if (!parsedId.success) return validationFail(parsedId.error);
+  const { data: files, error } = await auth.supabase.rpc("delete_item_forever", { p_item_id: parsedId.data });
+  if (error) return fail(mapDbError(error));
+  for (const bucket of [PHOTO_BUCKET, DOCUMENT_BUCKET]) {
+    const paths = files.filter((f) => f.bucket === bucket).map((f) => f.path);
+    if (paths.length) await auth.supabase.storage.from(bucket).remove(paths);
+  }
   return ok();
 }
 
