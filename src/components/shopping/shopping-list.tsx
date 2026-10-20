@@ -127,7 +127,7 @@ export function ShoppingList() {
         {t("fromLowStock")}
       </Button>
 
-      <section className="rounded-[var(--radius-lg)] border border-border bg-card">
+      <section className="rounded-md border border-border bg-card">
         {isPending ? (
           <div className="flex flex-col gap-2 p-4">
             <Skeleton className="h-12" />
@@ -153,7 +153,7 @@ export function ShoppingList() {
               {t("clearDone")}
             </Button>
           </div>
-          <ul className="rounded-[var(--radius-lg)] border border-border bg-card">
+          <ul className="rounded-md border border-border bg-card">
             {done.map((row) => (
               <ShoppingRow key={row.id} row={row} onCheck={markBought} onQty={setQty} onDelete={(r) => mutate.mutate(async () => unwrap(await deleteShoppingAction(r.id)))} />
             ))}

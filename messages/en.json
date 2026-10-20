@@ -480,6 +480,20 @@
       "title": "Language",
       "hint": "Language of the app and notification emails."
     },
+    "font": {
+      "title": "Font",
+      "hint": "Applies to this device. All fonts support Vietnamese.",
+      "sample": "Tủ lạnh · Hết hạn sau 3 ngày",
+      "names": {
+        "be-vietnam-pro": "Be Vietnam Pro",
+        "inter": "Inter",
+        "noto-sans": "Noto Sans",
+        "roboto": "Roboto",
+        "lexend": "Lexend",
+        "nunito-sans": "Nunito Sans",
+        "system": "System default"
+      }
+    },
     "region": {
       "title": "Region",
       "timezone": "Time zone",

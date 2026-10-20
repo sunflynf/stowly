@@ -111,7 +111,7 @@ export function CategoryDialog({
                       aria-label={name}
                       onClick={() => setDraft({ ...draft, icon: name })}
                       className={cn(
-                        "flex size-11 items-center justify-center rounded-[var(--radius)] border",
+                        "flex size-11 items-center justify-center rounded-md border",
                         checked ? "border-primary bg-accent text-accent-foreground" : "border-input bg-card hover:bg-muted",
                       )}
                     >
@@ -125,7 +125,7 @@ export function CategoryDialog({
               <legend className="text-sm font-semibold">{t("fields")}</legend>
               <p className="-mt-1 text-sm text-muted-foreground">{t("fieldsHint")}</p>
               {draft.default_attributes.map((attr, i) => (
-                <div key={i} className="grid grid-cols-[1fr_1fr_auto] items-end gap-2 rounded-[var(--radius)] border border-border p-3 sm:grid-cols-[1fr_1fr_8rem_auto]">
+                <div key={i} className="grid grid-cols-[1fr_1fr_auto] items-end gap-2 rounded-md border border-border p-3 sm:grid-cols-[1fr_1fr_8rem_auto]">
                   <Field label={t("fieldLabelVi")} htmlFor={`attr-vi-${i}`}>
                     <Input id={`attr-vi-${i}`} value={attr.label_vi} maxLength={60} onChange={(e) => setAttr(i, { label_vi: e.target.value })} />
                   </Field>

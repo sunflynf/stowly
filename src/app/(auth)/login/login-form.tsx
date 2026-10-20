@@ -73,7 +73,7 @@ export function LoginForm({ next, email = "", initialMode = "signin" }: { next?:
   };
 
   return (
-    <div className="rounded-[var(--radius-lg)] border border-border bg-card p-5">
+    <div className="rounded-md border border-border bg-card p-5">
       <h2 className="mb-4 text-lg font-semibold">{mode === "signin" ? t("auth.title") : t("auth.createAccount")}</h2>
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
@@ -108,8 +108,8 @@ export function LoginForm({ next, email = "", initialMode = "signin" }: { next?:
             role={message.tone === "error" ? "alert" : "status"}
             className={
               message.tone === "error"
-                ? "rounded-[var(--radius)] bg-danger px-3 py-2 text-sm font-medium text-danger-foreground"
-                : "rounded-[var(--radius)] bg-accent px-3 py-2 text-sm font-medium text-accent-foreground"
+                ? "rounded-md bg-danger px-3 py-2 text-sm font-medium text-danger-foreground"
+                : "rounded-md bg-accent px-3 py-2 text-sm font-medium text-accent-foreground"
             }
           >
             {message.text}

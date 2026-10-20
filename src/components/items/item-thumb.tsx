@@ -19,7 +19,7 @@ export function ItemThumb({
   return (
     <span
       className={cn(
-        "flex shrink-0 items-center justify-center overflow-hidden rounded-[10px] bg-muted font-semibold text-neutral-foreground",
+        "flex shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted font-semibold text-neutral-foreground",
         dims,
         className,
       )}

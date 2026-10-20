@@ -10,7 +10,7 @@ function ShellSkeleton() {
       <div className="hidden w-60 shrink-0 border-r border-border bg-card md:block" />
       <div className="mx-auto w-full max-w-[1120px] flex-1 px-4 pt-4 md:px-10 md:pt-9">
         <div className="mb-6 h-9 w-56 animate-pulse rounded-md bg-muted" />
-        <div className="h-[52px] animate-pulse rounded-[var(--radius)] bg-muted" />
+        <div className="h-[52px] animate-pulse rounded-md bg-muted" />
       </div>
     </div>
   );

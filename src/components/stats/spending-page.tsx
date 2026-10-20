@@ -18,7 +18,7 @@ import { MonthChart } from "./month-chart";
 
 function Tile({ label, value, hint, className }: { label: string; value: string; hint?: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("flex min-w-0 flex-col rounded-[var(--radius-lg)] border border-border bg-card p-4 md:p-5", className)}>
+    <div className={cn("flex min-w-0 flex-col rounded-md border border-border bg-card p-4 md:p-5", className)}>
       <span className="text-sm text-muted-foreground">{label}</span>
       <span className="mt-1 truncate text-[26px] leading-tight font-bold md:text-[30px]">{value}</span>
       {hint && <span className="mt-1 text-sm text-muted-foreground">{hint}</span>}
@@ -164,7 +164,7 @@ export function SpendingPage() {
           {missing && <p className="text-sm text-muted-foreground">{missing}</p>}
 
           {data.count === 0 ? (
-            <p className="rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
+            <p className="rounded-md border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
           ) : (
             <>
               <Card>

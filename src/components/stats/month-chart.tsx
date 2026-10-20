@@ -76,7 +76,7 @@ export function MonthChart({ data, currency }: { data: MonthPoint[]; currency: s
                   <span
                     role="tooltip"
                     className={cn(
-                      "pointer-events-none absolute z-10 mb-2 min-w-32 rounded-[var(--radius)] border border-border bg-popover px-3 py-2 text-left shadow-lg",
+                      "pointer-events-none absolute z-10 mb-2 min-w-32 rounded-md border border-border bg-popover px-3 py-2 text-left shadow-lg",
                       i > data.length / 2 ? "right-0" : "left-0",
                     )}
                     style={{ bottom: `${Math.min(h, 75)}%` }}

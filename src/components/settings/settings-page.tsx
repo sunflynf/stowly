@@ -15,6 +15,7 @@ import { Field } from "@/components/ui/field";
 import { Input, NativeSelect } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
+import { FontPicker } from "./font-picker";
 import { MembersSection } from "./members-section";
 import { signOutAction } from "@/lib/actions/auth";
 import { sendTestPushAction, updateProfileAction } from "@/lib/actions/settings";
@@ -136,6 +137,16 @@ export function SettingsPage() {
         <CardContent className="flex flex-col gap-2">
           <LanguageSwitcher />
           <p className="text-sm text-muted-foreground">{t("language.hint")}</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("font.title")}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <FontPicker />
+          <p className="text-sm text-muted-foreground">{t("font.hint")}</p>
         </CardContent>
       </Card>
 

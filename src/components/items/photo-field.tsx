@@ -34,7 +34,7 @@ function PickButtons({ onFiles, disabled, compact }: { onFiles: (files: File[]) 
         disabled={disabled}
         onClick={() => camera.current?.click()}
         className={cn(
-          "flex flex-col items-center justify-center gap-2 rounded-[var(--radius-lg)] border border-dashed border-primary bg-accent font-semibold text-accent-foreground disabled:opacity-50",
+          "flex flex-col items-center justify-center gap-2 rounded-md border border-dashed border-primary bg-accent font-semibold text-accent-foreground disabled:opacity-50",
           compact ? "min-h-14 flex-row" : "min-h-28",
         )}
       >
@@ -46,7 +46,7 @@ function PickButtons({ onFiles, disabled, compact }: { onFiles: (files: File[]) 
         disabled={disabled}
         onClick={() => gallery.current?.click()}
         className={cn(
-          "flex flex-col items-center justify-center gap-2 rounded-[var(--radius-lg)] border border-input bg-card font-medium disabled:opacity-50",
+          "flex flex-col items-center justify-center gap-2 rounded-md border border-input bg-card font-medium disabled:opacity-50",
           compact ? "min-h-14 flex-row" : "min-h-28",
         )}
       >
@@ -75,7 +75,7 @@ export function PendingPhotoField({ files, onChange }: { files: File[]; onChange
           {previews.map((src, i) => (
             <li key={src} className="relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt={t("photoN", { n: i + 1, name: "" })} className="size-20 rounded-[10px] object-cover" />
+              <img src={src} alt={t("photoN", { n: i + 1, name: "" })} className="size-20 rounded-md object-cover" />
               <button
                 type="button"
                 onClick={() => onChange(files.filter((_, j) => j !== i))}
@@ -148,7 +148,7 @@ export function ItemPhotoManager({ itemId, name, photos }: { itemId: string; nam
             <img
               src={urls[p.thumb_path ?? p.storage_path]}
               alt={t("photoN", { n: i + 1, name })}
-              className="size-24 rounded-[10px] bg-muted object-cover"
+              className="size-24 rounded-md bg-muted object-cover"
             />
             <div className="flex">
               <button
@@ -172,7 +172,7 @@ export function ItemPhotoManager({ itemId, name, photos }: { itemId: string; nam
           </li>
         ))}
         {uploading > 0 && (
-          <li className="flex size-24 items-center justify-center rounded-[10px] bg-muted" role="status">
+          <li className="flex size-24 items-center justify-center rounded-md bg-muted" role="status">
             <Loader2 className="size-5 animate-spin" aria-hidden />
             <span className="sr-only">{t("uploading")}</span>
           </li>

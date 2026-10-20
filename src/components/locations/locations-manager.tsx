@@ -198,7 +198,7 @@ export function LocationsManager() {
     <>
       <PageHeader title={t("title")} subtitle={t("subtitle")} actions={addRoom} />
       <div className="mb-3 flex flex-wrap gap-2 md:hidden">{addRoom}</div>
-      <div className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
+      <div className="overflow-hidden rounded-md border border-border bg-card">
         {isPending ? (
           <div className="flex flex-col gap-2 p-4">
             <Skeleton className="h-10" />

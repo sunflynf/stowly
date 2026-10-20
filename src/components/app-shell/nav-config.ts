@@ -63,8 +63,9 @@ export const secondaryNav: NavItem[] = [
   { href: "/shopping", label: "shopping", icon: ShoppingCart },
   { href: "/stats", label: "stats", icon: ChartColumn },
   { href: "/suggestions", label: "suggestions", icon: Sparkles },
-  { href: "/settings", label: "settings", icon: Settings },
 ];
+
+export const settingsNav: NavItem = { href: "/settings", label: "settings", icon: Settings };
 
 export function isActive(item: NavItem, pathname: string, search: URLSearchParams) {
   if (item.match) return item.match(pathname, search);

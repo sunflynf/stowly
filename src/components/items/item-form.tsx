@@ -124,7 +124,7 @@ export function ItemForm({ mode, itemId, initial, photos = [], initialBarcode }:
     group: `${uid}-group`,
   };
 
-  const card = "flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-4 md:p-5";
+  const card = "flex flex-col gap-4 rounded-md border border-border bg-card p-4 md:p-5";
 
   return (
     <form
@@ -182,7 +182,7 @@ export function ItemForm({ mode, itemId, initial, photos = [], initialBarcode }:
               type="button"
               aria-label={t("decrease")}
               onClick={() => setValue("quantity", stepNumber(form.getValues("quantity"), -1), { shouldDirty: true })}
-              className="flex size-11 items-center justify-center rounded-[var(--radius)] border border-input bg-card hover:bg-muted"
+              className="flex size-11 items-center justify-center rounded-md border border-input bg-card hover:bg-muted"
             >
               <Minus className="size-4" aria-hidden />
             </button>
@@ -196,7 +196,7 @@ export function ItemForm({ mode, itemId, initial, photos = [], initialBarcode }:
               type="button"
               aria-label={t("increase")}
               onClick={() => setValue("quantity", stepNumber(form.getValues("quantity"), 1), { shouldDirty: true })}
-              className="flex size-11 items-center justify-center rounded-[var(--radius)] bg-primary text-primary-foreground hover:bg-primary-hover"
+              className="flex size-11 items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary-hover"
             >
               <Plus className="size-4" aria-hidden />
             </button>
@@ -236,7 +236,7 @@ export function ItemForm({ mode, itemId, initial, photos = [], initialBarcode }:
           type="button"
           aria-expanded={showMore}
           onClick={() => setShowMore((s) => !s)}
-          className="flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius)] text-[15px] font-semibold text-primary hover:bg-accent"
+          className="flex min-h-11 items-center justify-center gap-2 rounded-md text-[15px] font-semibold text-primary hover:bg-accent"
         >
           {showMore ? t("lessDetails") : t("moreDetails")}
           <ChevronDown className={cn("size-4 transition-transform", showMore && "rotate-180")} aria-hidden />

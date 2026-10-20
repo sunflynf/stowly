@@ -35,7 +35,7 @@ export function GroupsPage() {
           <Skeleton className="h-28" />
         </div>
       ) : !groups?.length ? (
-        <p className="rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
+        <p className="rounded-md border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">
           {groups.map((g) => {
@@ -44,11 +44,11 @@ export function GroupsPage() {
               <li key={g.id}>
                 <Link
                   href={`/groups/${g.id}`}
-                  className="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4 hover:border-input"
+                  className="flex flex-col gap-3 rounded-md border border-border bg-card p-4 hover:border-input"
                 >
                   <span className="flex items-start justify-between gap-2">
                     <span className="flex min-w-0 items-center gap-3">
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-accent text-accent-foreground">
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
                         <Boxes className="size-5" aria-hidden />
                       </span>
                       <span className="min-w-0">

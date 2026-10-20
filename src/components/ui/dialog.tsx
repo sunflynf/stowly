@@ -24,8 +24,8 @@ function DialogContent({
         className={cn(
           "fixed z-50 flex max-h-[92dvh] flex-col overflow-y-auto border border-border bg-card p-5 shadow-xl focus:outline-none",
           side === "center" &&
-            "top-1/2 left-1/2 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-[var(--radius-lg)]",
-          side === "bottom" && "inset-x-0 bottom-0 rounded-t-[var(--radius-lg)] pb-[max(1.25rem,env(safe-area-inset-bottom))]",
+            "top-1/2 left-1/2 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-md",
+          side === "bottom" && "inset-x-0 bottom-0 rounded-t-md pb-[max(1.25rem,env(safe-area-inset-bottom))]",
           side === "right" && "inset-y-0 right-0 h-full w-full max-w-md",
           className,
         )}

@@ -480,6 +480,20 @@
       "title": "Ngôn ngữ",
       "hint": "Ngôn ngữ giao diện và email thông báo."
     },
+    "font": {
+      "title": "Phông chữ",
+      "hint": "Áp dụng cho thiết bị này. Tất cả phông đều hỗ trợ tiếng Việt.",
+      "sample": "Tủ lạnh · Hết hạn sau 3 ngày",
+      "names": {
+        "be-vietnam-pro": "Be Vietnam Pro",
+        "inter": "Inter",
+        "noto-sans": "Noto Sans",
+        "roboto": "Roboto",
+        "lexend": "Lexend",
+        "nunito-sans": "Nunito Sans",
+        "system": "Mặc định hệ thống"
+      }
+    },
     "region": {
       "title": "Khu vực",
       "timezone": "Múi giờ",

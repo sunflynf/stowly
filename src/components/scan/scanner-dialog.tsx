@@ -113,7 +113,7 @@ export function ScannerDialog({ open, onOpenChange, onResult, title, hint, forma
           <DialogDescription>{message}</DialogDescription>
         </DialogHeader>
         {(status === "starting" || status === "scanning") && (
-          <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius)] bg-foreground">
+          <div className="relative aspect-square w-full overflow-hidden rounded-md bg-foreground">
             <video ref={video} muted playsInline className="size-full object-cover" aria-label={title ?? t("title")} />
             {status === "starting" ? (
               <span className="absolute inset-0 flex items-center justify-center gap-2 text-sm text-white" role="status">
@@ -121,7 +121,7 @@ export function ScannerDialog({ open, onOpenChange, onResult, title, hint, forma
                 {t("starting")}
               </span>
             ) : (
-              <span className="pointer-events-none absolute inset-[18%] rounded-xl border-2 border-white/80" aria-hidden />
+              <span className="pointer-events-none absolute inset-[18%] rounded-md border-2 border-white/80" aria-hidden />
             )}
           </div>
         )}

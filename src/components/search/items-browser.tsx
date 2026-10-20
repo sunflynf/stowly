@@ -82,7 +82,7 @@ export function ItemsBrowser() {
         <FilterBar params={params} onChange={update} />
       </div>
 
-      <section className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card" aria-busy={search.isFetching}>
+      <section className="overflow-hidden rounded-md border border-border bg-card" aria-busy={search.isFetching}>
         <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-5">
           <h2 className="font-semibold" aria-live="polite">
             {search.isPending ? " " : heading}

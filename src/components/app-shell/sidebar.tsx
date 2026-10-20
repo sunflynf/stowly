@@ -6,9 +6,8 @@ import { useFormatter, useTranslations } from "next-intl";
 import { LogOut } from "lucide-react";
 import { signOutAction } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
-import { LanguageSwitcher } from "./language-switcher";
 import { LogoMark } from "./logo";
-import { isActive, primaryNav, secondaryNav, type NavItem } from "./nav-config";
+import { isActive, primaryNav, secondaryNav, settingsNav, type NavItem } from "./nav-config";
 import { useNavCounts } from "./use-nav-counts";
 
 function NavLink({ item, count }: { item: NavItem; count?: number }) {
@@ -23,7 +22,7 @@ function NavLink({ item, count }: { item: NavItem; count?: number }) {
       href={item.href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex min-h-11 items-center gap-3 rounded-[var(--radius)] px-3 py-2 text-[15px] font-medium transition-colors",
+        "flex min-h-11 items-center gap-3 rounded-md px-3 py-2 text-[15px] font-medium transition-colors",
         active ? "bg-accent font-semibold text-accent-foreground" : "text-foreground hover:bg-muted",
       )}
     >
@@ -58,11 +57,11 @@ export function Sidebar() {
         ))}
       </nav>
       <div className="flex flex-col gap-2 border-t border-border px-3 py-4">
-        <LanguageSwitcher />
+        <NavLink item={settingsNav} />
         <form action={signOutAction}>
           <button
             type="submit"
-            className="flex min-h-11 w-full items-center gap-3 rounded-[var(--radius)] px-3 text-[15px] font-medium text-muted-foreground hover:bg-muted"
+            className="flex min-h-11 w-full items-center gap-3 rounded-md px-3 text-[15px] font-medium text-muted-foreground hover:bg-muted"
           >
             <LogOut className="size-[18px]" aria-hidden />
             {t("nav.signOut")}
