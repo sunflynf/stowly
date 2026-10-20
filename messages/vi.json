@@ -525,7 +525,25 @@
       "title": "Tài khoản",
       "signedInAs": "Đang đăng nhập: {email}"
     },
-    "saved": "Đã lưu cài đặt"
+    "saved": "Đã lưu cài đặt",
+    "appearance": {
+      "title": "Giao diện",
+      "hint": "Màu sắc chỉ áp dụng cho bạn; mỗi thành viên chọn riêng. Màu báo hiệu (đỏ, cam) giữ nguyên ý nghĩa ở mọi giao diện.",
+      "themes": {
+        "auto": "Tự động",
+        "teal": "Stowly xanh ngọc",
+        "green": "Xanh lá tươi",
+        "blue": "Xanh biển dịu",
+        "dark": "Tối"
+      },
+      "hints": {
+        "auto": "Theo chế độ sáng/tối của thiết bị",
+        "teal": "Mặc định",
+        "green": "Tự nhiên, xanh rêu",
+        "blue": "Nhẹ nhàng, ven biển",
+        "dark": "Dịu mắt vào buổi tối"
+      }
+    }
   },
   "notifications": {
     "subject": "{count, plural, other {Stowly: # mục cần xử lý}}",
