@@ -48,7 +48,7 @@ function StatCard({
   return (
     <Link
       href={href}
-      className={cn("flex min-w-0 flex-col rounded-[var(--radius-lg)] border border-border bg-card p-3 hover:border-input md:p-5", className)}
+      className={cn("flex min-w-0 flex-col rounded-md border border-border bg-card p-3 hover:border-input md:p-5", className)}
     >
       <span className="order-2 text-sm leading-tight text-muted-foreground md:order-1">
         <span className="md:hidden">{shortLabel ?? label}</span>
@@ -366,9 +366,9 @@ export function Dashboard() {
       {suggestionCount > 0 && (
         <Link
           href="/suggestions"
-          className="mt-5 flex min-h-14 items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-card px-5 py-3 hover:border-input"
+          className="mt-5 flex min-h-14 items-center gap-3 rounded-md border border-border bg-card px-5 py-3 hover:border-input"
         >
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-accent text-accent-foreground">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
             <Sparkles className="size-5" aria-hidden />
           </span>
           <span className="min-w-0 flex-1">

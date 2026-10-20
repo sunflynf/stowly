@@ -73,7 +73,7 @@ export function SearchBox({ value, onChange, delay = 200, placeholder, autoFocus
         enterKeyHint="search"
         autoComplete="off"
         maxLength={200}
-        className="h-[52px] w-full rounded-[var(--radius)] border border-input bg-card pr-14 pl-12 text-base placeholder:text-muted-foreground/80 focus-visible:border-primary focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-primary/25 [&::-webkit-search-cancel-button]:hidden"
+        className="h-[52px] w-full rounded-md border border-input bg-card pr-14 pl-12 text-base placeholder:text-muted-foreground/80 focus-visible:border-primary focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-primary/25 [&::-webkit-search-cancel-button]:hidden"
       />
       {draft ? (
         <button

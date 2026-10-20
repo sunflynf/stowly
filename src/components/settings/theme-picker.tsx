@@ -66,7 +66,7 @@ export function ThemePicker({ value }: { value: ThemePreference }) {
             aria-checked={checked}
             onClick={() => choose(theme)}
             className={cn(
-              "flex flex-col overflow-hidden rounded-[var(--radius)] border-2 bg-card text-left",
+              "flex flex-col overflow-hidden rounded-md border-2 bg-card text-left",
               checked ? "border-primary" : "border-border hover:border-input",
             )}
           >

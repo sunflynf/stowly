@@ -90,3 +90,27 @@ export function ItemList({ rows }: { rows: SearchRow[] }) {
     </ul>
   );
 }
+
+/** Card grid: photo on top, details below. Used for a location's contents. */
+export function ItemCards({ rows }: { rows: SearchRow[] }) {
+  const h = useRowHelpers(rows);
+  return (
+    <ul className="grid grid-cols-1 gap-3 p-4 min-[30rem]:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 md:p-5">
+      {rows.map((r) => (
+        <li key={r.id} className="flex flex-col overflow-hidden rounded-md border border-border bg-card transition-colors hover:border-input">
+          <Link href={`/items/${r.id}`} className="group flex flex-1 flex-col">
+            <ItemThumb name={r.name} url={h.thumb(r)} size="fill" className="rounded-none" />
+            <span className="flex flex-1 flex-col gap-1 px-4 pt-3">
+              <span className="line-clamp-2 font-semibold break-words group-hover:underline">{r.name}</span>
+              <span className="truncate text-sm text-muted-foreground">{h.category(r)}</span>
+              <StatusBadge status={h.status(r)} short className="mt-1 self-start" />
+            </span>
+          </Link>
+          <div className="flex items-center justify-between gap-2 px-4 py-3">
+            <QuantityStepper id={r.id} name={r.name} quantity={r.quantity} low={h.low(r)} />
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}

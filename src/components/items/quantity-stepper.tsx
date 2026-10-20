@@ -47,7 +47,7 @@ export function QuantityStepper({ id, name, quantity, low, size = "sm", classNam
           onClick={() => change(-1)}
           disabled={quantity <= 0}
           aria-label={t("decrease")}
-          className="flex size-12 items-center justify-center rounded-[var(--radius)] border border-input bg-card text-foreground hover:bg-muted disabled:opacity-40"
+          className="flex size-12 items-center justify-center rounded-md border border-input bg-card text-foreground hover:bg-muted disabled:opacity-40"
         >
           <Minus className="size-5" aria-hidden />
         </button>
@@ -61,7 +61,7 @@ export function QuantityStepper({ id, name, quantity, low, size = "sm", classNam
           type="button"
           onClick={() => change(1)}
           aria-label={t("increase")}
-          className="flex size-12 items-center justify-center rounded-[var(--radius)] bg-primary text-primary-foreground hover:bg-primary-hover"
+          className="flex size-12 items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary-hover"
         >
           <Plus className="size-5" aria-hidden />
         </button>
@@ -73,14 +73,14 @@ export function QuantityStepper({ id, name, quantity, low, size = "sm", classNam
     <div
       role="group"
       aria-label={t("quantityOf", { name })}
-      className={cn("inline-flex h-11 items-center rounded-[var(--radius)] border border-input bg-card", className)}
+      className={cn("inline-flex h-11 items-center rounded-md border border-input bg-card", className)}
     >
       <button
         type="button"
         onClick={() => change(-1)}
         disabled={quantity <= 0}
         aria-label={t("decrease")}
-        className="flex h-full w-11 items-center justify-center rounded-l-[var(--radius)] hover:bg-muted disabled:opacity-40"
+        className="flex h-full w-11 items-center justify-center rounded-l-md hover:bg-muted disabled:opacity-40"
       >
         <Minus className="size-4" aria-hidden />
       </button>
@@ -94,7 +94,7 @@ export function QuantityStepper({ id, name, quantity, low, size = "sm", classNam
         type="button"
         onClick={() => change(1)}
         aria-label={t("increase")}
-        className="flex h-full w-11 items-center justify-center rounded-r-[var(--radius)] hover:bg-muted"
+        className="flex h-full w-11 items-center justify-center rounded-r-md hover:bg-muted"
       >
         <Plus className="size-4" aria-hidden />
       </button>

@@ -3,9 +3,7 @@ import {
   Boxes,
   ChartColumn,
   Sparkles,
-  Clock,
   LayoutGrid,
-  Layers,
   MapPin,
   Package,
   Settings,
@@ -16,7 +14,7 @@ import {
 import type { Messages } from "@/lib/messages-type";
 
 export type NavKey = keyof Messages["nav"];
-export type NavCount = "items" | "expiring" | "lowStock" | "attention";
+export type NavCount = "items" | "attention";
 
 export interface NavItem {
   href: string;
@@ -37,23 +35,8 @@ export const primaryNav: NavItem[] = [
     label: "items",
     icon: Package,
     count: "items",
-    match: (p, s) => p.startsWith("/items") && !s.get("states"),
   },
   { href: "/locations", label: "locations", icon: MapPin },
-  {
-    href: EXPIRING_HREF,
-    label: "expiring",
-    icon: Clock,
-    count: "expiring",
-    match: (p, s) => p === "/items" && (s.get("states") ?? "").includes("expir"),
-  },
-  {
-    href: STOCK_HREF,
-    label: "stock",
-    icon: Layers,
-    count: "lowStock",
-    match: (p, s) => p === "/items" && (s.get("states") ?? "").includes("stock"),
-  },
   { href: "/categories", label: "categories", icon: Tag },
 ];
 
@@ -63,8 +46,9 @@ export const secondaryNav: NavItem[] = [
   { href: "/shopping", label: "shopping", icon: ShoppingCart },
   { href: "/stats", label: "stats", icon: ChartColumn },
   { href: "/suggestions", label: "suggestions", icon: Sparkles },
-  { href: "/settings", label: "settings", icon: Settings },
 ];
+
+export const settingsNav: NavItem = { href: "/settings", label: "settings", icon: Settings };
 
 export function isActive(item: NavItem, pathname: string, search: URLSearchParams) {
   if (item.match) return item.match(pathname, search);

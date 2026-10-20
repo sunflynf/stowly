@@ -68,7 +68,7 @@ export function LocationPicker({ value, onChange, id, className, placeholder }: 
           id={id}
           type="button"
           className={cn(
-            "flex min-h-12 w-full items-center gap-3 rounded-[var(--radius)] border border-input bg-card px-3.5 text-left text-[15px]",
+            "flex min-h-12 w-full items-center gap-3 rounded-md border border-input bg-card px-3.5 text-left text-[15px]",
             className,
           )}
         >
@@ -79,7 +79,7 @@ export function LocationPicker({ value, onChange, id, className, placeholder }: 
           <ChevronRight className="size-5 shrink-0 text-muted-foreground" aria-hidden />
         </button>
       </DialogTrigger>
-      <DialogContent side="bottom" className="md:inset-x-auto md:top-1/2 md:bottom-auto md:left-1/2 md:w-full md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[var(--radius-lg)]">
+      <DialogContent side="bottom" className="md:inset-x-auto md:top-1/2 md:bottom-auto md:left-1/2 md:w-full md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-md">
         <DialogTitle className="mb-3">{t("pickerTitle")}</DialogTitle>
         <div className="relative mb-2">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />

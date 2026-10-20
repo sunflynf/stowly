@@ -16,6 +16,7 @@ import { useDashboardStats } from "@/lib/queries/stats";
 import { FilterBar } from "./filter-bar";
 import { ItemList, ItemTable } from "./item-results";
 import { SearchBox } from "./search-box";
+import { ViewTabs } from "./view-tabs";
 import { CanEdit } from "@/components/app-shell/can-edit";
 
 export function ItemsBrowser() {
@@ -77,12 +78,18 @@ export function ItemsBrowser() {
     <>
       <PageHeader title={t("title")} subtitle={stats ? t("subtitle", { count: stats.total_items }) : " "} actions={addButton} />
 
+      <ViewTabs
+        params={params}
+        onChange={update}
+        counts={stats ? { all: stats.total_items, expiring: stats.expiring_30d + stats.expired, stock: stats.low_stock } : undefined}
+      />
+
       <SearchBox value={params.q} onChange={(q) => update({ q })} placeholder={isDesktop ? t("searchPlaceholder") : t("searchShort")} slashShortcut className="mb-3" />
       <div className="mb-4">
         <FilterBar params={params} onChange={update} />
       </div>
 
-      <section className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card" aria-busy={search.isFetching}>
+      <section className="overflow-hidden rounded-md border border-border bg-card" aria-busy={search.isFetching}>
         <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-5">
           <h2 className="font-semibold" aria-live="polite">
             {search.isPending ? " " : heading}

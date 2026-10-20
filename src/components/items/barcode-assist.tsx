@@ -105,8 +105,8 @@ export function useBarcodeAssist(form: UseFormReturn<ItemFormValues>, categories
       role="status"
       className={
         notice.type === "existing"
-          ? "rounded-[var(--radius)] bg-warning px-4 py-3 text-[15px] text-warning-foreground"
-          : "rounded-[var(--radius)] bg-accent px-4 py-3 text-[15px] text-accent-foreground"
+          ? "rounded-md bg-warning px-4 py-3 text-[15px] text-warning-foreground"
+          : "rounded-md bg-accent px-4 py-3 text-[15px] text-accent-foreground"
       }
     >
       {notice.type === "loading" && (

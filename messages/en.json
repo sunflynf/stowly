@@ -41,7 +41,6 @@
     "itemsShort": "Items",
     "locations": "Locations",
     "expiring": "Expiring",
-    "stock": "Stock",
     "alerts": "Alerts",
     "shopping": "Shopping list",
     "categories": "Categories & tags",
@@ -53,7 +52,9 @@
     "account": "Account",
     "groups": "Item groups",
     "stats": "Spending",
-    "suggestions": "Clean-up ideas"
+    "suggestions": "Clean-up ideas",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar"
   },
   "auth": {
     "title": "Sign in",
@@ -285,7 +286,9 @@
     "addHere": "Add item here",
     "notFound": "This location could not be found.",
     "breadcrumb": "Location path",
-    "emptyHere": "Nothing stored here yet."
+    "emptyHere": "Nothing stored here yet.",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all"
   },
   "categoriesPage": {
     "title": "Categories & tags",
@@ -345,7 +348,6 @@
       "tags": "Tags",
       "price": "Price",
       "all": "All",
-      "lowOnly": "Low stock only",
       "archived": "Archived",
       "priceMin": "From",
       "priceMax": "To",
@@ -371,6 +373,12 @@
       "expiry": "Expiry date",
       "low_stock": "Low stock first",
       "current": "Sort: {value}"
+    },
+    "views": {
+      "label": "View",
+      "all": "All",
+      "expiring": "Expiring",
+      "stock": "Low stock"
     }
   },
   "dashboard": {
@@ -479,6 +487,20 @@
     "language": {
       "title": "Language",
       "hint": "Language of the app and notification emails."
+    },
+    "font": {
+      "title": "Font",
+      "hint": "Applies to this device. All fonts support Vietnamese.",
+      "sample": "Tủ lạnh · Hết hạn sau 3 ngày",
+      "names": {
+        "be-vietnam-pro": "Be Vietnam Pro",
+        "inter": "Inter",
+        "noto-sans": "Noto Sans",
+        "roboto": "Roboto",
+        "lexend": "Lexend",
+        "nunito-sans": "Nunito Sans",
+        "system": "System default"
+      }
     },
     "region": {
       "title": "Region",

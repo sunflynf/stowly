@@ -9,7 +9,7 @@ export function PlaceholderPage({ titleKey }: { titleKey: NavKey }) {
   return (
     <>
       <PageHeader title={t(`nav.${titleKey}`)} />
-      <p className="rounded-[var(--radius-lg)] border border-dashed border-input bg-card p-8 text-center text-muted-foreground">
+      <p className="rounded-md border border-dashed border-input bg-card p-8 text-center text-muted-foreground">
         {t("placeholder.body")}
       </p>
     </>

@@ -41,7 +41,6 @@
     "itemsShort": "Đồ dùng",
     "locations": "Vị trí",
     "expiring": "Sắp hết hạn",
-    "stock": "Tồn kho",
     "alerts": "Cảnh báo",
     "shopping": "Danh sách mua",
     "categories": "Danh mục & thẻ",
@@ -53,7 +52,9 @@
     "account": "Tài khoản",
     "groups": "Nhóm đồ",
     "stats": "Chi tiêu",
-    "suggestions": "Gợi ý dọn dẹp"
+    "suggestions": "Gợi ý dọn dẹp",
+    "collapseSidebar": "Thu gọn thanh bên",
+    "expandSidebar": "Mở rộng thanh bên"
   },
   "auth": {
     "title": "Đăng nhập",
@@ -285,7 +286,9 @@
     "addHere": "Thêm đồ vào đây",
     "notFound": "Không tìm thấy vị trí này.",
     "breadcrumb": "Đường dẫn vị trí",
-    "emptyHere": "Chưa có món đồ nào ở đây."
+    "emptyHere": "Chưa có món đồ nào ở đây.",
+    "expandAll": "Mở rộng tất cả",
+    "collapseAll": "Thu gọn tất cả"
   },
   "categoriesPage": {
     "title": "Danh mục & thẻ",
@@ -345,7 +348,6 @@
       "tags": "Thẻ",
       "price": "Giá",
       "all": "Tất cả",
-      "lowOnly": "Chỉ tồn kho thấp",
       "archived": "Đã lưu trữ",
       "priceMin": "Từ",
       "priceMax": "Đến",
@@ -371,6 +373,12 @@
       "expiry": "Hạn dùng gần nhất",
       "low_stock": "Tồn kho thấp trước",
       "current": "Sắp xếp: {value}"
+    },
+    "views": {
+      "label": "Chế độ xem",
+      "all": "Tất cả",
+      "expiring": "Sắp hết hạn",
+      "stock": "Sắp hết hàng"
     }
   },
   "dashboard": {
@@ -479,6 +487,20 @@
     "language": {
       "title": "Ngôn ngữ",
       "hint": "Ngôn ngữ giao diện và email thông báo."
+    },
+    "font": {
+      "title": "Phông chữ",
+      "hint": "Áp dụng cho thiết bị này. Tất cả phông đều hỗ trợ tiếng Việt.",
+      "sample": "Tủ lạnh · Hết hạn sau 3 ngày",
+      "names": {
+        "be-vietnam-pro": "Be Vietnam Pro",
+        "inter": "Inter",
+        "noto-sans": "Noto Sans",
+        "roboto": "Roboto",
+        "lexend": "Lexend",
+        "nunito-sans": "Nunito Sans",
+        "system": "Mặc định hệ thống"
+      }
     },
     "region": {
       "title": "Khu vực",

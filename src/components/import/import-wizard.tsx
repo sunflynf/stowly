@@ -158,7 +158,7 @@ export function ImportWizard() {
     ? (["created", "updated", "skipped", "error"] as const).map((s) => results.rows.filter((r) => r.result.status === s).length)
     : null;
 
-  const card = "rounded-[var(--radius-lg)] border border-border bg-card p-4 md:p-5";
+  const card = "rounded-md border border-border bg-card p-4 md:p-5";
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-5">
@@ -234,7 +234,7 @@ export function ImportWizard() {
             {t("template")}
           </Button>
           {error && (
-            <p role="alert" className="rounded-[var(--radius)] bg-danger px-3 py-2 text-sm font-medium text-danger-foreground">
+            <p role="alert" className="rounded-md bg-danger px-3 py-2 text-sm font-medium text-danger-foreground">
               {error}
             </p>
           )}
@@ -293,7 +293,7 @@ export function ImportWizard() {
               })}
             </ul>
             {!hasName && (
-              <p role="alert" className="mt-3 rounded-[var(--radius)] bg-warning px-3 py-2 text-sm font-medium text-warning-foreground">
+              <p role="alert" className="mt-3 rounded-md bg-warning px-3 py-2 text-sm font-medium text-warning-foreground">
                 {t("needName")}
               </p>
             )}
@@ -308,7 +308,7 @@ export function ImportWizard() {
                   <label
                     key={m}
                     className={cn(
-                      "flex cursor-pointer flex-col gap-1 rounded-[var(--radius)] border p-3",
+                      "flex cursor-pointer flex-col gap-1 rounded-md border p-3",
                       mode === m ? "border-primary bg-accent" : "border-input hover:bg-muted",
                     )}
                   >

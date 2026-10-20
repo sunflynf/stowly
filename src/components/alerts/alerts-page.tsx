@@ -128,7 +128,7 @@ export function AlertsPage() {
             <Skeleton className="h-28" />
           </div>
         ) : visible.length === 0 && visibleGroups.length === 0 ? (
-          <p className="rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
+          <p className="rounded-md border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
         ) : (
           <ul className="flex flex-col gap-3">
             {visibleGroups.map((g) => (
@@ -161,7 +161,7 @@ export function AlertsPage() {
               const status = h.status(a);
               const expiryKind = a.kind === "expired" || a.kind === "expiring_soon";
               return (
-                <li key={`${a.item_id}-${a.kind}`} className="rounded-[var(--radius-lg)] border border-border bg-card p-4">
+                <li key={`${a.item_id}-${a.kind}`} className="rounded-md border border-border bg-card p-4">
                   <Link href={`/items/${a.item_id}`} className="flex items-center gap-3">
                     <ItemThumb name={a.name} url={a.thumb_path ? urls[a.thumb_path] : undefined} />
                     <span className="min-w-0 flex-1">
