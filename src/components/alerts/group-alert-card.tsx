@@ -23,9 +23,9 @@ export function GroupAlertCard({
   const ts = useTranslations("status");
   const f = useFormats();
   return (
-    <li className="rounded-[var(--radius-lg)] border border-border bg-card p-4">
+    <li className="rounded-md border border-border bg-card p-4">
       <Link href={`/groups/${alert.id}`} className="flex items-center gap-3">
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-[10px] bg-accent text-accent-foreground">
+        <span className="flex size-12 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
           <Boxes className="size-5" aria-hidden />
         </span>
         <span className="min-w-0 flex-1">

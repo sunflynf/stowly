@@ -32,11 +32,11 @@ export function DocumentViewer({ doc, onClose }: { doc: (ItemDocument & { url: s
         </DialogHeader>
         {doc &&
           (doc.mime_type === "application/pdf" ? (
-            <iframe src={doc.url} title={doc.title} className="h-[70dvh] w-full rounded-[var(--radius)] border border-border bg-muted" />
+            <iframe src={doc.url} title={doc.title} className="h-[70dvh] w-full rounded-md border border-border bg-muted" />
           ) : (
             // Signed, short-lived URL from private storage; next/image would try to optimise and cache it.
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={doc.url} alt={doc.title} className="max-h-[70dvh] w-full rounded-[var(--radius)] bg-muted object-contain" />
+            <img src={doc.url} alt={doc.title} className="max-h-[70dvh] w-full rounded-md bg-muted object-contain" />
           ))}
         <DialogFooter>
           <Button variant="secondary" onClick={onClose}>
@@ -77,7 +77,7 @@ export function DocumentList({ docs, onOpen, onDelete }: { docs: ItemDocument[];
     <ul className="flex flex-col">
       {docs.map((d) => (
         <li key={d.id} className="flex items-center gap-3 border-b border-border py-2.5 last:border-0">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-muted text-muted-foreground">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
             {d.mime_type === "application/pdf" ? <FileText className="size-5" aria-hidden /> : <ImageIcon className="size-5" aria-hidden />}
           </span>
           <button type="button" className="min-w-0 flex-1 text-left" onClick={() => onOpen(d)}>
@@ -140,7 +140,7 @@ export function ItemDocuments({ itemId }: { itemId: string }) {
   };
 
   return (
-    <section className="rounded-[var(--radius-lg)] border border-border bg-card p-4 md:p-5" aria-labelledby="item-documents">
+    <section className="rounded-md border border-border bg-card p-4 md:p-5" aria-labelledby="item-documents">
       <h2 id="item-documents" className="mb-2 font-semibold">
         {t("title")}
       </h2>

@@ -106,7 +106,7 @@ function InviteForm() {
       </form>
       <p className="text-sm text-muted-foreground">{t(`roleHints.${role}`)}</p>
       {result && (
-        <div role="status" className="flex flex-col gap-2 rounded-[var(--radius)] bg-accent px-3 py-3 text-sm text-accent-foreground">
+        <div role="status" className="flex flex-col gap-2 rounded-md bg-accent px-3 py-3 text-sm text-accent-foreground">
           <p className="font-medium">{result.emailed ? t("inviteSent", { email: result.email }) : t("inviteLinkOnly", { email: result.email })}</p>
           <div className="flex items-center gap-2">
             <Input readOnly value={result.link} aria-label={t("inviteLink")} className="font-mono text-xs" onFocus={(e) => e.target.select()} />

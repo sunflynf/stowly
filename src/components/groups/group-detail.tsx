@@ -195,7 +195,7 @@ export function GroupDetail({ id }: { id: string }) {
     });
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div>
       <PageHeader
         title={group.name}
         subtitle={t("members", { count: group.members })}
@@ -218,8 +218,8 @@ export function GroupDetail({ id }: { id: string }) {
             role="status"
             className={
               group.total === 0
-                ? "flex items-start gap-2 rounded-[var(--radius)] bg-danger px-4 py-3 font-semibold text-danger-foreground"
-                : "flex items-start gap-2 rounded-[var(--radius)] bg-warning px-4 py-3 font-semibold text-warning-foreground"
+                ? "flex items-start gap-2 rounded-md bg-danger px-4 py-3 font-semibold text-danger-foreground"
+                : "flex items-start gap-2 rounded-md bg-warning px-4 py-3 font-semibold text-warning-foreground"
             }
           >
             <AlertTriangle className="mt-0.5 size-5 shrink-0" aria-hidden />
@@ -230,7 +230,7 @@ export function GroupDetail({ id }: { id: string }) {
         )}
         {snoozed && <p className="text-sm text-muted-foreground">{t("snoozedUntil", { date: f.date(group.snoozed_until) })}</p>}
 
-        <section className="rounded-[var(--radius-lg)] border border-border bg-card p-4">
+        <section className="rounded-md border border-border bg-card p-4">
           <GroupMeter group={group} />
           <div className="mt-4 flex flex-wrap gap-2">
             <Button onClick={addToShopping} disabled={act.isPending}>
@@ -244,7 +244,7 @@ export function GroupDetail({ id }: { id: string }) {
           </div>
         </section>
 
-        <section className="rounded-[var(--radius-lg)] border border-border bg-card">
+        <section className="rounded-md border border-border bg-card">
           {search.isPending ? (
             <Skeleton className="m-4 h-24" />
           ) : members.length === 0 ? (

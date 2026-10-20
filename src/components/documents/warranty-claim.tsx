@@ -36,10 +36,10 @@ export function WarrantyClaim({ id }: { id: string }) {
   const { data: urls = {} } = usePhotoUrls(item?.photos.map((p) => p.storage_path) ?? []);
   const { viewing, open, close } = useOpenDocument();
 
-  if (isPending) return <Skeleton className="mx-auto h-96 max-w-2xl" />;
+  if (isPending) return <Skeleton className="h-96" />;
   if (!item) {
     return (
-      <div className="mx-auto max-w-2xl">
+      <div>
         <PageHeader title={t("claimWarranty")} back="/items" />
         <p className="text-muted-foreground">{ti("notFound")}</p>
       </div>
@@ -52,7 +52,7 @@ export function WarrantyClaim({ id }: { id: string }) {
   const dash = <span className="font-normal text-muted-foreground">{t("notRecorded")}</span>;
 
   return (
-    <div className="mx-auto max-w-2xl print:max-w-none">
+    <div>
       <PageHeader
         title={t("claimWarranty")}
         back={`/items/${id}`}
@@ -72,7 +72,7 @@ export function WarrantyClaim({ id }: { id: string }) {
           </p>
         </header>
 
-        <section className="rounded-[var(--radius-lg)] border border-border bg-card px-4 py-1 print:border-0 print:px-0">
+        <section className="rounded-md border border-border bg-card px-4 py-1 print:border-0 print:px-0">
           <dl>
             <Fact label={ti("fields.purchaseDate")} value={item.purchase_date ? f.date(item.purchase_date) : dash} />
             <Fact
@@ -101,7 +101,7 @@ export function WarrantyClaim({ id }: { id: string }) {
           </dl>
         </section>
 
-        <section aria-labelledby="claim-docs" className="rounded-[var(--radius-lg)] border border-border bg-card p-4 print:border-0 print:p-0">
+        <section aria-labelledby="claim-docs" className="rounded-md border border-border bg-card p-4 print:border-0 print:p-0">
           <h3 id="claim-docs" className="mb-1 font-semibold">
             {t("title")}
           </h3>
@@ -120,7 +120,7 @@ export function WarrantyClaim({ id }: { id: string }) {
                   <img
                     src={urls[p.storage_path]}
                     alt={ti("photoN", { n: i + 1, name: item.name })}
-                    className="aspect-[4/3] w-full rounded-[var(--radius)] bg-muted object-cover"
+                    className="aspect-[4/3] w-full rounded-md bg-muted object-cover"
                   />
                 </li>
               ))}

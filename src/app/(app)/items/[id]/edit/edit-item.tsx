@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { PageHeader } from "@/components/app-shell/page-header";
+import { ItemDrawer } from "@/components/items/item-drawer";
 import { ItemForm } from "@/components/items/item-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useItem, type ItemDetail } from "@/lib/queries/items";
@@ -37,12 +38,26 @@ function toFormValues(item: ItemDetail): ItemFormValues {
   };
 }
 
-export function EditItem({ id }: { id: string }) {
+export function EditItem({ id, drawer = false }: { id: string; drawer?: boolean }) {
   const t = useTranslations("item");
   const { data: item, isPending } = useItem(id);
 
+  if (drawer) {
+    return (
+      <ItemDrawer title={t("editTitle")}>
+        {isPending ? (
+          <Skeleton className="h-96" />
+        ) : !item ? (
+          <p className="text-muted-foreground">{t("notFound")}</p>
+        ) : (
+          <ItemForm mode="edit" embedded itemId={id} initial={toFormValues(item)} photos={item.photos} />
+        )}
+      </ItemDrawer>
+    );
+  }
+
   return (
-    <div className="mx-auto max-w-2xl">
+    <div>
       <PageHeader title={t("editTitle")} back={`/items/${id}`} />
       {isPending ? (
         <Skeleton className="h-96" />

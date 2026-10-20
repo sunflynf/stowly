@@ -64,7 +64,7 @@ export function InsuranceReport() {
   ].filter(Boolean);
 
   return (
-    <div className="mx-auto max-w-4xl print:max-w-none">
+    <div>
       <div className="print:hidden">
         <PageHeader
           title={t("title")}
@@ -79,7 +79,7 @@ export function InsuranceReport() {
       </div>
 
       <form
-        className="mb-5 grid gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4 sm:grid-cols-3 print:hidden"
+        className="mb-5 grid gap-3 rounded-md border border-border bg-card p-4 sm:grid-cols-3 print:hidden"
         aria-label={t("filters")}
         onSubmit={(e) => e.preventDefault()}
       >
@@ -131,10 +131,10 @@ export function InsuranceReport() {
       {isPending || !report ? (
         <Skeleton className="h-64" />
       ) : report.rows.length === 0 ? (
-        <p className="rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
+        <p className="rounded-md border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
       ) : (
         <>
-          <p className="mb-3 flex flex-wrap items-baseline justify-between gap-2 rounded-[var(--radius-lg)] border border-border bg-card px-4 py-3 print:border-0 print:px-0">
+          <p className="mb-3 flex flex-wrap items-baseline justify-between gap-2 rounded-md border border-border bg-card px-4 py-3 print:border-0 print:px-0">
             <span className="text-[15px]">{t("count", { count: report.count })}</span>
             <span className="text-lg font-bold tabular-nums">
               {t("total")}: {money(report.total)}
@@ -145,7 +145,7 @@ export function InsuranceReport() {
           <ul className="flex flex-col gap-2 md:hidden print:hidden">
             {report.rows.map((r) => (
               <li key={r.id}>
-                <Link href={`/items/${r.id}`} className="flex gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-3">
+                <Link href={`/items/${r.id}`} className="flex gap-3 rounded-md border border-border bg-card p-3">
                   <ItemThumb name={r.name} url={r.thumb_path ? urls[r.thumb_path] : undefined} />
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-2">

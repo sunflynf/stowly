@@ -35,7 +35,7 @@ export function MaintenancePage() {
   );
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div>
       <PageHeader title={t("title")} subtitle={t("subtitle")} actions={addButton} />
       <div className="mb-4 md:hidden">{addButton}</div>
       {isPending ? (
@@ -44,7 +44,7 @@ export function MaintenancePage() {
           <Skeleton className="h-32" />
         </div>
       ) : !tasks?.length ? (
-        <p className="rounded-[var(--radius-lg)] border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
+        <p className="rounded-md border border-border bg-card p-8 text-center text-muted-foreground">{t("empty")}</p>
       ) : (
         <div className="flex flex-col gap-6">
           {sections

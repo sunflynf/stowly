@@ -18,7 +18,11 @@ test("sign up, land on the Vietnamese dashboard, switch to English, sign out", a
   // Seeded bilingual categories show up in the quick filters / sidebar.
   await expect(page.getByRole("link", { name: "Tất cả đồ dùng" })).toBeVisible();
 
+  // The language switcher lives in Settings.
+  await page.goto("/settings");
   await page.getByRole("button", { name: "English" }).first().click();
+  await expect(page.getByRole("heading", { name: "Settings", level: 1 })).toBeVisible();
+  await page.goto("/");
   await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
 

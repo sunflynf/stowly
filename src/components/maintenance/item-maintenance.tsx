@@ -18,7 +18,7 @@ export function ItemMaintenance({ itemId, itemName }: { itemId: string; itemName
   const alertOf = new Map(alerts.map((a) => [a.task_id, a]));
 
   return (
-    <section className="rounded-[var(--radius-lg)] border border-border bg-card p-4 md:p-5" aria-labelledby="item-maintenance">
+    <section className="rounded-md border border-border bg-card p-4 md:p-5" aria-labelledby="item-maintenance">
       <div className="mb-2 flex items-center justify-between gap-3">
         <h2 id="item-maintenance" className="font-semibold">
           {t("title")}
