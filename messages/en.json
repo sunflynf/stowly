@@ -57,7 +57,8 @@
     "insurance": "Insurance report",
     "collapseSidebar": "Collapse sidebar",
     "expandSidebar": "Expand sidebar",
-    "loans": "Lent & borrowed"
+    "loans": "Lent & borrowed",
+    "trash": "Trash"
   },
   "auth": {
     "title": "Sign in",
@@ -237,8 +238,8 @@
       "returned": "Returned"
     },
     "delete": "Delete item",
-    "deleteConfirm": "Delete “{name}”? This cannot be undone.",
-    "deleted": "Item deleted",
+    "deleteConfirm": "Move “{name}” to the trash? You can restore it for 30 days.",
+    "deleted": "Moved to the trash",
     "archive": "Archive",
     "unarchive": "Restore",
     "archived": "Item archived",
@@ -1003,5 +1004,19 @@
     "noSpeech": "Didn't hear anything. Try again.",
     "denied": "Allow microphone access to search by voice.",
     "failed": "Couldn't recognise that. Try again or type to search."
+  },
+  "trash": {
+    "title": "Trash",
+    "subtitle": "Deleted items are kept for 30 days, then removed for good with their photos and documents.",
+    "empty": "The trash is empty.",
+    "undo": "Undo",
+    "deletedOn": "Deleted {date} by {name}",
+    "purgeOn": "Removed for good on {date}",
+    "restore": "Restore",
+    "restored": "Restored “{name}”.",
+    "deleteForever": "Delete forever",
+    "deleteForeverNamed": "Delete {name} forever",
+    "deleteForeverConfirm": "Delete “{name}” forever, with its photos, documents and history? This cannot be undone.",
+    "deletedForever": "Deleted forever."
   }
 }

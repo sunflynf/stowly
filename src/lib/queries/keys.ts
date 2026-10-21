@@ -14,6 +14,7 @@ export const qk = {
   shopping: ["shopping"] as const,
   groups: ["groups"] as const,
   loans: ["items", "loans"] as const,
+  trash: ["items", "trash"] as const,
   maintenance: ["maintenance"] as const,
   maintenanceAlerts: ["maintenance", "alerts"] as const,
   maintenanceLog: (taskId: string) => ["maintenance", "log", taskId] as const,

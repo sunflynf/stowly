@@ -11,6 +11,7 @@ import {
   ShoppingCart,
   Handshake,
   Tag,
+  Trash2,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -52,6 +53,7 @@ export const secondaryNav: NavItem[] = [
   { href: "/stats", label: "stats", icon: ChartColumn },
   { href: "/reports/insurance", label: "insurance", icon: ShieldCheck },
   { href: "/suggestions", label: "suggestions", icon: Sparkles },
+  { href: "/trash", label: "trash", icon: Trash2 },
 ];
 
 export const settingsNav: NavItem = { href: "/settings", label: "settings", icon: Settings };

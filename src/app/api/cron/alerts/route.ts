@@ -3,10 +3,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { runAlertDigest } from "@/lib/alerts/digest";
 import { emailConfigured } from "@/lib/alerts/email";
 import { pushConfigured } from "@/lib/alerts/push";
+import { purgeExpiredTrash } from "@/lib/trash";
 
 // Called hourly by Supabase pg_cron (pg_net) or Vercel Cron with
 // "Authorization: Bearer <CRON_SECRET>". Each user is processed in the hour
-// matching their digest time in their own timezone.
+// matching their digest time in their own timezone. The same run empties
+// trash older than 30 days (skipped on dry runs).
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
@@ -24,12 +26,14 @@ async function handle(request: NextRequest) {
   const force = request.nextUrl.searchParams.get("force") === "1";
   const dryRun = request.nextUrl.searchParams.get("dry") === "1";
   const results = await runAlertDigest({ force, dryRun });
+  const trash = dryRun ? null : await purgeExpiredTrash();
   const sent = results.reduce((acc, r) => ({ email: acc.email + r.email, push: acc.push + r.push }), { email: 0, push: 0 });
   return NextResponse.json({
     ok: true,
     users: results.length,
     sent,
     channels: { email: emailConfigured(), push: pushConfigured() },
+    trash,
     results,
   });
 }

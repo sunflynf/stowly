@@ -269,14 +269,14 @@ isOneToOne: false
                   ]
                 },"items": {
                   Row: {
-                    "archived_at": string | null,"attributes": NonNullable<Json>,"barcode": string | null,"category_id": string | null,"condition": Database["public"]['Enums']["item_condition"],"created_at": string,"expiry_date": string | null,"group_id": string | null,"household_id": string,"id": string,"last_replaced_at": string | null,"location_id": string | null,"min_quantity": number | null,"name": string,"name_norm": string | null,"notes": string | null,"opened_date": string | null,"purchase_date": string | null,"purchase_place": string | null,"purchase_price": number | null,"quantity": number,"replace_after_months": number | null,"search_text": string,"search_vector": unknown,"unit": string | null,"updated_at": string,"usage_last_at": string | null,"usage_per_day": number | null,"warranty_until": string | null
+                    "archived_at": string | null,"attributes": NonNullable<Json>,"barcode": string | null,"category_id": string | null,"condition": Database["public"]['Enums']["item_condition"],"created_at": string,"deleted_at": string | null,"deleted_by": string | null,"deleted_was_archived": boolean,"expiry_date": string | null,"group_id": string | null,"household_id": string,"id": string,"last_replaced_at": string | null,"location_id": string | null,"min_quantity": number | null,"name": string,"name_norm": string | null,"notes": string | null,"opened_date": string | null,"purchase_date": string | null,"purchase_place": string | null,"purchase_price": number | null,"quantity": number,"replace_after_months": number | null,"search_text": string,"search_vector": unknown,"unit": string | null,"updated_at": string,"usage_last_at": string | null,"usage_per_day": number | null,"warranty_until": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"expiry_date"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name": string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"usage_last_at"?: string | null,"usage_per_day"?: number | null,"warranty_until"?: string | null
+                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"deleted_at"?: string | null,"deleted_by"?: string | null,"deleted_was_archived"?: boolean,"expiry_date"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name": string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"usage_last_at"?: string | null,"usage_per_day"?: number | null,"warranty_until"?: string | null
                   }
                   Update: {
-                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"expiry_date"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name"?: string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"usage_last_at"?: string | null,"usage_per_day"?: number | null,"warranty_until"?: string | null
+                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"deleted_at"?: string | null,"deleted_by"?: string | null,"deleted_was_archived"?: boolean,"expiry_date"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name"?: string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"usage_last_at"?: string | null,"usage_per_day"?: number | null,"warranty_until"?: string | null
                   }
                   Relationships: [
                     {
@@ -642,6 +642,11 @@ isOneToOne: false
 "dashboard_stats":
 { Args: Record<PropertyKey, never>; Returns: Json
                            },
+"delete_item_forever":
+{ Args: { "p_item_id": string }; Returns: {
+              "bucket": string,"path": string
+            }[]
+                           },
 "f_unaccent":
 { Args: { "input": string }; Returns: string
                            },
@@ -688,6 +693,9 @@ isOneToOne: false
 "refresh_item_usage":
 { Args: { "p_item_id": string }; Returns: undefined
                            },
+"restore_item":
+{ Args: { "p_item_id": string }; Returns: undefined
+                           },
 "search_candidate_ids":
 { Args: { "p_norm": string,"p_tsq": unknown,"p_words": (string)[] }; Returns: (string)[]
                            },
@@ -705,6 +713,14 @@ isOneToOne: false
 "tag_counts":
 { Args: Record<PropertyKey, never>; Returns: {
               "item_count": number,"tag_id": string
+            }[]
+                           },
+"trash_item":
+{ Args: { "p_item_id": string }; Returns: undefined
+                           },
+"trash_items":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "deleted_at": string,"deleted_by_name": string,"id": string,"location_path": string,"location_path_en": string,"name": string,"purge_on": string,"thumb_path": string
             }[]
                            },
 "unused_suggestion_counts":
