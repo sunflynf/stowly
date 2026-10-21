@@ -82,6 +82,16 @@ describe("row level security", () => {
     expect(results).toHaveLength(0);
   });
 
+  it("the search candidate lookup only returns the caller's own items", async () => {
+    const args = { p_tsq: "'sac':*", p_norm: "sac", p_words: ["sac"] };
+    const { data: mine } = await a.client.rpc("search_candidate_ids", args);
+    expect(mine).toContain(itemId);
+    const { data: theirs } = await b.client.rpc("search_candidate_ids", args);
+    expect(theirs).not.toContain(itemId);
+    const { error } = await anonClient().rpc("search_candidate_ids", args);
+    expect(error).not.toBeNull();
+  });
+
   it("profiles are private", async () => {
     const { data } = await b.client.from("profiles").select("id").eq("id", a.id);
     expect(data).toHaveLength(0);
