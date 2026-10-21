@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { VoiceButton } from "./voice-button";
 
 interface Props {
   value: string;
@@ -16,10 +17,12 @@ interface Props {
   /** Show the "/" keyboard hint and focus on "/" (desktop). */
   slashShortcut?: boolean;
   onSubmit?: (value: string) => void;
+  /** Show a microphone button (voice search) where the browser supports it. */
+  voice?: boolean;
 }
 
 /** Large search input with debounced updates and a "/" shortcut. */
-export function SearchBox({ value, onChange, delay = 200, placeholder, autoFocus, className, slashShortcut, onSubmit }: Props) {
+export function SearchBox({ value, onChange, delay = 200, placeholder, autoFocus, className, slashShortcut, onSubmit, voice }: Props) {
   const t = useTranslations("items");
   const tc = useTranslations("common");
   const [draft, setDraft] = useState(value);
@@ -88,6 +91,15 @@ export function SearchBox({ value, onChange, delay = 200, placeholder, autoFocus
         >
           <X className="size-5" aria-hidden />
         </button>
+      ) : voice ? (
+        <VoiceButton
+          className="absolute top-1/2 right-2 -translate-y-1/2"
+          onResult={(q) => {
+            setDraft(q);
+            onChange(q);
+            onSubmit?.(q);
+          }}
+        />
       ) : (
         slashShortcut && (
           <kbd className="absolute top-1/2 right-4 hidden -translate-y-1/2 rounded-md border border-input px-1.5 text-xs text-muted-foreground md:block">

@@ -107,7 +107,7 @@ export function ItemsBrowser() {
         counts={stats ? { all: stats.total_items, expiring: stats.expiring_30d + stats.expired, stock: stats.low_stock } : undefined}
       />
 
-      <SearchBox value={params.q} onChange={(q) => update({ q })} placeholder={isDesktop ? t("searchPlaceholder") : t("searchShort")} slashShortcut className="mb-3" />
+      <SearchBox value={params.q} onChange={(q) => update({ q })} placeholder={isDesktop ? t("searchPlaceholder") : t("searchShort")} slashShortcut voice className="mb-3" />
       <div className="mb-4">
         <FilterBar params={params} onChange={update} />
       </div>

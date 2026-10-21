@@ -951,5 +951,13 @@
     "empty": "Không có món đồ nào có giá mua khớp bộ lọc.",
     "unpriced": "{count, plural, other {# món đồ khớp bộ lọc chưa có giá mua nên không được liệt kê.}}",
     "truncated": "Chỉ hiển thị {shown} món giá trị nhất; tổng vẫn tính tất cả."
+  },
+  "voice": {
+    "start": "Tìm bằng giọng nói",
+    "stop": "Dừng nghe",
+    "listening": "Đang nghe… hãy nói tên món đồ, ví dụ “cái khoan ở đâu”.",
+    "noSpeech": "Không nghe thấy gì. Hãy thử lại.",
+    "denied": "Hãy cho phép dùng micro để tìm bằng giọng nói.",
+    "failed": "Không nhận dạng được giọng nói. Hãy thử lại hoặc gõ để tìm."
   }
 }
