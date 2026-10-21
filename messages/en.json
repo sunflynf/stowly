@@ -57,6 +57,7 @@
     "insurance": "Insurance report",
     "collapseSidebar": "Collapse sidebar",
     "expandSidebar": "Expand sidebar",
+    "loans": "Lent & borrowed",
     "trash": "Trash"
   },
   "auth": {
@@ -149,7 +150,12 @@
     "warranty_left": "{months, plural, one {Warranty: # month left} other {Warranty: # months left}}",
     "archived": "Archived",
     "maintenance_due": "{days, plural, =0 {Due today} one {Due in # day} other {Due in # days}}",
-    "maintenance_overdue": "{days, plural, =0 {Due today} one {# day overdue} other {# days overdue}}"
+    "maintenance_overdue": "{days, plural, =0 {Due today} one {# day overdue} other {# days overdue}}",
+    "borrow_due": "{days, plural, =0 {Give back today} one {Give back in # day} other {Give back in # days}}",
+    "borrow_overdue": "{days, plural, one {# day late to give back} other {# days late to give back}}",
+    "borrowed": "Borrowed, give back",
+    "running_out": "{days, plural, =0 {May run out today} one {About # day left} other {About # days left}}",
+    "running_low": "Running low soon"
   },
   "item": {
     "fields": {
@@ -226,7 +232,10 @@
       "quantity_change": "{delta} → {quantity} left",
       "moved": "Moved from {from} to {to}",
       "status_change": "Condition: {from} → {to}",
-      "maintenance": "Maintenance done"
+      "maintenance": "Maintenance done",
+      "lent": "Lent out",
+      "borrowed": "Borrowed",
+      "returned": "Returned"
     },
     "delete": "Delete item",
     "deleteConfirm": "Move “{name}” to the trash? You can restore it for 30 days.",
@@ -259,7 +268,13 @@
       "demo": "Demo data"
     },
     "byPerson": "by {name}",
-    "formerMember": "{name} (left)"
+    "formerMember": "{name} (left)",
+    "usage": {
+      "perDays": "You use about 1 every {days} days",
+      "perWeek": "You use about {amount} a week",
+      "perDay": "You use about {amount} a day",
+      "emptyOn": "likely empty by {date}"
+    }
   },
   "locations": {
     "title": "Locations",
@@ -467,7 +482,7 @@
       "stock": "Stock",
       "warranty": "Warranty",
       "replace": "Replace",
-      "lent": "Lent",
+      "lent": "Lent & borrowed",
       "snoozed": "Snoozed",
       "maintenance": "Maintenance"
     },
@@ -952,6 +967,43 @@
     "empty": "No items with a purchase price match these filters.",
     "unpriced": "{count, plural, one {# matching item has no purchase price and is not listed.} other {# matching items have no purchase price and are not listed.}}",
     "truncated": "Showing the {shown} most valuable items; the total includes all of them."
+  },
+  "loans": {
+    "title": "Lending",
+    "pageTitle": "Lent & borrowed",
+    "subtitle": "What you've lent out and what you've borrowed from others.",
+    "empty": "Nothing is lent out or borrowed. Open an item and choose “Lend”.",
+    "none": "This item is at home.",
+    "lend": "Lend",
+    "borrow": "This is borrowed",
+    "lentTo": "Lent to",
+    "borrowedFrom": "Borrowed from",
+    "dueBack": "Due back on",
+    "giveBackBy": "Give back by",
+    "dueHint": "Optional. With a date you get a reminder.",
+    "note": "Note (optional)",
+    "lentNow": "Lent to {person}",
+    "borrowedNow": "Borrowed from {person}",
+    "since": "since {date}",
+    "dueBackOn": "due back {date}",
+    "giveBackOn": "give back by {date}",
+    "noDue": "no return date",
+    "markReturned": "It's back",
+    "markGivenBack": "Given back",
+    "lentToast": "Recorded: lent to {person}.",
+    "borrowedToast": "Recorded: borrowed from {person}.",
+    "returnedToast": "Marked as back home.",
+    "givenBackToast": "Marked as given back.",
+    "lentSection": "Lent out ({count})",
+    "borrowedSection": "Borrowed ({count})"
+  },
+  "voice": {
+    "start": "Search by voice",
+    "stop": "Stop listening",
+    "listening": "Listening… say the item's name, e.g. “where's the drill?”.",
+    "noSpeech": "Didn't hear anything. Try again.",
+    "denied": "Allow microphone access to search by voice.",
+    "failed": "Couldn't recognise that. Try again or type to search."
   },
   "trash": {
     "title": "Trash",

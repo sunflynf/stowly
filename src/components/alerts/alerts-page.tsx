@@ -36,10 +36,10 @@ type Tab = "all" | "expiry" | "stock" | "warranty" | "replace" | "lent" | "maint
 const TABS: Record<Tab, readonly AlertKind[] | null> = {
   all: null,
   expiry: ["expired", "expiring_soon"],
-  stock: ["out_of_stock", "low_stock"],
+  stock: ["out_of_stock", "low_stock", "running_out"],
   warranty: ["warranty_ending"],
   replace: ["replace_due"],
-  lent: ["lent_overdue"],
+  lent: ["lent_overdue", "borrow_due"],
   maintenance: ["maintenance_due", "maintenance_overdue"],
   snoozed: null,
 };
@@ -225,7 +225,7 @@ export function AlertsPage() {
                             {t("actions.markReplaced")}
                           </Button>
                         )}
-                        {a.kind === "lent_overdue" && (
+                        {(a.kind === "lent_overdue" || a.kind === "borrow_due") && (
                           <Button
                             variant="secondary"
                             size="sm"
@@ -235,7 +235,7 @@ export function AlertsPage() {
                             {t("actions.returned")}
                           </Button>
                         )}
-                        {a.kind !== "warranty_ending" && a.kind !== "lent_overdue" && (
+                        {a.kind !== "warranty_ending" && a.kind !== "lent_overdue" && a.kind !== "borrow_due" && (
                           <Button variant="secondary" size="sm" onClick={() => addToShopping.mutate({ ...a, id: a.item_id })}>
                             <ShoppingCart />
                             {t("actions.addToShopping")}

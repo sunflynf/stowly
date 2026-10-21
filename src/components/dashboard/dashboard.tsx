@@ -252,6 +252,7 @@ export function Dashboard() {
           onSubmit={(q) => q.trim() && router.push(`/items?q=${encodeURIComponent(q.trim())}`)}
           placeholder={isDesktop ? ti("searchPlaceholder") : ti("searchShort")}
           slashShortcut
+          voice
           className="flex-1"
         />
         <div className="md:hidden">

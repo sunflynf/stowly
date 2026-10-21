@@ -8,6 +8,7 @@ import { AlertTriangle, Archive, ArchiveRestore, Camera, MoreVertical, Pencil, S
 import { toast } from "sonner";
 import { PageHeader } from "@/components/app-shell/page-header";
 import { ItemDocuments } from "@/components/documents/item-documents";
+import { LoanCard } from "@/components/loans/loan-card";
 import { ItemMaintenance } from "@/components/maintenance/item-maintenance";
 import { QuantityStepper } from "@/components/items/quantity-stepper";
 import { StatusBadge, useStatusLabel } from "@/components/items/status-badge";
@@ -25,6 +26,7 @@ import { useItem, useItemAlerts, useItemEvents, usePhotoUrls, type ItemDetail } 
 import { useLabels, useLocations } from "@/lib/queries/taxonomy";
 import { alertStatus, itemStatus } from "@/lib/status";
 import { attributeDefsSchema } from "@/lib/validation/item";
+import { emptyOn, usageSummary } from "@/lib/usage";
 import { cn } from "@/lib/utils";
 
 // Notes written by the app itself (vs. typed by the user) are translated.
@@ -105,6 +107,8 @@ function History({ id }: { id: string }) {
                 quantity: qty(e.quantity_after),
               });
             else if (e.type === "maintenance") text = t("events.maintenance");
+            // Loan events keep the person in the note.
+            else if (e.type === "lent" || e.type === "borrowed" || e.type === "returned") text = t(`events.${e.type}`);
             else if (e.type === "moved") text = t("events.moved", { from: locName(e.from_location_id), to: locName(e.to_location_id) });
             else
               text = t("events.status_change", {
@@ -179,6 +183,10 @@ export function ItemDetailView({ id }: { id: string }) {
   const attrDefs = attributeDefsSchema.safeParse(item.category?.default_attributes ?? []);
   const attrs = (item.attributes ?? {}) as Record<string, string>;
   const qty = (n: number | null) => format.number(Number(n ?? 0), "quantity");
+  // Learned from the quantity history (see usage_rate migration).
+  const usage = item.usage_per_day !== null ? usageSummary(Number(item.usage_per_day)) : null;
+  const usageEmpty =
+    item.usage_per_day !== null && item.usage_last_at ? emptyOn(Number(item.quantity), Number(item.usage_per_day), item.usage_last_at) : null;
 
   const remove = async () => {
     try {
@@ -305,6 +313,16 @@ export function ItemDetailView({ id }: { id: string }) {
             <p className="text-sm text-muted-foreground">
               {item.min_quantity !== null ? t("thresholdValue", { threshold: qty(item.min_quantity) }) : t("fields.minQuantityHint")}
             </p>
+            {usage && (
+              <p className="mt-1 text-sm text-muted-foreground">
+                {usage.kind === "perDays"
+                  ? t("usage.perDays", { days: usage.days })
+                  : usage.kind === "perWeek"
+                    ? t("usage.perWeek", { amount: format.number(usage.amount) })
+                    : t("usage.perDay", { amount: format.number(usage.amount) })}
+                {usageEmpty && item.quantity > 0 ? ` · ${t("usage.emptyOn", { date: fmtDate(usageEmpty) })}` : ""}
+              </p>
+            )}
           </div>
           <QuantityStepper id={item.id} name={item.name} quantity={item.quantity} low={low} size="lg" />
         </section>
@@ -386,6 +404,8 @@ export function ItemDetailView({ id }: { id: string }) {
         </section>
 
         <ItemDocuments itemId={id} />
+
+        <LoanCard itemId={id} attributes={item.attributes} />
 
         <ItemMaintenance itemId={id} itemName={item.name} />
 

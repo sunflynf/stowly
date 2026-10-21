@@ -269,14 +269,14 @@ isOneToOne: false
                   ]
                 },"items": {
                   Row: {
-                    "archived_at": string | null,"attributes": NonNullable<Json>,"barcode": string | null,"category_id": string | null,"condition": Database["public"]['Enums']["item_condition"],"created_at": string,"deleted_at": string | null,"deleted_by": string | null,"deleted_was_archived": boolean,"expiry_date": string | null,"group_id": string | null,"household_id": string,"id": string,"last_replaced_at": string | null,"location_id": string | null,"min_quantity": number | null,"name": string,"name_norm": string | null,"notes": string | null,"opened_date": string | null,"purchase_date": string | null,"purchase_place": string | null,"purchase_price": number | null,"quantity": number,"replace_after_months": number | null,"search_text": string,"search_vector": unknown,"unit": string | null,"updated_at": string,"warranty_until": string | null
+                    "archived_at": string | null,"attributes": NonNullable<Json>,"barcode": string | null,"category_id": string | null,"condition": Database["public"]['Enums']["item_condition"],"created_at": string,"deleted_at": string | null,"deleted_by": string | null,"deleted_was_archived": boolean,"expiry_date": string | null,"group_id": string | null,"household_id": string,"id": string,"last_replaced_at": string | null,"location_id": string | null,"min_quantity": number | null,"name": string,"name_norm": string | null,"notes": string | null,"opened_date": string | null,"purchase_date": string | null,"purchase_place": string | null,"purchase_price": number | null,"quantity": number,"replace_after_months": number | null,"search_text": string,"search_vector": unknown,"unit": string | null,"updated_at": string,"usage_last_at": string | null,"usage_per_day": number | null,"warranty_until": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"deleted_at"?: string | null,"deleted_by"?: string | null,"deleted_was_archived"?: boolean,"expiry_date"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name": string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"warranty_until"?: string | null
+                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"deleted_at"?: string | null,"deleted_by"?: string | null,"deleted_was_archived"?: boolean,"expiry_date"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name": string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"usage_last_at"?: string | null,"usage_per_day"?: number | null,"warranty_until"?: string | null
                   }
                   Update: {
-                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"deleted_at"?: string | null,"deleted_by"?: string | null,"deleted_was_archived"?: boolean,"expiry_date"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name"?: string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"warranty_until"?: string | null
+                    "archived_at"?: string | null,"attributes"?: NonNullable<Json>,"barcode"?: string | null,"category_id"?: string | null,"condition"?: Database["public"]['Enums']["item_condition"],"created_at"?: string,"deleted_at"?: string | null,"deleted_by"?: string | null,"deleted_was_archived"?: boolean,"expiry_date"?: string | null,"group_id"?: string | null,"household_id"?: string,"id"?: string,"last_replaced_at"?: string | null,"location_id"?: string | null,"min_quantity"?: number | null,"name"?: string,"name_norm"?: never,"notes"?: string | null,"opened_date"?: string | null,"purchase_date"?: string | null,"purchase_place"?: string | null,"purchase_price"?: number | null,"quantity"?: number,"replace_after_months"?: number | null,"search_text"?: string,"search_vector"?: unknown,"unit"?: string | null,"updated_at"?: string,"usage_last_at"?: string | null,"usage_per_day"?: number | null,"warranty_until"?: string | null
                   }
                   Relationships: [
                     {
@@ -690,8 +690,14 @@ isOneToOne: false
 "refresh_item_search":
 { Args: { "p_ids": (string)[] }; Returns: undefined
                            },
+"refresh_item_usage":
+{ Args: { "p_item_id": string }; Returns: undefined
+                           },
 "restore_item":
 { Args: { "p_item_id": string }; Returns: undefined
+                           },
+"search_candidate_ids":
+{ Args: { "p_norm": string,"p_tsq": unknown,"p_words": (string)[] }; Returns: (string)[]
                            },
 "search_items":
 { Args: { "p_archived"?: boolean,"p_category_ids"?: (string)[],"p_conditions"?: (Database["public"]['Enums']["item_condition"])[],"p_group_id"?: string,"p_limit"?: number,"p_location_id"?: string,"p_offset"?: number,"p_price_max"?: number,"p_price_min"?: number,"p_query"?: string,"p_sort"?: string,"p_states"?: (Database["public"]['Enums']["alert_kind"])[],"p_tag_ids"?: (string)[] }; Returns: {
@@ -747,7 +753,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "alert_kind": "expired"|"expiring_soon"|"out_of_stock"|"low_stock"|"warranty_ending"|"replace_due"|"lent_overdue"|"maintenance_due"|"maintenance_overdue","document_kind": "warranty"|"invoice"|"manual"|"other","household_role": "owner"|"editor"|"viewer","interval_unit": "day"|"week"|"month"|"year","item_condition": "new"|"good"|"worn"|"broken"|"given_away","item_event_type": "created"|"quantity_change"|"moved"|"status_change"|"maintenance"
+            "alert_kind": "expired"|"expiring_soon"|"out_of_stock"|"low_stock"|"warranty_ending"|"replace_due"|"lent_overdue"|"maintenance_due"|"maintenance_overdue"|"borrow_due"|"running_out","document_kind": "warranty"|"invoice"|"manual"|"other","household_role": "owner"|"editor"|"viewer","interval_unit": "day"|"week"|"month"|"year","item_condition": "new"|"good"|"worn"|"broken"|"given_away","item_event_type": "created"|"quantity_change"|"moved"|"status_change"|"maintenance"|"lent"|"borrowed"|"returned"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -863,7 +869,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "alert_kind": ["expired", "expiring_soon", "out_of_stock", "low_stock", "warranty_ending", "replace_due", "lent_overdue", "maintenance_due", "maintenance_overdue"],"document_kind": ["warranty", "invoice", "manual", "other"],"household_role": ["owner", "editor", "viewer"],"interval_unit": ["day", "week", "month", "year"],"item_condition": ["new", "good", "worn", "broken", "given_away"],"item_event_type": ["created", "quantity_change", "moved", "status_change", "maintenance"]
+            "alert_kind": ["expired", "expiring_soon", "out_of_stock", "low_stock", "warranty_ending", "replace_due", "lent_overdue", "maintenance_due", "maintenance_overdue", "borrow_due", "running_out"],"document_kind": ["warranty", "invoice", "manual", "other"],"household_role": ["owner", "editor", "viewer"],"interval_unit": ["day", "week", "month", "year"],"item_condition": ["new", "good", "worn", "broken", "given_away"],"item_event_type": ["created", "quantity_change", "moved", "status_change", "maintenance", "lent", "borrowed", "returned"]
           }
         }
 } as const

@@ -13,6 +13,7 @@ export const qk = {
   alerts: ["alerts"] as const,
   shopping: ["shopping"] as const,
   groups: ["groups"] as const,
+  loans: ["items", "loans"] as const,
   trash: ["items", "trash"] as const,
   maintenance: ["maintenance"] as const,
   maintenanceAlerts: ["maintenance", "alerts"] as const,
