@@ -995,5 +995,13 @@
     "givenBackToast": "Marked as given back.",
     "lentSection": "Lent out ({count})",
     "borrowedSection": "Borrowed ({count})"
+  },
+  "voice": {
+    "start": "Search by voice",
+    "stop": "Stop listening",
+    "listening": "Listening… say the item's name, e.g. “where's the drill?”.",
+    "noSpeech": "Didn't hear anything. Try again.",
+    "denied": "Allow microphone access to search by voice.",
+    "failed": "Couldn't recognise that. Try again or type to search."
   }
 }

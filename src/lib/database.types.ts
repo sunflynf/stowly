@@ -688,6 +688,9 @@ isOneToOne: false
 "refresh_item_usage":
 { Args: { "p_item_id": string }; Returns: undefined
                            },
+"search_candidate_ids":
+{ Args: { "p_norm": string,"p_tsq": unknown,"p_words": (string)[] }; Returns: (string)[]
+                           },
 "search_items":
 { Args: { "p_archived"?: boolean,"p_category_ids"?: (string)[],"p_conditions"?: (Database["public"]['Enums']["item_condition"])[],"p_group_id"?: string,"p_limit"?: number,"p_location_id"?: string,"p_offset"?: number,"p_price_max"?: number,"p_price_min"?: number,"p_query"?: string,"p_sort"?: string,"p_states"?: (Database["public"]['Enums']["alert_kind"])[],"p_tag_ids"?: (string)[] }; Returns: {
               "alert_kinds": (Database["public"]['Enums']["alert_kind"])[],"category_id": string,"condition": Database["public"]['Enums']["item_condition"],"expiry_date": string,"group_id": string,"id": string,"location_id": string,"location_path": string,"location_path_en": string,"min_quantity": number,"name": string,"purchase_price": number,"quantity": number,"rank": number,"thumb_path": string,"total_count": number,"unit": string,"updated_at": string,"warranty_until": string

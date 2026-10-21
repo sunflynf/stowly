@@ -995,5 +995,13 @@
     "givenBackToast": "Đã ghi nhận đã trả lại.",
     "lentSection": "Đang cho mượn ({count})",
     "borrowedSection": "Đang mượn ({count})"
+  },
+  "voice": {
+    "start": "Tìm bằng giọng nói",
+    "stop": "Dừng nghe",
+    "listening": "Đang nghe… hãy nói tên món đồ, ví dụ “cái khoan ở đâu”.",
+    "noSpeech": "Không nghe thấy gì. Hãy thử lại.",
+    "denied": "Hãy cho phép dùng micro để tìm bằng giọng nói.",
+    "failed": "Không nhận dạng được giọng nói. Hãy thử lại hoặc gõ để tìm."
   }
 }
