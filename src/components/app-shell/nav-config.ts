@@ -9,6 +9,7 @@ import {
   Settings,
   ShieldCheck,
   ShoppingCart,
+  Handshake,
   Tag,
   Wrench,
   type LucideIcon,
@@ -45,6 +46,7 @@ export const primaryNav: NavItem[] = [
 export const secondaryNav: NavItem[] = [
   { href: "/alerts", label: "alerts", icon: Bell, count: "attention" },
   { href: "/maintenance", label: "maintenance", icon: Wrench },
+  { href: "/loans", label: "loans", icon: Handshake },
   { href: "/groups", label: "groups", icon: Boxes },
   { href: "/shopping", label: "shopping", icon: ShoppingCart },
   { href: "/stats", label: "stats", icon: ChartColumn },

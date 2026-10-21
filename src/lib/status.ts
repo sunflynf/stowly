@@ -28,6 +28,7 @@ const KIND_SEVERITY: Record<AlertKind, number> = {
   lent_overdue: 2,
   maintenance_overdue: 3,
   maintenance_due: 2,
+  borrow_due: 2,
 };
 
 export interface ItemStatusInput {
@@ -51,7 +52,9 @@ export type StatusKey =
   | "good"
   | "new"
   | "warranty_left"
-  | "archived";
+  | "archived"
+  | "borrow_overdue"
+  | "borrowed";
 
 export interface ItemStatus {
   key: StatusKey;
@@ -80,6 +83,8 @@ export function itemStatus(item: ItemStatusInput, kinds: readonly AlertKind[], t
       values.months = since ? monthsBetween(since, today) : 0;
     }
     if (top === "lent_overdue") values.days = 0;
+    // Rows from search do not carry the agreed date: a plain "to give back" badge.
+    if (top === "borrow_due") return { key: "borrowed", tone: "warning", values: {} };
     let tone: Tone = KIND_SEVERITY[top] === 3 ? "danger" : "warning";
     if (top === "expiring_soon") tone = (values.days ?? 0) <= 7 ? "danger" : "success";
     return { key: top, tone, values };
@@ -114,6 +119,11 @@ export function alertStatus(alert: AlertInfo): ItemStatus {
     case "replace_due":
       values.months = alert.months ?? 0;
       break;
+  }
+  if (alert.kind === "borrow_due") {
+    // Something borrowed: "give back in N days", or "N days late" once overdue.
+    const late = days < 0;
+    return { key: late ? "borrow_overdue" : "borrow_due", tone: late ? "danger" : "warning", values: { days: Math.abs(days) } };
   }
   return { key: alert.kind, tone: severityTone(alert.severity ?? KIND_SEVERITY[alert.kind]), values };
 }
