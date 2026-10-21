@@ -76,10 +76,10 @@ Useful local URLs:
    People you invite to your household can still sign up with the invited email while the invite is open (7 days); no allowlist change is needed. If you disable sign-ups in Supabase entirely, invitees need an existing account.
 4. **Vercel.** Import the repo and set the variables from `.env.example`:
    - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
-   - `NEXT_PUBLIC_SITE_URL`, `ALLOWED_EMAIL`, `CRON_SECRET`
+   - `NEXT_PUBLIC_SITE_URL`, `ALLOWED_EMAIL`, `CRON_SECRET`, optionally `AUTH_EMAIL_CONFIRMATION`
    - `RESEND_API_KEY`, `ALERT_EMAIL_FROM`
    - `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`
-5. **Email (Resend).** Create an API key. Until you verify a domain, keep `ALERT_EMAIL_FROM="Stowly <onboarding@resend.dev>"`. With that sender, Resend only delivers to the address of the Resend account owner.
+5. **Email (Resend).** Create an API key. Until you verify a domain, keep `ALERT_EMAIL_FROM="Stowly <onboarding@resend.dev>"`. With that sender, Resend only delivers to the address of the Resend account owner, so sign-up confirmation emails to anyone else (e.g. people you invite) fail. Until you verify a domain, set `AUTH_EMAIL_CONFIRMATION=off` in Vercel: sign-up then creates the account already confirmed and sends nothing. Share invite links by hand; the Members screen shows the link when the email could not be sent.
 6. **Web push.** Run `pnpm vapid` and put the keys in the env vars above.
 7. **Scheduled alerts.** pg_cron is already scheduled by the migration (`stowly-alert-digest`, minute 5 of every hour). Point it at your deployment in the SQL editor:
    ```sql
@@ -191,6 +191,8 @@ Defaults chosen where the brief was open, or where the environment forced a choi
    - The `private.signup_allowlist` table, enforced by a trigger on `auth.users`. An empty table allows any sign-up, which is convenient for local development.
 
    Magic links only sign in existing accounts.
+
+   `AUTH_EMAIL_CONFIRMATION=off` skips the confirmation email: the server creates the account confirmed with the service-role key and signs it in. Both locks above still apply. It exists because Resend's test sender only reaches its own account address; turn it back on once a domain is verified.
 8. **Next.js 16 specifics.**
    - `proxy.ts` replaces middleware.
    - Cache Components are not enabled, because all data is per-user and fetched on the client.

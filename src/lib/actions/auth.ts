@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { publicEnv } from "@/lib/env";
+import { emailConfirmationEnabled, publicEnv } from "@/lib/env";
 import { syncPreferenceCookies } from "@/lib/preferences";
 import { magicLinkSchema, safeNextPath, signInSchema, signUpSchema } from "@/lib/validation/auth";
 import { fail, ok, validationFail, type ActionResult } from "./result";
@@ -47,6 +47,22 @@ export async function signUpAction(input: unknown, next?: string): Promise<Actio
 
   const supabase = await getSupabaseServer();
   const locale = await getLocale();
+
+  if (!emailConfirmationEnabled()) {
+    // No email is sent: the account is created confirmed, then signed in.
+    const { error: createError } = await getSupabaseAdmin().auth.admin.createUser({
+      ...parsed.data,
+      email_confirm: true,
+      user_metadata: { locale },
+    });
+    // An existing account signs in with its own password, as on the sign-in form.
+    if (createError && createError.code !== "email_exists") return authError(createError);
+    const { error } = await supabase.auth.signInWithPassword(parsed.data);
+    if (error) return authError(error);
+    await syncPreferenceCookies(supabase);
+    redirect(safeNextPath(next));
+  }
+
   const callback = new URL("/auth/callback", publicEnv.siteUrl());
   callback.searchParams.set("next", safeNextPath(next));
   const { data, error } = await supabase.auth.signUp({
