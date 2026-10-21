@@ -152,7 +152,9 @@
     "maintenance_overdue": "{days, plural, =0 {Đến hạn hôm nay} other {Trễ # ngày}}",
     "borrow_due": "{days, plural, =0 {Trả hôm nay} other {Còn # ngày để trả}}",
     "borrow_overdue": "{days, plural, other {Trễ hạn trả # ngày}}",
-    "borrowed": "Đồ mượn, cần trả"
+    "borrowed": "Đồ mượn, cần trả",
+    "running_out": "{days, plural, =0 {Có thể hết hôm nay} other {Còn khoảng # ngày dùng}}",
+    "running_low": "Sắp dùng hết"
   },
   "item": {
     "fields": {
@@ -265,7 +267,13 @@
       "demo": "Dữ liệu mẫu"
     },
     "byPerson": "bởi {name}",
-    "formerMember": "{name} (đã rời nhà)"
+    "formerMember": "{name} (đã rời nhà)",
+    "usage": {
+      "perDays": "Dùng khoảng 1 mỗi {days} ngày",
+      "perWeek": "Dùng khoảng {amount} mỗi tuần",
+      "perDay": "Dùng khoảng {amount} mỗi ngày",
+      "emptyOn": "dự kiến hết vào {date}"
+    }
   },
   "locations": {
     "title": "Vị trí",

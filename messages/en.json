@@ -152,7 +152,9 @@
     "maintenance_overdue": "{days, plural, =0 {Due today} one {# day overdue} other {# days overdue}}",
     "borrow_due": "{days, plural, =0 {Give back today} one {Give back in # day} other {Give back in # days}}",
     "borrow_overdue": "{days, plural, one {# day late to give back} other {# days late to give back}}",
-    "borrowed": "Borrowed, give back"
+    "borrowed": "Borrowed, give back",
+    "running_out": "{days, plural, =0 {May run out today} one {About # day left} other {About # days left}}",
+    "running_low": "Running low soon"
   },
   "item": {
     "fields": {
@@ -265,7 +267,13 @@
       "demo": "Demo data"
     },
     "byPerson": "by {name}",
-    "formerMember": "{name} (left)"
+    "formerMember": "{name} (left)",
+    "usage": {
+      "perDays": "You use about 1 every {days} days",
+      "perWeek": "You use about {amount} a week",
+      "perDay": "You use about {amount} a day",
+      "emptyOn": "likely empty by {date}"
+    }
   },
   "locations": {
     "title": "Locations",

@@ -29,6 +29,7 @@ const KIND_SEVERITY: Record<AlertKind, number> = {
   maintenance_overdue: 3,
   maintenance_due: 2,
   borrow_due: 2,
+  running_out: 2,
 };
 
 export interface ItemStatusInput {
@@ -54,7 +55,8 @@ export type StatusKey =
   | "warranty_left"
   | "archived"
   | "borrow_overdue"
-  | "borrowed";
+  | "borrowed"
+  | "running_low";
 
 export interface ItemStatus {
   key: StatusKey;
@@ -85,6 +87,8 @@ export function itemStatus(item: ItemStatusInput, kinds: readonly AlertKind[], t
     if (top === "lent_overdue") values.days = 0;
     // Rows from search do not carry the agreed date: a plain "to give back" badge.
     if (top === "borrow_due") return { key: "borrowed", tone: "warning", values: {} };
+    // Rows from search do not carry the prediction: a plain "running low" badge.
+    if (top === "running_out") return { key: "running_low", tone: "warning", values: {} };
     let tone: Tone = KIND_SEVERITY[top] === 3 ? "danger" : "warning";
     if (top === "expiring_soon") tone = (values.days ?? 0) <= 7 ? "danger" : "success";
     return { key: top, tone, values };
@@ -114,6 +118,7 @@ export function alertStatus(alert: AlertInfo): ItemStatus {
     case "expiring_soon":
     case "warranty_ending":
     case "maintenance_due":
+    case "running_out":
       values.days = Math.max(0, days);
       break;
     case "replace_due":
