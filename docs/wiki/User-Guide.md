@@ -3,7 +3,7 @@ How to use Stowly day to day. Menu names are given in Vietnamese, with English i
 ## Getting started
 
 1. Open the app and create an account on the sign-in page. You can sign in later with your password or with a magic link sent by email.
-2. Every new account starts with seven built-in categories and a starter location tree (Phòng khách, Phòng ngủ › Tủ quần áo, Nhà bếp › Tủ lạnh, …). Rename, move or delete them to match your home.
+2. Every new account gets its own household and starts with seven built-in categories and a starter location tree (Phòng khách, Phòng ngủ › Tủ quần áo, Nhà bếp › Tủ lạnh, …). Rename, move or delete them to match your home.
 3. Switch language in the sidebar or in **Cài đặt (Settings)**. Your choice is saved to your account.
 4. On a phone, use the browser's "Add to Home Screen" to install Stowly as an app.
 
@@ -39,12 +39,45 @@ Stowly raises an alert when an item:
 - is low or out of stock;
 - is a book lent out and overdue.
 
+Maintenance tasks that are due or overdue appear in the same places (see [Maintenance](#maintenance)).
+
 Where to see them:
 - The **dashboard** shows counts, the items that need attention and low-stock bars.
 - **Cảnh báo (Alerts)** lists everything. Actions: **Mark replaced**, **Used up** (archives the item), **Add to shopping list**, **Snooze 7 days**. Each can be undone.
 - A **daily digest** arrives by email and/or push notification at your chosen hour (07:00 by default). Each reminder is sent once. Expiry reminders go out at 30, 7 and 1 days before.
 
 Change lead times, the digest hour and channels in **Cài đặt (Settings)**. You can also turn on push for the current device and send a test notification there.
+
+## Maintenance
+
+For jobs that repeat, such as cleaning the AC filter or servicing the motorbike.
+
+1. Open **Bảo trì (Maintenance)** and choose **Thêm lịch bảo trì (Add maintenance task)**. You can also add one from an item's page.
+2. Give it a title and **Lặp lại mỗi (Repeat every)** a number of days, weeks, months or years. Optionally set a first due date, link an item and add notes. Without a first date, the first due date is one interval from today.
+3. When it is due (or within your warning window, 7 days by default), it shows on the dashboard, in Alerts and in the daily digest.
+4. **Mark done** records the date (today by default) and an optional note, then schedules the next one from that day. Open the task to see its history.
+5. Tasks can be snoozed, edited or deleted.
+
+## Documents and warranty
+
+- On an item, upload warranty cards, invoices and manuals (PDF, JPG, PNG or WebP, up to 10 MB each, 20 per item). Pick the document type, then view or download it later.
+- **Claim warranty** on an item gathers warranty status, brand/model, serial number, photos and documents in one printable page.
+- **Báo cáo bảo hiểm (Insurance report)** lists your valuables with photo, purchase price and serial number plus a total. Filter by minimum value, category or room, then **Print / Save PDF**. Items without a purchase price are left out, and a note says how many.
+
+## Household and members
+
+Several people can share one household's items.
+
+- **Cài đặt → Thành viên (Settings → Members):** name the household and set your display name (shown in item history).
+- **Invite someone** by email as **Biên tập (Editor)** or **Chỉ xem (Viewer)**. They get a link valid for 7 days; if email isn't set up, copy the link and send it yourself. They sign in or sign up with that email and press **Tham gia (Join)**.
+- Roles: **Owner** manages everything including members; **Editor** adds, edits and deletes items, shopping list and alerts; **Viewer** can only look.
+- Owners can change roles, remove members and revoke pending invites. Anyone can leave a household except its last owner.
+- If you belong to several households, switch between them in the same section.
+- Shared by the household: items, locations, shopping list, snoozes. Personal: language, theme, timezone, currency, alert lead days and digest settings.
+
+## Themes
+
+**Cài đặt → Giao diện (Settings → Appearance):** Auto (follows your device's light/dark mode), teal, green, blue or dark. The choice is saved to your account and applies on every device.
 
 ## Shopping list
 

@@ -2,13 +2,13 @@
 
 **v1.0.0:** milestones M1–M6 (sign-in, i18n, items, locations, search, alerts, daily digest, PWA), plus QR labels, barcode scanning, item groups, CSV import, spending stats and clean-up suggestions.
 
-## Next (v2)
+## Shipped since v1.0.0 (v2)
 
-In this order:
-
-1. **Household members.** Invite family by email with roles: owner, editor, viewer. Rewrites the access rules around households, so it comes first.
-2. **Maintenance schedules.** Recurring tasks such as "Clean AC filter every 3 months", included in the dashboard, Alerts and the daily digest.
-3. **Warranty documents and insurance report.** Attach warranty cards, invoices and manuals; a "Claim warranty" view; a printable report of high-value items.
+1. **Household members.** Invite family by email with roles: owner, editor, viewer. Switch between households in Settings → Members.
+2. **Maintenance schedules.** Recurring tasks such as "Clean AC filter every 3 months", shown on the dashboard and Alerts and included in the daily digest.
+3. **Warranty documents and insurance report.** Attach warranty cards, invoices and manuals to items; a "Claim warranty" view; a printable insurance report of high-value items.
+4. **Colour themes.** Auto (follows the device), teal, green, blue and dark, saved per person.
+5. **Faster search.** Text queries find candidates through the GIN indexes first.
 
 ## Ideas
 
@@ -38,7 +38,6 @@ In this order:
 - Moving mode: pack into numbered boxes with QR labels and unpack box by box.
 
 ### Quality of life
-- Dark mode (colours are already CSS variables).
 - Offline add with sync.
 - Home-screen shortcuts for Quick add and Scan.
 - Trash: deleted items kept for 30 days.

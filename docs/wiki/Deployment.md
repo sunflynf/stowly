@@ -6,7 +6,7 @@ Stowly runs on **Vercel** (the app) and **Supabase** (database, sign-in, photo s
 | --- | --- | --- | --- |
 | Vercel | Hosts the Next.js app, server actions and API routes | Yes | Yes. Hobby is free for personal, non-commercial use. |
 | Supabase | Postgres, Auth, Storage, Row Level Security, pg_cron + pg_net, Vault | Yes | Probably; see the limits below |
-| Resend | Daily digest email (and, optionally, sign-in emails over SMTP) | Yes | Yes (3,000 emails a month) |
+| Resend | Daily digest and household invite emails (and, optionally, sign-in emails over SMTP) | Yes | Yes (3,000 emails a month) |
 | Web Push | Phone and browser notifications | No; generate VAPID keys with `pnpm vapid` | Free |
 | Open Food Facts / Open Products Facts | Product name lookup for scanned barcodes | No | Free |
 | Domain (optional) | Lets Resend send from your own address | Any registrar | About $10 a year |
@@ -15,7 +15,7 @@ Stowly runs on **Vercel** (the app) and **Supabase** (database, sign-in, photo s
 - **Resend's onboarding sender** (`onboarding@resend.dev`) only delivers to the email of the Resend account owner. That's fine for one person; verify a domain to send anywhere else.
 - **Supabase's built-in sign-in email** is heavily rate-limited (a few per hour). Point Supabase at Resend instead: Authentication → SMTP Settings.
 - **Free Supabase projects pause after about 7 days without activity.** Use the app regularly, resume it from the dashboard, or upgrade to Pro.
-- **Storage:** free Supabase gives 1 GB of files and a 500 MB database. Photos are about 150–300 KB each after resizing, so several thousand photos can pass 1 GB. Items alone fit easily.
+- **Storage:** free Supabase gives 1 GB of files and a 500 MB database. Photos are about 150–300 KB each after resizing, so several thousand photos can pass 1 GB. Documents (up to 10 MB each) count toward the same limit. Items alone fit easily.
 
 ## Steps
 
@@ -32,7 +32,7 @@ Stowly runs on **Vercel** (the app) and **Supabase** (database, sign-in, photo s
    ```sql
    insert into private.signup_allowlist (email) values ('you@example.com');
    ```
-   After creating your account you can disable sign-ups in Supabase entirely.
+   After creating your account you can disable sign-ups in Supabase entirely. People you invite to your household can still sign up with the invited email while the invite is open (7 days); if you disable sign-ups entirely, invitees need an existing account.
 4. **Import the repo in Vercel** and set the environment variables:
 
    | Variable | Value |
@@ -63,3 +63,5 @@ Stowly runs on **Vercel** (the app) and **Supabase** (database, sign-in, photo s
 - A real digest email arrives (Settings → set the digest hour to the next hour, or call the endpoint without `dry=1`).
 - Push notifications: turn on push in Settings on your phone and send a test notification.
 - A barcode lookup fills in a product name.
+- Invite a second email from Settings → Members. Without `RESEND_API_KEY` the link is shown to copy; open it in another browser to join.
+- Upload a warranty PDF to an item and open it.

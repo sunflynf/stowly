@@ -26,6 +26,7 @@ If Docker image pulls are rate-limited, run `SUPABASE_INTERNAL_IMAGE_REGISTRY=do
 ```bash
 pnpm seed:demo                    # ~150 items for demo@stowly.local / demo-password
 pnpm seed:demo --count 5000       # performance data set
+pnpm seed:demo --count 5000 --members 3   # + demo-member-1..3@stowly.local (editor, viewer, editor) in the same household
 pnpm seed:demo --email you@example.com --password secret123 --count 300
 ```
 
@@ -39,10 +40,10 @@ The seed backdates history, so spending stats and clean-up suggestions have some
 | `pnpm lint` | ESLint (`no-explicit-any` is an error) |
 | `pnpm typecheck` | `next typegen` + `tsc --noEmit` |
 | `pnpm lint:i18n` | Fails if a message key exists in one language but not the other |
-| `pnpm test` | Unit tests (Vitest) |
-| `pnpm test:db` | Integration tests against local Supabase: RLS, storage, search, groups, digest, insights |
+| `pnpm test` | Unit tests (Vitest): i18n parity, validation, alert logic, digest rendering, theme contrast |
+| `pnpm test:db` | Integration tests against local Supabase: RLS, storage, search, groups, digest, insights, households (every table × every role), maintenance and documents |
 | `pnpm test:e2e` | Playwright, desktop and mobile, including a real camera scan through Chromium's fake camera |
-| `pnpm bench:search` | Search latency on the seeded account (target p95 < 200 ms) |
+| `pnpm bench:search` | Search latency on the seeded account, and as each `demo-member-N` when present (target p95 < 200 ms) |
 | `pnpm db:reset` / `pnpm db:types` | Re-apply migrations / regenerate `src/lib/database.types.ts` |
 | `pnpm vapid` | Generate VAPID keys for web push |
 
@@ -72,12 +73,12 @@ pnpm bench:search
 
 | Path | Contents |
 | --- | --- |
-| `src/app` | Routes: `(auth)/login`, `(app)/…` pages, `api/` routes, `l/[id]` label links |
-| `src/components` | UI by feature (`items`, `alerts`, `shopping`, …) and `ui/` primitives |
+| `src/app` | Routes: `(auth)/login`, `(app)/…` pages, `api/` routes, `l/[id]` label links, `invite/[token]` household invites |
+| `src/components` | UI by feature (`items`, `alerts`, `maintenance`, `documents`, `reports`, …) and `ui/` primitives |
 | `src/lib/actions` | Server Actions |
 | `src/lib/queries` | TanStack Query hooks |
 | `src/lib/alerts` | Digest selection, rendering, email and push |
-| `supabase/migrations` | Schema, RLS, triggers, search, alerts, cron |
+| `supabase/migrations` | Schema, RLS, triggers, search, alerts, cron, households, maintenance, documents |
 | `messages` | Vietnamese and English text |
 | `tests/unit`, `tests/integration`, `e2e` | Tests |
 | `scripts` | Seed, benchmark, i18n check, VAPID |
