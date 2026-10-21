@@ -121,6 +121,7 @@ Useful local URLs:
 
 Measured on the local stack with 5,000 items (end-to-end via PostgREST):
 - Search: p95 ≤ ~110 ms across text, typo, location, state-filtered and paginated queries. With households (owner + 3 members of the same household, each benchmarked): worst p95 151 ms.
+- Search after the candidate lookup (decision 25), same machine and run conditions, before → after p50: "ao khoac" 142 → ~50 ms, "sạc" 57 → ~35 ms, typo "lightnig" 154 → ~15 ms, "phong ngu" 126 → ~97 ms; non-text queries unchanged.
 - `item_alerts` view: ~20 ms.
 - `dashboard_stats()`: ~40 ms.
 
@@ -146,6 +147,7 @@ Measured on the local stack with 5,000 items (end-to-end via PostgREST):
   - A substring match runs on the normalised name.
   - Typo tolerance is per word (4+ letters), using `pg_trgm` strict word similarity.
   - GIN indexes back the full-text and trigram matching.
+  - A text query first collects candidate ids through those indexes (`search_candidate_ids()`), then runs the exact match and ranking only on them. See decision 25.
 - **Maintenance alerts.** `compute_maintenance_alerts(task, today, lead_days)` decides which tasks are due or overdue, the same pattern as `compute_item_alerts()`. The `maintenance_alerts` view, `dashboard_stats()` and the digest (`user_maintenance_alerts(user)`) all read it. The threshold key includes the due date, and `maintenance_notifications_log` is unique per person, so each reminder is sent once.
 - **No resends.** `notifications_log(user, item, kind, threshold_key, channel)` is unique, so each member gets each reminder once.
   - The threshold key includes the date and the bucket (e.g. `2026-11-01:7`), so the 30-, 7- and 1-day reminders each send once.
@@ -276,6 +278,12 @@ Defaults chosen where the brief was open, or where the environment forced a choi
     - **Backup:** `item_documents` rows (with `storage_path`) are part of the JSON export, like photos.
     - No new dependencies.
 
+25. **Search candidates through the indexes.**
+    - **Why:** Row Level Security stops Postgres from using an index for operators that are not "leakproof" (`@@`, the trigram operators) ahead of the policy. So every text search checked every item of the household one by one, including a subquery per word; at 5,000 items the original search was already at ~200 ms p95.
+    - **How:** `search_candidate_ids()` is a small `security definer` function that filters to the caller's active household itself (it only ever returns ids the caller can read; tested). It collects, through the GIN indexes, the whole-query matches, name substrings and, per word, exact/prefix/typo matches intersected across words. That is exactly the set `search_items()` accepts, so results do not change. A check against the previous function on 30 queries (typos, accents, multi-word, symbols) returned identical rows, order and totals.
+    - **Broad queries** (more than 400 whole-query matches, e.g. a room name) skip the candidate list, because checking every row is cheaper than many typo lookups.
+    - The function disables sequential scans for itself only: the planner cannot estimate trigram matches and otherwise often compares every row.
+    - It relies on pg_trgm's default strict-word-similarity threshold (0.5), the same value the exact match uses. The migration role may not pin it, and the API roles cannot change it.
 26. **Voice search.**
     - Uses the browser's built-in speech recognition (Web Speech API), so there is no extra service, key or dependency. Chrome, Edge and Safari support it, including Vietnamese; Firefox does not, and then the microphone button is hidden. Some browsers send the audio to their vendor's speech service; the app itself never receives audio, only the recognised text.
     - The recogniser uses Vietnamese (`vi-VN`) or English (`en-US`) to match the app language.
